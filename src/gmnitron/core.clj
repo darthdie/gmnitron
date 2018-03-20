@@ -2,12 +2,13 @@
     (:gen-class)
     (:require [clj-discord.core :as discord]
               [gmnitron.commands.roll :as roll]
+              [gmnitron.commands.scene :as scene]
               [clojure.string :as str]
               [gmnitron.common :as common]))
 
 (def token (System/getenv "GMNITRON_BOT_TOKEN"))
 
-(def command_handlers (into [] (merge roll/command_list)))
+(def command_handlers (into [] (apply merge roll/command_list scene/command_list)))
 
 (defn find_command [desired_name commands]
   (if (= (count commands) 0)
@@ -27,7 +28,7 @@
           (discord/answer-command data 
                           (get data "content")
                           (if (common/correct_argument_count arguments min_args max_args)
-                              (handler arguments)
+                              (handler { :arguments arguments :author (get data "author") })
                               usage)))
     nil))
 

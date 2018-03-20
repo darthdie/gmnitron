@@ -1,6 +1,5 @@
 (ns gmnitron.commands.roll
-  (:require [clj-discord.core :as discord]
-            [gmnitron.common :as common]
+  (:require [gmnitron.common :as common]
             [clojure.string :as str])
   (:import (javax.script ScriptEngineManager
                          ScriptEngine)))
@@ -32,20 +31,20 @@
             modifier_expression (clojure.string/join " " modifiers)]
         (.eval engine (str num " + (" modifier_expression ")")))))
 
-(defn roll_min [arguments]
-  (let [[d1 d2 d3 & modifiers] arguments
+(defn roll_min [data]
+  (let [[d1 d2 d3 & modifiers] (get data :arguments)
           rolls (roll_dice [d1 d2 d3])
           [min mid max] (roll_dice rolls)]
           (die_str min (apply_modifiers min modifiers) min mid max modifiers)))
 
-(defn roll_mid [arguments]
-  (let [[d1 d2 d3 & modifiers] arguments
+(defn roll_mid [data]
+  (let [[d1 d2 d3 & modifiers] (get data :arguments)
           rolls (roll_dice [d1 d2 d3])
           [min mid max] (roll_dice rolls)]
           (die_str mid (apply_modifiers mid modifiers) min mid max modifiers)))
 
-(defn roll_max [arguments]
-  (let [[d1 d2 d3 & modifiers] arguments
+(defn roll_max [data]
+  (let [[d1 d2 d3 & modifiers] (get data :arguments)
           rolls (roll_dice [d1 d2 d3])
           [min mid max] (roll_dice rolls)]
           (die_str max (apply_modifiers max modifiers) min mid max modifiers)))
