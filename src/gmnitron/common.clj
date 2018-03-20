@@ -1,5 +1,6 @@
 (ns gmnitron.common
-  (:require [clj-discord.core :as discord]))
+  (:require [clj-discord.core :as discord]
+            [clojure.string :as str]))
 
 (defn correct_argument_count [arguments min max]
   (not (or (< (count arguments) min) (> (count arguments) max))))
@@ -10,4 +11,11 @@
     (discord/answer-command data
                             (get data "content")
                             (if (correct_argument_count arguments min max)
-                                f))))
+                                (f)
+                                usage))))
+                      
+(defmacro fmt [^String string]
+  (let [-re #"#\{(.*?)\}"
+        fstr (str/replace string -re "%s")
+        fargs (map #(read-string (second %)) (re-seq -re string))]
+    `(format ~fstr ~@fargs)))
