@@ -5,9 +5,16 @@
   (:import (javax.script ScriptEngineManager
                          ScriptEngine)))
 
+(defn clean_modifiers
+  ([output] (clean_modifiers ["+" "-" "*" "%" "/"] output))
+  ([modifiers output] (if (= (count modifiers) 0)
+                          output
+                          (let [modifier (first modifiers)]
+                            (recur (rest modifiers) (str/replace output (re-pattern (str "\\" modifier "(?=\\S)")) (str modifier " ")))))))
+
 (defn die_str [effect_die sum min mid max modifiers]
   (let [rolls (str/join ", " [min mid max])
-        modifier_expression (str/join " " modifiers)]
+        modifier_expression (clean_modifiers (str/join " " modifiers))]
     (if (> (count modifiers) 0)
         (common/fmt "Rolled **#{sum}** = #{effect_die} #{modifier_expression} (#{rolls})")
         (common/fmt "Rolled **#{effect_die}** (#{rolls})"))))
