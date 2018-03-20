@@ -2,7 +2,8 @@
     (:gen-class)
     (:require [clj-discord.core :as discord]
               [gmnitron.commands.roll :as roll]
-              [clojure.string :as str]))
+              [clojure.string :as str]
+              [gmnitron.common :as common]))
 
 (def token (System/getenv "GMNITRON_BOT_TOKEN"))
 
@@ -11,19 +12,31 @@
 (defn find_command [desired_name commands]
   (if (= (count commands) 0)
     nil
-    (let [[command_name handler] (first commands)]
+    (let [command (first commands)
+          command_name (get command :name)]
       (if (= desired_name (name command_name))
-        handler
+        command
         (recur desired_name (rest commands))))))
 
+(defn execute_command [command_name type data arguments]
+  (if-let [command (find_command command_name command_handlers)]
+    (let [min_args (get command :min_args 0)
+          max_args (get command :max_args 100)
+          usage (get command :usage "")
+          handler (get command :handler)]
+          (discord/answer-command data 
+                          (get data "content")
+                          (if (common/correct_argument_count arguments min_args max_args)
+                              (handler arguments)
+                              usage)))
+    nil))
+
 (defn command_handler [type data]
-      (let [message (get data "content")]
-           (if (.startsWith message "!")
-               (let [raw_command (->> message (next) (apply str))
-                    [command & command_arguments] (str/split raw_command #" ")]
-                    (if-let [handler (find_command command command_handlers)]
-                      (handler type data command_arguments)
-                      nil)))))
+  (let [message (get data "content")]
+        (if (.startsWith message "!")
+            (let [raw_command (->> message (next) (apply str))
+                 [command & command_arguments] (str/split raw_command #" ")]
+                 (execute_command command type data command_arguments)))))
 
 (defn -main [& args]
   (discord/connect {:token token

@@ -6,14 +6,14 @@
                          ScriptEngine)))
 
 (defn die_str [effect_die sum min mid max modifiers]
-      (let [rolls (str/join ", " [min mid max])
-            modifier_expression (str/join " " modifiers)]
-        (if (> (count modifiers) 0)
-            (common/fmt "Rolled **#{sum}** = #{effect_die} #{modifier_expression} (#{rolls})")
-            (common/fmt "Rolled **#{effect_die}** (#{rolls})"))))
+  (let [rolls (str/join ", " [min mid max])
+        modifier_expression (str/join " " modifiers)]
+    (if (> (count modifiers) 0)
+        (common/fmt "Rolled **#{sum}** = #{effect_die} #{modifier_expression} (#{rolls})")
+        (common/fmt "Rolled **#{effect_die}** (#{rolls})"))))
 
 (defn roll_die [size]
-      (+ 1 (rand-int size)))
+  (+ 1 (rand-int size)))
 
 (defn roll_dice [dice]
   (sort (map #(roll_die (Integer/parseInt (str %))) dice)))
@@ -25,29 +25,26 @@
             modifier_expression (clojure.string/join " " modifiers)]
         (.eval engine (str num " + (" modifier_expression ")")))))
 
-(defn roll_min [type data arguments]
-  (common/discord_response type data arguments "Expected !min (die 1) (die 2) (die 3) [modifiers]" 3 100
-                          #(let [[d1 d2 d3 & modifiers] arguments
-                                rolls (roll_dice [d1 d2 d3])
-                                [min mid max] (roll_dice rolls)]
-                                  (die_str min (apply_modifiers min modifiers) min mid max modifiers))))
+(defn roll_min [arguments]
+  (let [[d1 d2 d3 & modifiers] arguments
+          rolls (roll_dice [d1 d2 d3])
+          [min mid max] (roll_dice rolls)]
+          (die_str min (apply_modifiers min modifiers) min mid max modifiers)))
 
-(defn roll_mid [type data arguments]
-  (common/discord_response type data arguments "Expected !mid (die 1) (die 2) (die 3) [modifiers]" 3 100
-                          #(let [[d1 d2 d3 & modifiers] arguments
-                                rolls (roll_dice [d1 d2 d3])
-                                [min mid max] (roll_dice rolls)]
-                                  (die_str mid (apply_modifiers mid modifiers) min mid max modifiers))))
+(defn roll_mid [arguments]
+  (let [[d1 d2 d3 & modifiers] arguments
+          rolls (roll_dice [d1 d2 d3])
+          [min mid max] (roll_dice rolls)]
+          (die_str mid (apply_modifiers mid modifiers) min mid max modifiers)))
 
-(defn roll_max [type data arguments]
-  (common/discord_response type data arguments "Expected !max (die 1) (die 2) (die 3) [modifiers]" 3 100
-                          #(let [[d1 d2 d3 & modifiers] arguments
-                                rolls (roll_dice [d1 d2 d3])
-                                [min mid max] (roll_dice rolls)]
-                                  (die_str max (apply_modifiers max modifiers) min mid max modifiers))))
+(defn roll_max [arguments]
+  (let [[d1 d2 d3 & modifiers] arguments
+          rolls (roll_dice [d1 d2 d3])
+          [min mid max] (roll_dice rolls)]
+          (die_str max (apply_modifiers max modifiers) min mid max modifiers)))
 
-(def command_list {
-  :min roll_min,
-  :mid roll_mid,
-  :max roll_max
-})
+(def command_list [
+  { :name "min" :handler roll_min :min_args 3 :usage "!min (die 1) (die 2) (die 3) [modifiers]" }
+  { :name "mid" :handler roll_mid :min_args 3 :usage "!mid (die 1) (die 2) (die 3) [modifiers]" }
+  { :name "max" :handler roll_max :min_args 3 :usage "!max (die 1) (die 2) (die 3) [modifiers]" }
+])
