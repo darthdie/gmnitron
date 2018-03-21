@@ -4,6 +4,7 @@
               [gmnitron.commands.roll :as roll]
               [gmnitron.commands.scene :as scene]
               [clojure.string :as str]
+              [gmnitron.database :as database]
               [gmnitron.common :as common]))
 
 (def token (System/getenv "GMNITRON_BOT_TOKEN"))
@@ -28,7 +29,7 @@
           (discord/answer-command data 
                           (get data "content")
                           (if (common/correct_argument_count arguments min_args max_args)
-                              (handler { :arguments arguments :author (get data "author") })
+                              (handler { :arguments arguments :author (get data "author") :channel_id (get data "channel_id") })
                               usage)))
     nil))
 
