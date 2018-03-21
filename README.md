@@ -14,6 +14,9 @@ You'll need to set the GMNITRON_BOT_TOKEN environment variable, which is the dis
 
 This section will be useful once finished.
 
+## Todo/Upcoming Features
+Going to add a `!recap` command that will consolidate the current `!scene` and `!round` commands. Not sure why I made them separate.
+
 ## Options
 
 ...

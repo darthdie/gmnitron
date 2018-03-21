@@ -21,8 +21,10 @@
 (defn roll_die [size]
   (+ 1 (rand-int size)))
 
+(defn str->int [str] (Integer. str))
+
 (defn roll_dice [dice]
-  (sort (map #(roll_die (Integer/parseInt (str %))) dice)))
+  (sort (map #(roll_die (common/str->int %)) dice)))
 
 (defn apply_modifiers [num modifiers]
   (if (= 0 (count modifiers))

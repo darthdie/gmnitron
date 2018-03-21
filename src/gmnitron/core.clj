@@ -1,15 +1,16 @@
 (ns gmnitron.core
     (:gen-class)
     (:require [clj-discord.core :as discord]
+              [clojure.string :as str]
               [gmnitron.commands.roll :as roll]
               [gmnitron.commands.scene :as scene]
-              [clojure.string :as str]
+              [gmnitron.commands.initiative :as initiative]
               [gmnitron.database :as database]
               [gmnitron.common :as common]))
 
 (def token (System/getenv "GMNITRON_BOT_TOKEN"))
 
-(def command_handlers (into [] (apply merge roll/command_list scene/command_list)))
+(def command_handlers (into [] (concat roll/command_list scene/command_list initiative/command_list)))
 
 (defn find_command [desired_name commands]
   (if (= (count commands) 0)
@@ -33,12 +34,15 @@
                               usage)))
     nil))
 
+(defn parse_arguments [arguments]
+  (vec (common/splitter (clojure.string/join " " arguments))))
+
 (defn command_handler [type data]
   (let [message (get data "content")]
         (if (.startsWith message "!")
             (let [raw_command (->> message (next) (apply str))
                  [command & command_arguments] (str/split raw_command #" ")]
-                 (execute_command command type data command_arguments)))))
+                 (execute_command command type data (parse_arguments command_arguments))))))
 
 (defn -main [& args]
   (discord/connect {:token token

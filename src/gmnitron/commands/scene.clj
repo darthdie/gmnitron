@@ -5,7 +5,7 @@
 
 (defn establish [data]
   (let [{arguments :arguments channel_id :channel} data
-        [green_ticks yellow_ticks red_ticks] (map #(Integer/parseInt %) arguments)]
+        [green_ticks yellow_ticks red_ticks] (map common/str->int arguments)]
     (database/insert-scene channel_id { :green_ticks green_ticks :yellow_ticks yellow_ticks :red_ticks red_ticks :current_tick 0 })
     (common/fmt "Scene has been established with #{green_ticks} green boxes, #{yellow_ticks} yellow boxes, and #{red_ticks} red boxes.")))
 
