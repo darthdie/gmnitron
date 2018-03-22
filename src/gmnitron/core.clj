@@ -11,14 +11,20 @@
 
 (def command-handlers (into [] (concat roll/command-list scene/command-list)))
 
+(defn help [data]
+  (str/join "\r\n\r\n" (map #(str (:name %) "\r\n" (get % :description "No description.") "\r\nUsage: " (get % :usage "")) command-handlers)))
+
+(def help-command { :name help :handler help :max_args 0 :usage "!help" })
+
 (defn find-command [desired-name commands]
-  (if (= (count commands) 0)
-    nil
-    (let [command (first commands)
-          command-name (get command :name)]
-      (if (= desired-name (name command-name))
-        command
-        (recur desired-name (rest commands))))))
+  (cond
+    (= desired-name "help") help-command
+    (= (count commands) 0) nil
+    :else (let [command (first commands)
+                command-name (get command :name)]
+            (if (= desired-name (name command-name))
+              command
+              (recur desired-name (rest commands))))))
 
 (defn execute-command [command-name type data arguments]
   (if-let [command (find-command command-name command-handlers)]

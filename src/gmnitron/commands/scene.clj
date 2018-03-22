@@ -64,8 +64,8 @@
       no-scene-message)))
 
 (def command-list [
-  { :name "establish" :handler establish :min-args 3 :usage "!establish (number of green ticks) (number of yellow ticks) (number of red ticks) (actors)" }
-  { :name "recap" :handler recap :max-args 0 :usage "!recap" }
-  { :name "pass" :handler pass :min-args 1 :usage "!pass (actor name)" }
-  { :name "tick" :handler tick :max-args 0 :usage "!tic" }
+  { :name "establish" :handler establish :min-args 4 :usage "!establish (number of green ticks) (number of yellow ticks) (number of red ticks) (actors)" :description "Sets up the scene with specified number of ticks and actors." }
+  { :name "recap" :handler recap :max-args 0 :usage "!recap" :description "Displays the current scene and initiative status." }
+  { :name "pass" :handler pass :min-args 1 :usage "!pass (actor name)" :description "Marks the actor as having acted this round." }
+  { :name "advance" :handler tick :max-args 0 :usage "!advance" :description "Advances the scene tracker." }
 ])
