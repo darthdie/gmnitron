@@ -14,6 +14,6 @@
   :heroku {
     :app-name "gmnitron"
     :jdk-version "1.8"
-    :include-files ["target/gmnitron-standalone.jar"]
-    :process-types { "worker" "java -jar target/gmnitron.jar" }}
+    :include-files ["target/uberjar/gmnitron-standalone.jar"]
+    :process-types { "worker" "java -jar target/uberjar/gmnitron.jar" }}
   :profiles {:uberjar {:aot :all}})
