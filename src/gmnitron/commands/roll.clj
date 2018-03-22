@@ -4,9 +4,6 @@
   (:import (javax.script ScriptEngineManager
                          ScriptEngine)))
 
-; TODO
-; Add removal of d from die rolls, e.g. !min d8 d4 d6
-
 (defn clean-modifiers
   ([output] (clean-modifiers ["+" "-" "*" "%" "/"] output))
   ([modifiers output] (if (= (count modifiers) 0)
@@ -32,8 +29,13 @@
             modifier-expression (clojure.string/join " " modifiers)]
         (.eval engine (str num " + (" modifier-expression ")")))))
 
+(defn parse-die [die]
+  (println "attempting to parse " die)
+  (let [result (if (str/starts-with? (str/lower-case die) "d") (subs die 1) die)]
+    (common/str->int result)))
+
 (defn roll-dice-pool [dice effect-die]
-  (let [rolls (sort (map #(roll-die (common/str->int %)) dice))
+  (let [rolls (sort (map #(roll-die (parse-die %)) dice))
         pool { :min (first rolls) :mid (second rolls) :max (last rolls) }]
     (merge pool { :effect (effect-die pool) })))
 
@@ -55,7 +57,7 @@
 
 (defn roll-minion [data]
   (let [[die & modifiers] (:arguments data)
-        roll (roll-die (common/str->int die))
+        roll (roll-die (parse-die die))
         total (apply-modifiers roll modifiers)
         modifier-expression (clean-modifiers (str/join " " modifiers))]
     (if (> (count modifiers) 0)
