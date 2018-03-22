@@ -1,0 +1,1 @@
+worker: java $JVM_OPTS -cp target/gmnitron-standalone.jar clojure.main -m gmnitron.core

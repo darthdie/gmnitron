@@ -8,4 +8,5 @@
                  [com.novemberain/monger "3.1.0"]]
   :main ^:skip-aot gmnitron.core
   :target-path "target/%s"
+  :uberjar-name "gmnitron-standalone.jar"
   :profiles {:uberjar {:aot :all}})

@@ -6,7 +6,7 @@
             [monger.operators :refer :all])
   (:import [com.mongodb MongoOptions ServerAddress]))
 
-(def db-uri (System/getenv "GMNITRON_DB_URI"))
+(def db-uri (System/getenv "MONGODB_URI"))
 
 (def db (atom (:db (mg/connect-via-uri db-uri))))
 
