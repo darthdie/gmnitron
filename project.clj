@@ -6,8 +6,14 @@
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [clj-discord "0.1.0-SNAPSHOT"]
                  [com.novemberain/monger "3.1.0"]]
+  :plugins [[lein-heroku "0.5.3"]]
   :main ^:skip-aot gmnitron.core
   :target-path "target/%s"
   :uberjar-name "gmnitron-standalone.jar"
   :min-lein-version "2.0.0"
+  :heroku {
+    :app-name "gmnitron"
+    :jdk-version "1.8"
+    :include-files ["target/gmnitron-standalone.jar"]
+    :process-types { "worker" "java -jar target/gmnitron.jar" }}
   :profiles {:uberjar {:aot :all}})
