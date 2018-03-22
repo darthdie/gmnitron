@@ -2,15 +2,15 @@
   (:require [clj-discord.core :as discord]
             [clojure.string :as str]))
 
-(defn correct_argument_count [arguments min max]
+(defn correct-argument-count [arguments min max]
   (not (or (< (count arguments) min) (> (count arguments) max))))
 
-(defn discord_response
-  ([type data arguments usage f] (discord_response data arguments usage 0 100 f))
+(defn discord-response
+  ([type data arguments usage f] (discord-response data arguments usage 0 100 f))
   ([type data arguments usage min max f]
     (discord/answer-command data
                             (get data "content")
-                            (if (correct_argument_count arguments min max)
+                            (if (correct-argument-count arguments min max)
                                 (f)
                                 usage))))
                       

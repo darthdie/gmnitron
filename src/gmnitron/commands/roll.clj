@@ -4,55 +4,69 @@
   (:import (javax.script ScriptEngineManager
                          ScriptEngine)))
 
-(defn clean_modifiers
-  ([output] (clean_modifiers ["+" "-" "*" "%" "/"] output))
+; TODO
+; Add removal of d from die rolls, e.g. !min d8 d4 d6
+; Add !boost, !hinder, !...other ones
+
+(defn clean-modifiers
+  ([output] (clean-modifiers ["+" "-" "*" "%" "/"] output))
   ([modifiers output] (if (= (count modifiers) 0)
                           output
                           (let [modifier (first modifiers)]
                             (recur (rest modifiers) (str/replace output (re-pattern (str "\\" modifier "(?=\\S)")) (str modifier " ")))))))
 
-(defn die_str [effect_die sum min mid max modifiers]
+(defn dice-pool->display [effect-die sum min mid max modifiers]
   (let [rolls (str/join ", " [min mid max])
-        modifier_expression (clean_modifiers (str/join " " modifiers))]
+        modifier-expression (clean-modifiers (str/join " " modifiers))]
     (if (> (count modifiers) 0)
-        (common/fmt "Rolled **#{sum}** = #{effect_die} #{modifier_expression} (#{rolls})")
-        (common/fmt "Rolled **#{effect_die}** (#{rolls})"))))
+        (common/fmt "Rolled **#{sum}** = #{effect-die} #{modifier-expression} (#{rolls})")
+        (common/fmt "Rolled **#{effect-die}** (#{rolls})"))))
 
-(defn roll_die [size]
+(defn roll-die [size]
   (+ 1 (rand-int size)))
 
 (defn str->int [str] (Integer. str))
 
-(defn roll_dice [dice]
-  (sort (map #(roll_die (common/str->int %)) dice)))
+(defn roll-dice [dice]
+  (sort (map #(roll-die (common/str->int %)) dice)))
 
-(defn apply_modifiers [num modifiers]
+(defn apply-modifiers [num modifiers]
   (if (= 0 (count modifiers))
       num
       (let [engine (.getEngineByName (ScriptEngineManager.) "JavaScript")
-            modifier_expression (clojure.string/join " " modifiers)]
-        (.eval engine (str num " + (" modifier_expression ")")))))
+            modifier-expression (clojure.string/join " " modifiers)]
+        (.eval engine (str num " + (" modifier-expression ")")))))
 
-(defn roll_min [data]
+(defn roll-min [data]
   (let [[d1 d2 d3 & modifiers] (get data :arguments)
-          rolls (roll_dice [d1 d2 d3])
-          [min mid max] (roll_dice rolls)]
-          (die_str min (apply_modifiers min modifiers) min mid max modifiers)))
+          rolls (roll-dice [d1 d2 d3])
+          [min mid max] (roll-dice rolls)]
+          (dice-pool->display min (apply-modifiers min modifiers) min mid max modifiers)))
 
-(defn roll_mid [data]
+(defn roll-mid [data]
   (let [[d1 d2 d3 & modifiers] (get data :arguments)
-          rolls (roll_dice [d1 d2 d3])
-          [min mid max] (roll_dice rolls)]
-          (die_str mid (apply_modifiers mid modifiers) min mid max modifiers)))
+          rolls (roll-dice [d1 d2 d3])
+          [min mid max] (roll-dice rolls)]
+          (dice-pool->display mid (apply-modifiers mid modifiers) min mid max modifiers)))
 
-(defn roll_max [data]
+(defn roll-max [data]
   (let [[d1 d2 d3 & modifiers] (get data :arguments)
-          rolls (roll_dice [d1 d2 d3])
-          [min mid max] (roll_dice rolls)]
-          (die_str max (apply_modifiers max modifiers) min mid max modifiers)))
+          rolls (roll-dice [d1 d2 d3])
+          [min mid max] (roll-dice rolls)]
+          (dice-pool->display max (apply-modifiers max modifiers) min mid max modifiers)))
 
-(def command_list [
-  { :name "min" :handler roll_min :min_args 3 :usage "!min (die 1) (die 2) (die 3) [modifiers]" }
-  { :name "mid" :handler roll_mid :min_args 3 :usage "!mid (die 1) (die 2) (die 3) [modifiers]" }
-  { :name "max" :handler roll_max :min_args 3 :usage "!max (die 1) (die 2) (die 3) [modifiers]" }
+(defn roll-minion [data]
+  (let [[die & modifiers] (get data :arguments)
+        roll (roll-die (str->int die))
+        total (apply-modifiers roll modifiers)
+        modifier-expression (clean-modifiers (str/join " " modifiers))]
+    (if (> (count modifiers) 0)
+      (common/fmt "Rolled **#{total}** = #{roll} #{modifier-expression}")
+      (common/fmt "Rolled **#{roll}**"))))
+
+(def command-list [
+  { :name "min" :handler roll-min :min-args 3 :usage "!min (die 1) (die 2) (die 3) [modifiers]" }
+  { :name "mid" :handler roll-mid :min-args 3 :usage "!mid (die 1) (die 2) (die 3) [modifiers]" }
+  { :name "max" :handler roll-max :min-args 3 :usage "!max (die 1) (die 2) (die 3) [modifiers]" }
+  { :name "minion" :handler roll-minion :min-args 1 :usage "!minion (die) [modifiers]" }
 ])

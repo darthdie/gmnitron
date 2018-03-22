@@ -6,32 +6,33 @@
             [monger.operators :refer :all])
   (:import [com.mongodb MongoOptions ServerAddress]))
 
-(def db_uri (System/getenv "GMNITRON_DB_URI"))
+(def db-uri (System/getenv "GMNITRON_DB_URI"))
 
-(def conn (atom (mg/connect-via-uri db_uri)))
+(def db (atom (:db (mg/connect-via-uri db-uri))))
 
-(defn find-scene [channel_id]
-  (mc/find-one-as-map (:db @conn) "scenes" { :channel_id channel_id }))
+(defn insert-scene [channel-id data]
+  (let [scene (merge (dissoc data :initiative) { :channel-id channel-id })
+        initiative (:initiative data)]
+    (mc/update @db "scenes" { :channel-id channel-id } scene {:upsert true})
+    (mc/remove @db "initiatives" {:channel-id channel-id})
+    (mc/insert-batch @db "initiatives" (map #(merge % { :channel-id channel-id }) initiative))))
 
-(defn insert-scene [channel_id data]
-  (mc/update (:db @conn) "scenes" {:channel_id channel_id} data {:upsert true}))
+(defn get-scene [channel-id]
+  (let [scene (mc/find-one-as-map @db "scenes" { :channel-id channel-id })
+        initiative (with-collection @db "initiatives" (find { :channel-id channel-id }) (sort (array-map :acted -1 :name 1)))]
+    (when (and scene initiative) (merge scene { :initiative initiative }))))
 
-(defn tick-scene [channel_id ticks]
-  (mc/update (:db @conn) "scenes" {:channel_id channel_id} {$inc {:current_tick ticks}} {:upsert true}))
+(defn has-actor-in-scene [channel-id actor-name]
+  (mc/any? @db "initiatives" { :search-name (str/lower-case actor-name) :channel-id channel-id }))
 
-(defn find-round [channel_id]
-  (with-collection (:db @conn) "rounds"
-    (find { :channel_id channel_id })
-    (sort (array-map :acted -1))))
+(defn update-scene-actor-acted [channel-id actor-name acted]
+  (mc/update @db "initiatives" { :channel-id channel-id :search-name (str/lower-case actor-name) } { $set { :acted acted } }))
 
-(defn delete-round [channel_id]
-  (mc/remove (:db @conn) "rounds" { :channel_id channel_id }))
+(defn has-any-unacted-actors [channel-id]
+  (mc/any? @db "initiatives" { :channel-id channel-id :acted false } ))
 
-(defn add-round [channel_id actors]
-  (mc/insert-batch (:db @conn) "rounds" (map #(merge % { :search_name (str/lower-case (get % :name)) }) actors)))
+(defn reset-scene-initiative [channel-id]
+  (mc/update @db "initiatives" { :channel-id channel-id } { $set { :acted false } } {:multi true}))
 
-(defn has-actor-in-round [channel_id actor_name]
-  (mc/any? (:db @conn) "rounds" { :search_name (str/lower-case actor_name) :channel_id channel_id }))
-
-(defn update-actor-acted [channel_id actor_name acted]
-  (mc/update (:db @conn) "rounds" { :search_name (str/lower-case actor_name) :channel_id channel_id } { $set { :acted acted } }))
+(defn tick-scene [channel-id]
+  (mc/update @db "scenes" { :channel-id channel-id } { $inc { :current-tick 1 } }))
