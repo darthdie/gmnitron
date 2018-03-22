@@ -9,4 +9,5 @@
   :main ^:skip-aot gmnitron.core
   :target-path "target/%s"
   :uberjar-name "gmnitron-standalone.jar"
+  :min-lein-version "2.0.0"
   :profiles {:uberjar {:aot :all}})
