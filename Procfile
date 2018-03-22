@@ -1,1 +1,0 @@
-worker: java -jar target/uberjar/gmnitron.jar
