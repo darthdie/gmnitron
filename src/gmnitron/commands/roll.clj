@@ -84,7 +84,7 @@
           die-display (dice-pool->display pool (apply-modifiers roll modifiers) modifiers)
           total (apply-modifiers roll modifiers)
           outcome (get-overcome-outcome total)]
-        (common/fmt "You rolled #{die-display}.\r\n#{outcome}"))
+        (common/fmt "#{die-display}.\r\n#{outcome}"))
       unknown-effect-die-error)))
 
 (defn get-mod-size [result operator]
@@ -102,7 +102,7 @@
         die-display (dice-pool->display pool (apply-modifiers roll modifiers) modifiers)
         total (apply-modifiers roll modifiers)
         mod-size (get-mod-size total operator)]
-      (common/fmt "You rolled #{die-display}.\r\nMod size: #{mod-size}"))
+      (common/fmt "#{die-display}.\r\nMod size: #{mod-size}"))
     unknown-effect-die-error))
 
 (defn boost [data]
