@@ -22,6 +22,8 @@
 
 (defn str->int [str] (Integer. str))
 
+(defn stripl [str s] (if (str/starts-with? str s) (subs str (count s)) str))
+
 (defn oxford
   ([items] (oxford (rest items) (first items)))
   ([items msg]

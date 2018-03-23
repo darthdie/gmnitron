@@ -13,16 +13,16 @@
                           (let [modifier (first modifiers)]
                             (recur (rest modifiers) (str/replace output (re-pattern (str "\\" modifier "(?=\\S)")) (str modifier " ")))))))
 
-(defn dice-pool->display [pool sum modifiers]
+(defn dice-pool->display [pool modifiers]
   (let [rolls (str/join ", " [(:min pool) (:mid pool) (:max pool)])
-        effect-die (:effect pool)
+        effect (:effect pool)
+        total (:total pool)
         modifier-expression (clean-modifiers (str/join " " modifiers))]
     (if (> (count modifiers) 0)
-        (common/fmt "Rolled **#{sum}** = #{effect-die} #{modifier-expression} (#{rolls})")
-        (common/fmt "Rolled **#{effect-die}** (#{rolls})"))))
+        (common/fmt "Rolled **#{total}** = #{effect} #{modifier-expression} (#{rolls})")
+        (common/fmt "Rolled **#{total}** (#{rolls})"))))
 
-(defn roll-die [size]
-  (+ 1 (rand-int size)))
+(defn roll-die [size] (+ 1 (rand-int size)))
 
 (defn apply-modifiers [num modifiers]
   (if (= 0 (count modifiers))
@@ -32,17 +32,17 @@
         (.eval engine (str num " + (" modifier-expression ")")))))
 
 (defn parse-die [die]
-  (let [result (if (str/starts-with? (str/lower-case die) "d") (subs die 1) die)]
+  (let [result (common/stripl (str/lower-case die) "d")]
     (common/str->int result)))
 
-(defn roll-dice-pool [dice effect-die]
+(defn roll-dice-pool [dice effect-die modifiers]
   (let [rolls (sort (map #(roll-die (parse-die %)) dice))
         pool { :min (first rolls) :mid (second rolls) :max (last rolls) }]
-    (merge pool { :effect (effect-die pool) })))
+    (merge pool { :effect (effect-die pool) :total (apply-modifiers (effect-die pool) modifiers) })))
 
 (defn roll-and-print-dice-pool [dice modifiers effect-die]
-  (let [pool (roll-dice-pool dice effect-die)]
-    (dice-pool->display pool (apply-modifiers (:effect pool) modifiers) modifiers)))
+  (let [pool (roll-dice-pool dice effect-die modifiers)]
+    (dice-pool->display pool modifiers)))
 
 (defn roll-min [data]
   (let [[d1 d2 d3 & modifiers] (:arguments data)]
@@ -79,11 +79,9 @@
 (defn overcome [data]
   (let [[effect-die d1 d2 d3 & modifiers] (:arguments data)]
     (if (effect-die? effect-die)
-      (let [pool (roll-dice-pool [d1 d2 d3] (keyword effect-die))
-          roll (:effect pool)
-          die-display (dice-pool->display pool (apply-modifiers roll modifiers) modifiers)
-          total (apply-modifiers roll modifiers)
-          outcome (get-overcome-outcome total)]
+      (let [pool (roll-dice-pool [d1 d2 d3] (keyword effect-die) modifiers)
+          die-display (dice-pool->display pool modifiers)
+          outcome (get-overcome-outcome (:total modifiers))]
         (common/fmt "\r\n#{die-display}.\r\n#{outcome}"))
       unknown-effect-die-error)))
 
@@ -95,23 +93,21 @@
     (<= 8 result 11) (str operator 3)
     (>= result 12) (str operator 4)))
 
-(defn roll-mod [effect-die d1 d2 d3 modifiers operator]
+(defn roll-mod [effect-die dice modifiers operator]
   (if (effect-die? effect-die)
-    (let [pool (roll-dice-pool [d1 d2 d3] (keyword effect-die))
-        roll (:effect pool)
-        die-display (dice-pool->display pool (apply-modifiers roll modifiers) modifiers)
-        total (apply-modifiers roll modifiers)
-        mod-size (get-mod-size total operator)]
+    (let [pool (roll-dice-pool dice (keyword effect-die) modifiers)
+        die-display (dice-pool->display pool modifiers)
+        mod-size (get-mod-size (:total pool) operator)]
       (common/fmt "\r\n#{die-display}.\r\nMod size: #{mod-size}"))
     unknown-effect-die-error))
 
 (defn boost [data]
   (let [[effect-die d1 d2 d3 & modifiers] (:arguments data)]
-    (roll-mod effect-die d1 d2 d3 modifiers "+")))
+    (roll-mod effect-die [d1 d2 d3] modifiers "+")))
 
 (defn hinder [data]
   (let [[effect-die d1 d2 d3 & modifiers] (:arguments data)]
-    (roll-mod effect-die d1 d2 d3 modifiers "-")))
+    (roll-mod effect-die [d1 d2 d3] modifiers "-")))
 
 (def command-list [
   { :name "min" :handler roll-min :min-args 3 :usage "!min (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and highlights the min die." }
