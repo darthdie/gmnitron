@@ -12,7 +12,7 @@
     (let [initiative (group-by :acted (get scene :initiative))
           acted (str/join "\r\n" (map actor->display (get initiative true [])))
           unacted (str/join "\r\n" (map actor->display (get initiative false [])))]
-      (str acted "\r\n\r\n" unacted)))
+      (str (if (> (count acted) 0) (str acted "\r\n\r\n") "") unacted)))
 
 (defn get-scene-recap [scene]
   (let [{green :green-ticks yellow :yellow-ticks red :red-ticks tick :current-tick} scene
@@ -34,7 +34,7 @@
   (let [{arguments :arguments channel-id :channel-id} data
         [green-ticks yellow-ticks red-ticks] (map common/str->int (take 3 arguments))
         names (drop 3 arguments)
-        actors (map (fn [actor-name] {:name actor-name :search-name (str/lower-case actor-name) :acted false}) names)]
+        actors (map (fn [actor-name] {:name actor-name :acted false}) names)]
     (database/insert-scene channel-id {
       :green-ticks green-ticks
       :yellow-ticks yellow-ticks

@@ -15,7 +15,7 @@
         initiative (:initiative data)]
     (mc/update @db "scenes" { :channel-id channel-id } scene {:upsert true})
     (mc/remove @db "initiatives" {:channel-id channel-id})
-    (mc/insert-batch @db "initiatives" (map #(merge % { :channel-id channel-id }) initiative))))
+    (mc/insert-batch @db "initiatives" (map #(merge % { :channel-id channel-id :search-name (str/lower-case (:name %)) }) initiative))))
 
 (defn get-scene [channel-id]
   (let [scene (mc/find-one-as-map @db "scenes" { :channel-id channel-id })

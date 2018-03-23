@@ -4,6 +4,8 @@
   (:import (javax.script ScriptEngineManager
                          ScriptEngine)))
 
+(def unknown-effect-die-error "ERROR. UNKNOWN EFFECT DIE. EXPECTED mid, min, or max.")
+
 (defn clean-modifiers
   ([output] (clean-modifiers ["+" "-" "*" "%" "/"] output))
   ([modifiers output] (if (= (count modifiers) 0)
@@ -30,7 +32,6 @@
         (.eval engine (str num " + (" modifier-expression ")")))))
 
 (defn parse-die [die]
-  (println "attempting to parse " die)
   (let [result (if (str/starts-with? (str/lower-case die) "d") (subs die 1) die)]
     (common/str->int result)))
 
@@ -84,7 +85,7 @@
           total (apply-modifiers roll modifiers)
           outcome (get-overcome-outcome total)]
         (common/fmt "You rolled #{die-display}.\r\n#{outcome}"))
-      "ERROR. UNKNOWN EFFECT DIE. EXPECTED mid, min, or max.")))
+      unknown-effect-die-error)))
 
 (defn get-mod-size [result operator]
   (cond
@@ -102,7 +103,7 @@
         total (apply-modifiers roll modifiers)
         mod-size (get-mod-size total operator)]
       (common/fmt "You rolled #{die-display}.\r\nMod size: #{mod-size}"))
-    "ERROR. UNKNOWN EFFECT DIE. EXPECTED mid, min, or max."))
+    unknown-effect-die-error))
 
 (defn boost [data]
   (let [[effect-die d1 d2 d3 & modifiers] (:arguments data)]
