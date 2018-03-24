@@ -4,14 +4,15 @@
   (:import (javax.script ScriptEngineManager
                          ScriptEngine)))
 
-(def unknown-effect-die-error "ERROR. UNKNOWN EFFECT DIE. EXPECTED mid, min, or max.")
+(def unknown-effect-die-error "ERROR. UNKNOWN EFFECT DIE. EXPECTED min, mid, or max.")
 
 (defn clean-modifiers
   ([output] (clean-modifiers ["+" "-" "*" "%" "/"] output))
-  ([modifiers output] (if (= (count modifiers) 0)
-                          output
-                          (let [modifier (first modifiers)]
-                            (recur (rest modifiers) (str/replace output (re-pattern (str "\\" modifier "(?=\\S)")) (str modifier " ")))))))
+  ([modifiers output] 
+    (if (= (count modifiers) 0)
+      output
+      (let [modifier (first modifiers)]
+        (recur (rest modifiers) (str/replace output (re-pattern (str "\\" modifier "(?=\\S)")) (str modifier " ")))))))
 
 (defn dice-pool->display [pool modifiers]
   (let [rolls (str/join ", " [(:min pool) (:mid pool) (:max pool)])
@@ -19,17 +20,17 @@
         total (:total pool)
         modifier-expression (clean-modifiers (str/join " " modifiers))]
     (if (> (count modifiers) 0)
-        (common/fmt "Rolled **#{total}** = #{effect} #{modifier-expression} (#{rolls})")
-        (common/fmt "Rolled **#{total}** (#{rolls})"))))
+      (common/fmt "Rolled **#{total}** = #{effect} #{modifier-expression} (#{rolls})")
+      (common/fmt "Rolled **#{total}** (#{rolls})"))))
 
 (defn roll-die [size] (+ 1 (rand-int size)))
 
 (defn apply-modifiers [num modifiers]
   (if (= 0 (count modifiers))
-      num
-      (let [engine (.getEngineByName (ScriptEngineManager.) "JavaScript")
-            modifier-expression (clojure.string/join " " modifiers)]
-        (.eval engine (str num " + (" modifier-expression ")")))))
+    num
+    (let [engine (.getEngineByName (ScriptEngineManager.) "JavaScript")
+          modifier-expression (clojure.string/join " " modifiers)]
+      (.eval engine (str num " + (" modifier-expression ")")))))
 
 (defn parse-die [die]
   (let [result (common/stripl (str/lower-case die) "d")]
