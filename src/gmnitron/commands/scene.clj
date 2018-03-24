@@ -12,7 +12,7 @@
     (let [initiative (group-by :acted (get scene :initiative))
           acted (str/join "\r\n" (map actor->display (get initiative true [])))
           unacted (str/join "\r\n" (map actor->display (get initiative false [])))]
-      (str (if (> (count acted) 0) (str acted "\r\n\r\n") "") unacted)))
+      (str (if (seq acted) (str acted "\r\n\r\n") "") unacted)))
 
 (defn get-scene-recap [scene]
   (let [{green :green-ticks yellow :yellow-ticks red :red-ticks tick :current-tick} scene

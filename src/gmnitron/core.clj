@@ -12,7 +12,7 @@
 (def command-handlers (into [] (concat roll/command-list scene/command-list)))
 
 (defn find-command [desired-name commands]
-  (if (= (count commands) 0)
+  (if (not (seq commands))
     nil
     (let [command (first commands)
                 command-name (get command :name)]
