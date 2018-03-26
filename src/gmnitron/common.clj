@@ -27,7 +27,7 @@
 (defn oxford
   ([items] (oxford (rest items) (first items)))
   ([items msg]
-    (if (not (seq items))
+    (if (empty? items)
       msg
       (if (= (count items) 1)
         (str msg ", and " (first items))

@@ -9,7 +9,7 @@
 (defn clean-modifiers
   ([output] (clean-modifiers ["+" "-" "*" "%" "/"] output))
   ([modifiers output] 
-    (if (not (seq modifiers))
+    (if (empty? modifiers)
       output
       (let [modifier (first modifiers)]
         (recur (rest modifiers) (str/replace output (re-pattern (str "\\" modifier "(?=\\S)")) (str modifier " ")))))))
@@ -19,14 +19,14 @@
         effect (:effect pool)
         total (:total pool)
         modifier-expression (clean-modifiers (str/join " " modifiers))]
-    (if (seq modifiers)
+    (if (not-empty modifiers)
       (common/fmt "Rolled **#{total}** = #{effect} #{modifier-expression} (#{rolls})")
       (common/fmt "Rolled **#{total}** (#{rolls})"))))
 
 (defn roll-die [size] (+ 1 (rand-int size)))
 
 (defn apply-modifiers [num modifiers]
-  (if (not (seq modifiers))
+  (if (empty? modifiers)
     num
     (let [engine (.getEngineByName (ScriptEngineManager.) "JavaScript")
           modifier-expression (clojure.string/join " " modifiers)]
@@ -62,7 +62,7 @@
         roll (roll-die (parse-die die))
         total (apply-modifiers roll modifiers)
         modifier-expression (clean-modifiers (str/join " " modifiers))]
-    (if (seq modifiers)
+    (if (not-empty modifiers)
       (common/fmt "Rolled **#{total}** = #{roll} #{modifier-expression}")
       (common/fmt "Rolled **#{roll}**"))))
 

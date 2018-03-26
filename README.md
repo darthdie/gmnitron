@@ -119,9 +119,13 @@ To run the bot locally, use the `lein run` command.
 
 ## Todo/Upcoming Possible Features
 
+* Add a command to add/remove actors at will
+* Add support for special quotes
+* Add a "current" actor to scenes, and have !pass change who that is
+* Change dice to display in original order, rather than ascending
 * Minion tracking
 * Mod tracking?
-* [Internal] Scene cleanup after 30 days.
+* [Internal] Scene cleanup after 30 days
 
 ## License
 
