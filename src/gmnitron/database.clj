@@ -22,6 +22,12 @@
         initiative (with-collection @db "initiatives" (find { :channel-id channel-id }) (sort (array-map :acted -1 :name 1)))]
     (when (and scene initiative) (merge scene { :initiative initiative }))))
 
+(defn add-actor [channel-id actor-name]
+  (mc/insert @db "initiatives" { :channel-id channel-id :name actor-name :search-name (str/lower-case actor-name) :acted false }))
+
+(defn remove-actor [channel-id actor-name]
+  (mc/remove @db "initiatives" { :channel-id channel-id :search-name (str/lower-case actor-name) } ))
+
 (defn has-actor-in-scene [channel-id actor-name]
   (mc/any? @db "initiatives" { :search-name (str/lower-case actor-name) :channel-id channel-id }))
 

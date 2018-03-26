@@ -60,11 +60,14 @@
   (try
     (let [message (get data "content")]
         (if (.startsWith message "!")
-            (let [raw-command (->> message (next) (apply str))
+            (let [raw-command (common/stripl message "!")
                  [command & command-arguments] (str/split raw-command #" ")]
                  (execute-command command type data (parse-arguments command-arguments)))))
     (catch java.lang.NumberFormatException e (respond data "ERROR. EXPECTED NUMERIC INPUT."))
-    (catch Exception e (println (.getMessage e) e))))
+    (catch Exception e
+      (do
+        (println (.getMessage e) e)
+        (respond data (str "ERROR. ERR. INTERNAL CORRUPTION. CONTACT CREATOR."))))))
 
 (defn -main [& args]
   (discord/connect {:token token
