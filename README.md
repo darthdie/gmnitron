@@ -26,10 +26,10 @@ You can invite the bot via: [This Invite Link](https://discordapp.com/oauth2/aut
 
 ```
 !min 8 12 12
-Rolled 4 (4, 6, 7)
+Rolled 3 (d12: 3, d8: 4, d12: 7)
 
-!max d8 d6 d12 + 2
-Rolled 7 = 5 + 2 (1, 5, 5)
+!max d8 d6 d12 +2
+Rolled 10 = 8 + 2 (d8: 3, d6: 5, d12: 8)
 
 !minion d6 +1
 Rolled 7 = 6 + 1
@@ -120,6 +120,7 @@ To run the bot locally, use the `lein run` command.
 ## Todo/Upcoming Possible Features
 
 * Add a "current" actor to scenes, and have !pass change who that is
+* Add a minion save vs roll
 * Minion tracking
 * Mod tracking?
 * [Internal] Scene cleanup after 30 days

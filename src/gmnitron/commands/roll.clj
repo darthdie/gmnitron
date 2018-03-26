@@ -94,7 +94,7 @@
     (if (effect-die? effect-die)
       (let [pool (roll-dice-pool [d1 d2 d3] (keyword effect-die) modifiers)
           die-display (dice-pool->display pool)
-          outcome (get-overcome-outcome (:total modifiers))]
+          outcome (get-overcome-outcome (:total pool))]
         (common/fmt "\r\n#{die-display}.\r\n#{outcome}"))
       unknown-effect-die-error)))
 
@@ -123,11 +123,11 @@
     (roll-mod effect-die [d1 d2 d3] modifiers "-")))
 
 (def command-list [
-  { :name "min" :handler roll-min :min-args 3 :max-args 4 :usage "!min (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and highlights the min die." }
-  { :name "mid" :handler roll-mid :min-args 3 :max-args 4 :usage "!mid (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and highlights the mid die." }
-  { :name "max" :handler roll-max :min-args 3 :max-args 4 :usage "!max (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and highlights the max die." }
-  { :name "minion" :handler roll-minion :min-args 1 :max-args 2 :usage "!minion (die) [modifiers]" :description "Rolls a minion save." }
-  { :name "overcome" :handler overcome :min-args 4 :max-args 5 :usage "!overcome (min/mid/max) (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and returns the overcome result." }
-  { :name "boost" :handler boost :min-args 4 :max-args 5 :usage "!boost (min/mid/max) (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and returns the boost result." }
-  { :name "hinder" :handler hinder :min-args 4 :max-args 5 :usage "!hinder (min/mid/max) (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and returns the hinder result." }
+  { :name "min" :handler roll-min :min-args 3 :max-args 5 :usage "!min (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and highlights the min die." }
+  { :name "mid" :handler roll-mid :min-args 3 :max-args 5 :usage "!mid (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and highlights the mid die." }
+  { :name "max" :handler roll-max :min-args 3 :max-args 5 :usage "!max (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and highlights the max die." }
+  { :name "minion" :handler roll-minion :min-args 1 :max-args 3 :usage "!minion (die) [modifiers]" :description "Rolls a minion save." }
+  { :name "overcome" :handler overcome :min-args 4 :max-args 6 :usage "!overcome (min/mid/max) (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and returns the overcome result." }
+  { :name "boost" :handler boost :min-args 4 :max-args 6 :usage "!boost (min/mid/max) (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and returns the boost result." }
+  { :name "hinder" :handler hinder :min-args 4 :max-args 6 :usage "!hinder (min/mid/max) (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and returns the hinder result." }
 ])
