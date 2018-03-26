@@ -33,6 +33,11 @@
         (str msg ", and " (first items))
         (recur (rest items) (str msg ", " (first items)))))))
 
+(defn is-quote? [c]
+  (or (= \“ c) (= \" c) (= \” c)))
+
+(def is-not-quote? (complement is-quote?))
+
 (defn splitter [s]
   ((fn step [xys]
      (lazy-seq
@@ -40,14 +45,11 @@
         (cond
          (Character/isSpace c)
          (step (rest xys))
-         (= \" c)
+         (is-quote? c)
          (let [[w* r*]
-               (split-with (fn [[x y]]
-                             (or (not= \" x)
-                                 (not (or (nil? y)
-                                          (Character/isSpace y)))))
+               (split-with (fn [[x y]] (or (is-not-quote? x) (not (or (nil? y) (Character/isSpace y)))))
                            (rest xys))]
-           (if (= \" (ffirst r*))
+           (if (is-quote? (ffirst r*))
              (cons (apply str (map first w*)) (step (rest r*)))
              (cons (apply str (map first w*)) nil)))
          :else
