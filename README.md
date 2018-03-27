@@ -129,7 +129,6 @@ To run the bot locally, use the `lein run` command.
 ## Todo/Upcoming Possible Features
 
 * Add a "current" actor to scenes, and have !pass change who that is
-* Add a minion save vs roll
 * Minion tracking
 * Mod tracking?
 * [Internal] Scene cleanup after 30 days
