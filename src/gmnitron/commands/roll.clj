@@ -69,14 +69,63 @@
   (let [[d1 d2 d3 & modifiers] (:arguments data)]
    (roll-and-print-dice-pool [d1 d2 d3] :max modifiers)))
 
+(defn decrease-die-size [die]
+  (- die 2))
+
+(defn parse-modifier-save [args]
+  (if (empty? args)
+    { :modifiers [] :save nil }
+    (if (str/starts-with? (str/lower-case (last args)) "v")
+      { :modifiers (butlast args) :save (common/str->int (common/stripl (str/lower-case (last args)) "v"))}
+      { :modifiers args :save nil })))
+
+(defn omnitron-insult []
+  (rand-nth [
+    "LOADING HUMOUR SUB-ROUTINE... FAILURE."
+    "ATTEMPTING TO UNDERSTAND... FAILURE.\r\nPAGE 17, SECTION 'Minions and Lieutenants', PARAGRAPH 4 STATES: 'If a minion is Attacked when at a d4, it is always removed and does not get a minion save.'"
+    "YOU MIGHT AS WELL HAVE TRIED TO ROLL TO BRING OblivAeon BACK."
+    "MY PROBABILITY SUB-ROUTINE PREDICTS SUCCESS."
+  ]))
+
+(defn get-minion-save-message [roll save die-size]
+  (cond
+    (<= die-size 4) (str (omnitron-insult) "\r\n" "The Minion is defeated!")
+    (>= roll save) (str "The Minion is reduced to a d" (- die-size 2) ".")
+    :else "The Minion is defeated!"))
+
+(defn modifiers->str [modifiers]
+  (->> modifiers
+    (str/join " ")
+    (clean-modifiers)))
+
 (defn roll-minion [data]
-  (let [[die & modifiers] (:arguments data)
-        roll (roll-die (parse-die die))
+  (let [[die & rest] (:arguments data)
+        { modifiers :modifiers save :save } (parse-modifier-save rest)
+        die-size (parse-die die)
+        roll (roll-die die-size)
         total (apply-modifiers roll modifiers)
-        modifier-expression (clean-modifiers (str/join " " modifiers))]
-    (if (not-empty modifiers)
-      (common/fmt "Rolled **#{total}** = #{roll} #{modifier-expression}")
-      (common/fmt "Rolled **#{roll}**"))))
+        modifier-expression (if (empty? modifiers) nil (str "= " roll " " (modifiers->str modifiers)))
+        save-message (if save (str "\r\n" (get-minion-save-message total save die-size)) nil)
+        save-expression (if save (str "vs. " save "") nil)]
+    (str "Rolled **" total "** " (str/join " " (filter some? [modifier-expression save-expression save-message])))))
+
+(defn get-lieutenant-save-message [roll save die-size]
+  (cond
+    (< roll save) (if (<= die-size 4)
+      "The Lieutenant is defeated!"
+      (str "The Lieutenant is reduced to a d" (- die-size 2) "."))
+    :else "The Lieutenant lives another day."))
+
+(defn roll-lieutenant [data]
+  (let [[die & rest] (:arguments data)
+        { modifiers :modifiers save :save } (parse-modifier-save rest)
+        die-size (parse-die die)
+        roll (roll-die die-size)
+        total (apply-modifiers roll modifiers)
+        modifier-expression (if (empty? modifiers) "" (str "= " roll " " (modifiers->str modifiers) ""))
+        save-message (if save (str "\r\n" (get-lieutenant-save-message total save die-size)) "")
+        save-expression (if save (str "vs. " save "") "")]
+    (str "Rolled **" total "** " (str/join " " [modifier-expression save-expression save-message]))))
 
 (defn get-overcome-outcome [result]
   (cond
@@ -84,7 +133,7 @@
     (<= 1 result 3) "Action fails, or succeeds with a major twist."
     (<= 4 result 7) "Action succeeds, but with a minor twist."
     (<= 8 result 11) "Action completely succeeds."
-    (>= result 12) "Action succeeds beyond expectations"))
+    (>= result 12) "Action succeeds beyond expectations."))
 
 (defn effect-die? [possible-die]
   (some #(= % (keyword possible-die)) [:min :mid :max]))
@@ -100,7 +149,7 @@
 
 (defn get-mod-size [result operator]
   (cond
-    (<= result 0) "No bonus or penalty is created"
+    (<= result 0) "No bonus or penalty is created."
     (<= 1 result 3) (str operator 1)
     (<= 4 result 7) (str operator 2)
     (<= 8 result 11) (str operator 3)
@@ -126,8 +175,9 @@
   { :name "min" :handler roll-min :min-args 3 :max-args 5 :usage "!min (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and highlights the min die." }
   { :name "mid" :handler roll-mid :min-args 3 :max-args 5 :usage "!mid (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and highlights the mid die." }
   { :name "max" :handler roll-max :min-args 3 :max-args 5 :usage "!max (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and highlights the max die." }
-  { :name "minion" :handler roll-minion :min-args 1 :max-args 3 :usage "!minion (die) [modifiers]" :description "Rolls a minion save." }
   { :name "overcome" :handler overcome :min-args 4 :max-args 6 :usage "!overcome (min/mid/max) (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and returns the overcome result." }
   { :name "boost" :handler boost :min-args 4 :max-args 6 :usage "!boost (min/mid/max) (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and returns the boost result." }
   { :name "hinder" :handler hinder :min-args 4 :max-args 6 :usage "!hinder (min/mid/max) (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and returns the hinder result." }
+  { :name "minion" :handler roll-minion :min-args 1 :max-args 4 :usage "!minion (die) [modifiers] [save vs]" :description "Rolls a minion save, optionally vs a number." }
+  { :name "lt" :handler roll-lieutenant :min-args 1 :max-args 4 :usage "!lt (die) [modifiers] [save vs]" :description "Rolls a lieutenant save, optionally vs a number." }
 ])

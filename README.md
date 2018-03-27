@@ -14,7 +14,8 @@ You can invite the bot via: [This Invite Link](https://discordapp.com/oauth2/aut
 !mid (die 1) (die 2) (die 3) [modifiers]
 !max (die 1) (die 2) (die 3) [modifiers]
 
-!minion (die) [modifiers]
+!minion (die) [modifiers] [save vs.]
+!lt (die) [modifiers] [save vs.]
 
 !overcome (min/mid/max) (die 1) (die 2) (die 3) [modifiers]
 
@@ -33,6 +34,14 @@ Rolled 10 = 8 + 2 (d8: 3, d6: 5, d12: 8)
 
 !minion d6 +1
 Rolled 7 = 6 + 1
+
+!minion d6 v5
+Rolled 4 vs. 5 
+The Minion is defeated!
+
+!lt d6 v5
+Rolled 3 vs. 5 
+The Lieutenant is reduced to a d4.
 
 !overcome mid d8 d6 d6
 Rolled 5 (5, 5, 5).
