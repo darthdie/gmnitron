@@ -122,7 +122,7 @@
         die-size (parse-die die)
         roll (roll-die die-size)
         total (apply-modifiers roll modifiers)
-        modifier-expression (if (empty? modifiers) "" (str "= " roll " " (modifiers->str modifiers) ""))
+        modifier-expression (if (empty? modifiers) "" (str "= " roll " " (modifiers->str modifiers)))
         save-message (if save (str "\r\n" (get-lieutenant-save-message total save die-size)) "")
         save-expression (if save (str "vs. " save "") "")]
     (str "Rolled **" total "** " (str/join " " [modifier-expression save-expression save-message]))))
