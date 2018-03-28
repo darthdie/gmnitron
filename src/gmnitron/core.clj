@@ -24,7 +24,7 @@
   (let [name (:name command)
         desc (get command :description "No description.")
         usage (get command :usage "")]
-    (common/fmt "#{name}\r\n#{desc}\r\nUsage:#{usage}")))
+    (common/fmt "#{name}\r\n#{desc}\r\nUsage: #{usage}")))
 
 (defn clean-command-name [name]
   (if (str/starts-with? name "!") (subs name 1) name))

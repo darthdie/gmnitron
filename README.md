@@ -10,17 +10,19 @@ You can invite the bot via: [This Invite Link](https://discordapp.com/oauth2/aut
 
 #### Dice Rolling
 ```
-!min (die 1) (die 2) (die 3) [modifiers]
-!mid (die 1) (die 2) (die 3) [modifiers]
-!max (die 1) (die 2) (die 3) [modifiers]
+!min (die 1) (die 2) (die 3) [modifier]
+!mid (die 1) (die 2) (die 3) [modifier]
+!max (die 1) (die 2) (die 3) [modifier]
 
-!minion (die) [modifiers] [save vs.]
-!lt (die) [modifiers] [save vs.]
+!reaction (die) [modifier]
 
-!overcome (min/mid/max) (die 1) (die 2) (die 3) [modifiers]
+!overcome (min/mid/max) (die 1) (die 2) (die 3) [modifier]
 
-!boost (min/mid/max) (die 1) (die 2) (die 3) [modifiers]
-!hinder (min/mid/max) (die 1) (die 2) (die 3) [modifiers]
+!boost (min/mid/max) (die 1) (die 2) (die 3) [modifier]
+!hinder (min/mid/max) (die 1) (die 2) (die 3) [modifier]
+
+!minion (die) [modifier] [save vs.]
+!lt (die) [modifier] [save vs.]
 ```
 
 #### Examples
@@ -31,6 +33,9 @@ Rolled 3 (d12: 3, d8: 4, d12: 7)
 
 !max d8 d6 d12 +2
 Rolled 10 = 8 + 2 (d8: 3, d6: 5, d12: 8)
+
+!reaction d6 + 2
+Rolled 7 = 5 + 2
 
 !minion d6 +1
 Rolled 7 = 6 + 1
