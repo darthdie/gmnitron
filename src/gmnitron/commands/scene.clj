@@ -5,14 +5,16 @@
 
 (def no-scene-message "ERROR. ATTEMPTED TO ACCESS NON-EXISTENT SCENE. CREATE ONE WITH THE !establish COMMAND.")
 (def no-scene-or-actor-message "ERROR. UNABLE TO ACCESS SCENE OR ACTOR. USE !establish OR !introduce COMMANDS TO CREATE.")
+(def actor-already-acted-message "ERROR. ACTOR HAS ALREADY GONE THIS INITIATIVE.")
+(def not-current-actor-message "ERROR. ILLEGAL INSTRUCTION. ONLY CURRENT ACTOR MAY PASS OFF.")
 
 (defn actor->display [actor]
-  (str "**" (get actor :name) "**" (if (get actor :acted) " has acted this round." " hasn't acted this round.")))
+  (str "**" (:name actor) "**" (if (:acted actor) " has acted this round." " hasn't acted this round.")))
 
 (defn get-initiative-recap [scene]
-    (let [initiative (group-by :acted (filter #(= (get % :active false) false) (get scene :initiative)))
-          current-actor (first (filter #(= (get % :active false) true) (get scene :initiative)))
-          current-actor-display (if current-actor (str "Current actor: " (actor->display current-actor)) nil)
+    (let [initiative (group-by :acted (filter #(= (get % :current false) false) (get scene :initiative)))
+          current-actor (first (filter #(= (get % :current false) true) (get scene :initiative)))
+          current-actor-display (if current-actor (str "**" (str (:name current-actor)) "** is the current actor.") nil)
           acted (str/join "\r\n" (map actor->display (get initiative true [])))
           unacted (str/join "\r\n" (map actor->display (get initiative false [])))]
       (str/join "\r\n\r\n" (filter #(> (count %) 0) [current-actor-display acted unacted]))))
@@ -50,17 +52,23 @@
     })
     (recap channel-id)))
 
-(defn pass [data]
+(defn pass [data] "The !pass command has been replaced with the !hand-off command. You can use it: !hand-off Legacy Wraith")
+
+(defn hand-off [data]
   (let [{arguments :arguments channel-id :channel-id} data
         actor-name (first arguments)
         pass-to (second arguments)]
-    (if (database/has-actor-in-scene channel-id actor-name)
-      (do
-        (database/update-scene-actor-acted channel-id actor-name true)
-        (when (not (database/has-any-unacted-actors channel-id))
-          (database/reset-scene-initiative channel-id))
-        (recap channel-id))
-      no-scene-or-actor-message)))
+    (cond
+      (and (database/has-current-actor channel-id) (not (database/is-current-actor channel-id actor-name))) not-current-actor-message
+      (not (database/has-actors-in-scene channel-id [actor-name pass-to])) no-scene-or-actor-message
+      (and (not (database/is-last-actor channel-id actor-name)) (database/actor-has-acted channel-id pass-to)) actor-already-acted-message
+      :else
+        (do
+          (database/update-scene-actor-acted channel-id actor-name true)
+          (when (not (database/has-any-unacted-actors channel-id))
+            (database/reset-scene-initiative channel-id))
+          (database/update-scene-set-active channel-id pass-to)
+          (recap channel-id)))))
 
 (defn tick [data]
   (let [{arguments :arguments channel-id :channel-id} data]
@@ -90,7 +98,8 @@
 (def command-list [
   { :name "establish" :handler establish :min-args 4 :usage "!establish (number of green ticks) (number of yellow ticks) (number of red ticks) (actors)" :description "Sets up the scene with specified number of ticks and actors." }
   { :name "recap" :handler recap-handler :max-args 0 :usage "!recap" :description "Displays the current scene and initiative status." }
-  { :name "pass" :handler pass :min-args 1 :max-args 2 :usage "!pass (actor name) [actor to go next]" :description "Marks the actor as having acted this round." }
+  { :name "pass" :handler pass :min-args 1 :max-args 1 :usage "!pass (actor name)" :description "Marks the actor as having acted this round." }
+  { :name "hand-off" :handler hand-off :min-args 2 :max-args 2 :usage "!hand-off (actor name) (actor to go next)" :description "Hands off the scene to the actor" }
   { :name "advance" :handler tick :max-args 0 :usage "!advance" :description "Advances the scene tracker." }
   { :name "introduce" :handler introduce :min-args 1 :usage "!introduce \"Big Baddie\"" :description "Adds an actor to the scene/initiative." }
   { :name "erase" :handler erase :min-args 1 :usage "!erase \"Big Baddie\"" :description "Removes an actor from the scene/initiative." }
