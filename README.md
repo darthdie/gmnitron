@@ -67,8 +67,8 @@ Mod size: -1
 !establish (# of green ticks) (# of yellow ticks) (# of red ticks) (actors)
 Establishes the scene with the given number of ticks, and the 'actors' in the scene/round.
 
-!pass (actor name)
-Mark this actor as having gone
+!hand-off (from actor) (to actor)
+Hand off the scene to the given actor.
 
 !advance
 Tick off the next box in the scene.
@@ -133,7 +133,6 @@ To run the bot locally, use the `lein run` command.
 
 ## Todo/Upcoming Possible Features
 
-* Add a "current" actor to scenes, and have !pass change who that is
 * Minion tracking
 * Mod tracking?
 * [Internal] Scene cleanup after 30 days
