@@ -10,10 +10,12 @@
   (str "**" (get actor :name) "**" (if (get actor :acted) " has acted this round." " hasn't acted this round.")))
 
 (defn get-initiative-recap [scene]
-    (let [initiative (group-by :acted (get scene :initiative))
+    (let [initiative (group-by :acted (filter #(= (get % :active false) false) (get scene :initiative)))
+          current-actor (first (filter #(= (get % :active false) true) (get scene :initiative)))
+          current-actor-display (if current-actor (str "Current actor: " (actor->display current-actor)) nil)
           acted (str/join "\r\n" (map actor->display (get initiative true [])))
           unacted (str/join "\r\n" (map actor->display (get initiative false [])))]
-      (str (if (not-empty acted) (str acted "\r\n\r\n") "") unacted)))
+      (str/join "\r\n\r\n" (filter #(> (count %) 0) [current-actor-display acted unacted]))))
 
 (defn get-scene-recap [scene]
   (let [{green :green-ticks yellow :yellow-ticks red :red-ticks tick :current-tick} scene
@@ -50,7 +52,8 @@
 
 (defn pass [data]
   (let [{arguments :arguments channel-id :channel-id} data
-        actor-name (first arguments)]
+        actor-name (first arguments)
+        pass-to (second arguments)]
     (if (database/has-actor-in-scene channel-id actor-name)
       (do
         (database/update-scene-actor-acted channel-id actor-name true)
@@ -87,7 +90,7 @@
 (def command-list [
   { :name "establish" :handler establish :min-args 4 :usage "!establish (number of green ticks) (number of yellow ticks) (number of red ticks) (actors)" :description "Sets up the scene with specified number of ticks and actors." }
   { :name "recap" :handler recap-handler :max-args 0 :usage "!recap" :description "Displays the current scene and initiative status." }
-  { :name "pass" :handler pass :min-args 1 :usage "!pass (actor name)" :description "Marks the actor as having acted this round." }
+  { :name "pass" :handler pass :min-args 1 :max-args 2 :usage "!pass (actor name) [actor to go next]" :description "Marks the actor as having acted this round." }
   { :name "advance" :handler tick :max-args 0 :usage "!advance" :description "Advances the scene tracker." }
   { :name "introduce" :handler introduce :min-args 1 :usage "!introduce \"Big Baddie\"" :description "Adds an actor to the scene/initiative." }
   { :name "erase" :handler erase :min-args 1 :usage "!erase \"Big Baddie\"" :description "Removes an actor from the scene/initiative." }
