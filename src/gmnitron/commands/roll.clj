@@ -171,6 +171,15 @@
   (let [[effect-die d1 d2 d3 & modifiers] (:arguments data)]
     (roll-mod effect-die [d1 d2 d3] modifiers "-")))
 
+(defn reaction [data]
+  (let [[die & modifiers] (:arguments data)
+        roll (roll-parsed-die die)
+        total (apply-modifiers roll modifiers)
+        modifier-expression (modifiers->str modifiers)]
+    (if (not-empty modifiers)
+      (common/fmt "Rolled **#{total}** = #{roll} #{modifier-expression}")
+      (common/fmt "Rolled **#{total}**"))))
+
 (def command-list [
   { :name "min" :handler roll-min :min-args 3 :max-args 5 :usage "!min (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and highlights the min die." }
   { :name "mid" :handler roll-mid :min-args 3 :max-args 5 :usage "!mid (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and highlights the mid die." }
@@ -180,4 +189,5 @@
   { :name "hinder" :handler hinder :min-args 4 :max-args 6 :usage "!hinder (min/mid/max) (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and returns the hinder result." }
   { :name "minion" :handler roll-minion :min-args 1 :max-args 4 :usage "!minion (die) [modifiers] [save vs]" :description "Rolls a minion save, optionally vs a number." }
   { :name "lt" :handler roll-lieutenant :min-args 1 :max-args 4 :usage "!lt (die) [modifiers] [save vs]" :description "Rolls a lieutenant save, optionally vs a number." }
+  { :name "reaction" :handler reaction :min-args 1 :max-args 3 :usage "!reaction (die) [modifiers]" :description "Rolls a reaction die." }
 ])
