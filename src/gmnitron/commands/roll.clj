@@ -111,9 +111,8 @@
 
 (defn get-lieutenant-save-message [roll save die-size]
   (cond
-    (< roll save) (if (<= die-size 4)
-      "The Lieutenant is defeated!"
-      (str "The Lieutenant is reduced to a d" (- die-size 2) "."))
+    (and (< roll save) (<= die-size 4)) "The Lieutenant is defeated!"
+    (< roll save) (str "The Lieutenant is reduced to a d" (- die-size 2) ".")
     :else "The Lieutenant lives another day."))
 
 (defn roll-lieutenant [data]
@@ -181,13 +180,13 @@
       (common/fmt "Rolled **#{total}**"))))
 
 (def command-list [
-  { :name "min" :handler roll-min :min-args 3 :max-args 5 :usage "!min (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and highlights the min die." }
-  { :name "mid" :handler roll-mid :min-args 3 :max-args 5 :usage "!mid (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and highlights the mid die." }
-  { :name "max" :handler roll-max :min-args 3 :max-args 5 :usage "!max (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and highlights the max die." }
-  { :name "overcome" :handler overcome :min-args 4 :max-args 6 :usage "!overcome (min/mid/max) (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and returns the overcome result." }
-  { :name "boost" :handler boost :min-args 4 :max-args 6 :usage "!boost (min/mid/max) (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and returns the boost result." }
-  { :name "hinder" :handler hinder :min-args 4 :max-args 6 :usage "!hinder (min/mid/max) (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and returns the hinder result." }
-  { :name "minion" :handler roll-minion :min-args 1 :max-args 4 :usage "!minion (die) [modifiers] [save vs]" :description "Rolls a minion save, optionally vs a number." }
-  { :name "lt" :handler roll-lieutenant :min-args 1 :max-args 4 :usage "!lt (die) [modifiers] [save vs]" :description "Rolls a lieutenant save, optionally vs a number." }
-  { :name "reaction" :handler reaction :min-args 1 :max-args 3 :usage "!reaction (die) [modifiers]" :description "Rolls a reaction die." }
+  { :command "!min" :handler roll-min :min-args 3 :max-args 5 :usage "!min (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and highlights the min die." }
+  { :command "!mid" :handler roll-mid :min-args 3 :max-args 5 :usage "!mid (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and highlights the mid die." }
+  { :command "!max" :handler roll-max :min-args 3 :max-args 5 :usage "!max (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and highlights the max die." }
+  { :command "!overcome" :handler overcome :min-args 4 :max-args 6 :usage "!overcome (min/mid/max) (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and returns the overcome result." }
+  { :command "!boost" :handler boost :min-args 4 :max-args 6 :usage "!boost (min/mid/max) (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and returns the boost result." }
+  { :command "!hinder" :handler hinder :min-args 4 :max-args 6 :usage "!hinder (min/mid/max) (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and returns the hinder result." }
+  { :command "!minion" :handler roll-minion :min-args 1 :max-args 4 :usage "!minion (die) [modifiers] [save vs]" :description "Rolls a minion save, optionally vs a number." }
+  { :command "!lt" :handler roll-lieutenant :min-args 1 :max-args 4 :usage "!lt (die) [modifiers] [save vs]" :description "Rolls a lieutenant save, optionally vs a number." }
+  { :command "!reaction" :handler reaction :min-args 1 :max-args 3 :usage "!reaction (die) [modifiers]" :description "Rolls a reaction die." }
 ])

@@ -15,13 +15,13 @@
   (if (empty? commands)
     nil
     (let [command (first commands)
-                command-name (get command :name)]
+                command-name (get command :command)]
             (if (= desired-name (name command-name))
               command
               (recur desired-name (rest commands))))))
 
 (defn command->help-message [command]
-  (let [name (:name command)
+  (let [name (:command command)
         desc (get command :description "No description.")
         usage (get command :usage "")]
     (common/fmt "#{name}\r\n#{desc}\r\nUsage: #{usage}")))
@@ -36,7 +36,7 @@
       "ERROR. COMMAND NOT FOUND.")
     (str "\r\n" (str/join "\r\n\r\n" (map command->help-message command-handlers)))))
 
-(def help-command { :name "help" :handler help :max_args 1 :usage "!help [command]" })
+(def help-command { :command "!help" :handler help :max_args 1 :usage "!help [command]" })
 
 (defn respond [data response]
   (discord/answer-command data (get data "content") response))
@@ -59,10 +59,9 @@
 (defn command-handler [type data]
   (try
     (let [message (get data "content")]
-        (if (.startsWith message "!")
-            (let [raw-command (common/stripl message "!")
-                 [command & command-arguments] (str/split raw-command #" ")]
-                 (execute-command command type data (parse-arguments command-arguments)))))
+      (let [raw-command (common/stripl message "!")
+            [command & command-arguments] (str/split raw-command #" ")]
+            (execute-command command type data (parse-arguments command-arguments))))
     (catch java.lang.NumberFormatException e (respond data "ERROR. EXPECTED NUMERIC INPUT."))
     (catch Exception e
       (do
