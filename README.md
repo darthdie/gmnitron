@@ -65,16 +65,25 @@ Mod size: -1
 
 ```
 !establish (# of green ticks) (# of yellow ticks) (# of red ticks) (actors)
-Establishes the scene with the given number of ticks, and the 'actors' in the scene/round.
+Establishes the scene with the given number of ticks, and the 'actors' in the scene/round. Also works with mentions.
 
 !hand-off (from actor) (to actor)
 Hand off the scene to the given actor.
+
+!hand-off-to (to actor)
+Hands off the scene from the current user to actor. Used
 
 !advance
 Tick off the next box in the scene.
 
 !recap
 Give a recap of the scene and initiative.
+
+!introduce
+Adds an actor to the scene/initiative.
+
+!erase
+Removes an actor from the scene/initiative.
 ```
 
 #### Examples
@@ -92,8 +101,22 @@ Scene hasn't acted this round.
 Tachyon hasn't acted this round.
 Wraith hasn't acted this round.
 
+or
 
-!pass "Absolute Zero"
+!establish 2 4 2 Scene Baddies Tachyon Wraith "Absolute Zero" @DarthDie
+The Story so Far
+
+It is currently a Green status. There are 2 Green boxes, 4 Yellow boxes, and 2 Red boxes left.
+
+Absolute Zero hasn't acted this round.
+Baddies hasn't acted this round.
+@DarthDie hasn't acted this round.
+Scene hasn't acted this round.
+Tachyon hasn't acted this round.
+Wraith hasn't acted this round.
+
+
+!hand-off "Absolute Zero"
 The Story so Far
 
 It is currently a Green status. There are 2 Green boxes, 4 Yellow boxes, and 2 Red boxes left.
@@ -102,6 +125,23 @@ Absolute Zero has acted this round.
 
 Baddies hasn't acted this round.
 Legacy hasn't acted this round.
+Scene hasn't acted this round.
+Tachyon hasn't acted this round.
+Wraith hasn't acted this round.
+
+
+DarthDie
+!hand-off-to Wraith
+The Story so Far
+
+It is currently a Green status. There are 2 Green boxes, 4 Yellow boxes, and 2 Red boxes left.
+
+Wraith is the current actor.
+
+Absolute Zero has acted this round.
+@DarthDie has acted this round.
+
+Baddies hasn't acted this round.
 Scene hasn't acted this round.
 Tachyon hasn't acted this round.
 Wraith hasn't acted this round.
@@ -119,6 +159,29 @@ Legacy hasn't acted this round.
 Scene hasn't acted this round.
 Tachyon hasn't acted this round.
 Wraith hasn't acted this round.
+
+
+!introduce "Baron Blade"
+The Story so Far
+
+It is currently a Green status. There are 2 Green boxes, 3 Yellow boxes, and 2 Red boxes left.
+
+Absolute Zero is the current actor.
+
+Legacy hasn't acted this round.
+The Wraith hasn't acted this round.
+Baron Blade hasn't acted this round.
+
+
+!erase "Baron Blade"
+The Story so Far
+
+It is currently a Green status. There are 2 Green boxes, 3 Yellow boxes, and 2 Red boxes left.
+
+Absolute Zero is the current actor.
+
+Legacy hasn't acted this round.
+The Wraith hasn't acted this round.
 ```
 
 ## Development
