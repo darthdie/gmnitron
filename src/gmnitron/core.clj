@@ -14,7 +14,7 @@
 (defn find-command [desired-name commands]
   (when (not-empty commands)
     (let [command (first commands)]
-      (if (str/starts-with? desired-name (name (:command command)))
+      (if (= desired-name (name (:command command)))
         command
         (recur desired-name (rest commands))))))
 
@@ -36,7 +36,15 @@
 (defn respond [data response]
   (discord/answer-command data (get data "content") response))
 
-(defn execute-command [command-name type data arguments]
+(defn parse-arguments [command]
+  (as-> (str/trim command) $
+    (str/split $ #" ")
+    (filter some? $)
+    (str/join " " $)
+    (common/splitter $)
+    (vec $)))
+
+(defn execute-command [command-name arguments type data]
   (when-let [command (find-command command-name (concat command-handlers [help-command]))]
     (let [min-args (get command :min-args 0)
           max-args (get command :max-args 100)
@@ -46,16 +54,11 @@
         (handler { :arguments arguments :author (get data "author") :channel-id (get data "channel_id") })
         usage))))
 
-(defn parse-arguments [arguments]
-  (vec (common/splitter (clojure.string/join " " arguments))))
-
 (defn command-handler [type data]
   (try
-    (println data)
     (let [message (get data "content")
-          raw-command message
-          [command & command-arguments] (str/split raw-command #" ")]
-      (if-let [response (execute-command raw-command type data (parse-arguments command-arguments))]
+          [command-name & arguments] (parse-arguments message)]
+      (if-let [response (execute-command command-name arguments type data)]
         (respond data response)))
     (catch java.lang.NumberFormatException e (respond data "ERROR. EXPECTED NUMERIC INPUT."))
     (catch Exception e

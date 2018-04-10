@@ -3,7 +3,7 @@
             [clojure.string :as str]))
 
 (defn correct-argument-count [arguments min max]
-  (not (or (< (count arguments) min) (> (count arguments) max))))
+  (and (>= (count arguments) min) (<= (count arguments) max)))
 
 (defn discord-response
   ([type data arguments usage f] (discord-response data arguments usage 0 100 f))

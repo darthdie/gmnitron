@@ -62,7 +62,7 @@
   (mc/any? @db "initiatives" { :channel-id channel-id :current true :search-name (str/lower-case name)}))
 
 (defn all-actors-acted? [channel-id]
-  (mc/empty? @db "initiatives" { :channel-id channel-id :acted false } ))
+  (= (mc/count @db "initiatives" { :channel-id channel-id :acted false }) 0))
 
 (defn reset-scene-initiative [channel-id]
   (mc/update @db "initiatives" { :channel-id channel-id } { $set { :acted false } } {:multi true}))
