@@ -10,7 +10,9 @@
   ([output] (clean-modifiers ["+" "-"] output))
   ([modifiers output] 
     (if (empty? modifiers)
-      (if (or (str/starts-with? output "+") (str/starts-with? output "-")) output (str "+ " output))
+      (if (re-matches #"[+-].*" output)
+        output
+        (str "+ " output))
       (let [modifier (first modifiers)]
         (recur (rest modifiers) (str/replace output (re-pattern (str "\\" modifier "(?=\\S)")) (str modifier " ")))))))
 
@@ -84,8 +86,7 @@
     "LOADING HUMOUR SUB-ROUTINE... FAILURE."
     "ATTEMPTING TO UNDERSTAND... FAILURE.\r\nPAGE 17, SECTION 'Minions and Lieutenants', PARAGRAPH 4 STATES: 'If a minion is Attacked when at a d4, it is always removed and does not get a minion save.'"
     "YOU MIGHT AS WELL HAVE TRIED TO ROLL TO BRING OblivAeon BACK."
-    "MY PROBABILITY SUB-ROUTINE PREDICTS SUCCESS."
-  ]))
+    "MY PROBABILITY SUB-ROUTINE PREDICTS SUCCESS."]))
 
 (defn get-minion-save-message [roll save die-size]
   (cond
@@ -98,16 +99,19 @@
     (str/join " ")
     (clean-modifiers)))
 
+(defn save-message-str [total & messages]
+  (str "Rolled **" total "** " (str/join " " (filter some? messages))))
+
 (defn roll-minion [data]
   (let [[die & rest] (:arguments data)
         { modifiers :modifiers save :save } (parse-modifier-save rest)
         die-size (parse-die die)
         roll (roll-die die-size)
         total (apply-modifiers roll modifiers)
-        modifier-expression (if (empty? modifiers) nil (str "= " roll " " (modifiers->str modifiers)))
-        save-message (if save (str "\r\n" (get-minion-save-message total save die-size)) nil)
-        save-expression (if save (str "vs. " save "") nil)]
-    (str "Rolled **" total "** " (str/join " " (filter some? [modifier-expression save-expression save-message])))))
+        modifier-expression (when (not-empty modifiers) (str "= " roll " " (modifiers->str modifiers)))
+        save-message (when save (str "\r\n" (get-minion-save-message total save die-size)))
+        save-expression (when save (str "vs. " save ""))]
+    (save-message-str total modifier-expression save-expression save-message)))
 
 (defn get-lieutenant-save-message [roll save die-size]
   (cond
@@ -121,10 +125,10 @@
         die-size (parse-die die)
         roll (roll-die die-size)
         total (apply-modifiers roll modifiers)
-        modifier-expression (if (empty? modifiers) "" (str "= " roll " " (modifiers->str modifiers)))
-        save-message (if save (str "\r\n" (get-lieutenant-save-message total save die-size)) "")
-        save-expression (if save (str "vs. " save "") "")]
-    (str "Rolled **" total "** " (str/join " " [modifier-expression save-expression save-message]))))
+        modifier-expression (when (not-empty modifiers) (str "= " roll " " (modifiers->str modifiers)))
+        save-message (when save (str "\r\n" (get-lieutenant-save-message total save die-size)))
+        save-expression (when save (str "vs. " save ""))]
+    (save-message-str total modifier-expression save-expression save-message)))
 
 (defn get-overcome-outcome [result]
   (cond
@@ -134,12 +138,12 @@
     (<= 8 result 11) "Action completely succeeds."
     (>= result 12) "Action succeeds beyond expectations."))
 
-(defn effect-die? [possible-die]
+(defn is-effect-die? [possible-die]
   (some #(= % (keyword possible-die)) [:min :mid :max]))
 
 (defn overcome [data]
   (let [[effect-die d1 d2 d3 & modifiers] (:arguments data)]
-    (if (effect-die? effect-die)
+    (if (is-effect-die? effect-die)
       (let [pool (roll-dice-pool [d1 d2 d3] (keyword effect-die) modifiers)
           die-display (dice-pool->display pool)
           outcome (get-overcome-outcome (:total pool))]
@@ -155,7 +159,7 @@
     (>= result 12) (str operator 4)))
 
 (defn roll-mod [effect-die dice modifiers operator]
-  (if (effect-die? effect-die)
+  (if (is-effect-die? effect-die)
     (let [pool (roll-dice-pool dice (keyword effect-die) modifiers)
         die-display (dice-pool->display pool)
         mod-size (get-mod-size (:total pool) operator)]

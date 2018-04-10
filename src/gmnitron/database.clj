@@ -25,17 +25,20 @@
         initiative (get-initiative channel-id)]
     (when (and scene initiative) (merge scene { :initiative initiative }))))
 
+(defn has-scene? [channel-id]
+  (mc/any? @db "scenes" { :channel-id channel-id } ))
+
 (defn add-actor [channel-id actor-name]
   (mc/insert @db "initiatives" { :channel-id channel-id :name actor-name :search-name (str/lower-case actor-name) :acted false }))
 
 (defn remove-actor [channel-id actor-name]
   (mc/remove @db "initiatives" { :channel-id channel-id :search-name (str/lower-case actor-name) } ))
 
-(defn has-actor-in-scene [channel-id actor-name]
+(defn has-actor-in-scene? [channel-id actor-name]
   (mc/any? @db "initiatives" { :search-name (str/lower-case actor-name) :channel-id channel-id }))
 
-(defn has-actors-in-scene [channel-id actors]
-  (every? #(has-actor-in-scene channel-id %) actors))
+(defn has-actors-in-scene? [channel-id actors]
+  (every? #(has-actor-in-scene? channel-id %) actors))
 
 (defn update-scene-actor-acted [channel-id actor-name acted]
   (mc/update @db "initiatives" { :channel-id channel-id :search-name (str/lower-case actor-name) } { $set { :acted acted } }))
@@ -44,31 +47,31 @@
   (mc/update @db "initiatives" { :channel-id channel-id } { $set { :current false } } { :multi true })
   (mc/update @db "initiatives" { :channel-id channel-id :search-name (str/lower-case name) } { $set { :current true } }))
 
-(defn actor-has-acted [channel-id name]
+(defn actor-has-acted? [channel-id name]
   (:acted (mc/find-one-as-map @db "initiatives" { :channel-id channel-id :search-name (str/lower-case name)})))
 
-(defn any-actors-have-acted [channel-id actors]
-  (some #(actor-has-acted channel-id %) actors))
+(defn is-last-actor? [channel-id name]
+  (and
+    (= (mc/count @db "initiatives" { :channel-id channel-id :acted false }) 1)
+    (mc/any? @db "initiatives" { :channel-id channel-id :current true :acted false :search-name (str/lower-case name) } )))
 
-(defn is-last-actor [channel-id name]
-  (let [actors (filter #(= (:acted %) false) (get-initiative channel-id))]
-    (and (= (count actors) 1) (= (:search-name (first actors)) (str/lower-case name)))))
-
-(defn has-current-actor [channel-id]
+(defn has-current-actor? [channel-id]
   (mc/any? @db "initiatives" { :current true :channel-id channel-id }))
 
-(defn is-current-actor [channel-id name]
-  (if-let [current-actor (->> channel-id
-                            (get-initiative)
-                            (filter #(= (get % :current false) true))
-                            (first))]
-    (= (:search-name current-actor) (str/lower-case name))))
+(defn is-current-actor? [channel-id name]
+  (mc/any? @db "initiatives" { :channel-id channel-id :current true :search-name (str/lower-case name)}))
 
-(defn has-any-unacted-actors [channel-id]
-  (mc/any? @db "initiatives" { :channel-id channel-id :acted false } ))
+(defn all-actors-acted? [channel-id]
+  (mc/empty? @db "initiatives" { :channel-id channel-id :acted false } ))
 
 (defn reset-scene-initiative [channel-id]
   (mc/update @db "initiatives" { :channel-id channel-id } { $set { :acted false } } {:multi true}))
 
 (defn tick-scene [channel-id]
   (mc/update @db "scenes" { :channel-id channel-id } { $inc { :current-tick 1 } }))
+
+(defn hand-off [channel-id from to]
+  (update-scene-actor-acted channel-id from true)
+  (when (all-actors-acted? channel-id)
+    (reset-scene-initiative channel-id))
+  (update-scene-set-active channel-id to))

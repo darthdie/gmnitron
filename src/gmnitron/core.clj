@@ -12,13 +12,11 @@
 (def command-handlers (into [] (concat roll/command-list scene/command-list)))
 
 (defn find-command [desired-name commands]
-  (if (empty? commands)
-    nil
-    (let [command (first commands)
-                command-name (get command :command)]
-            (if (= desired-name (name command-name))
-              command
-              (recur desired-name (rest commands))))))
+  (when (not-empty commands)
+    (let [command (first commands)]
+      (if (str/starts-with? desired-name (name (:command command)))
+        command
+        (recur desired-name (rest commands))))))
 
 (defn command->help-message [command]
   (let [name (:command command)
@@ -26,12 +24,9 @@
         usage (get command :usage "")]
     (common/fmt "#{name}\r\n#{desc}\r\nUsage: #{usage}")))
 
-(defn clean-command-name [name]
-  (if (str/starts-with? name "!") (subs name 1) name))
-
 (defn help [data]
   (if-let [command-name (first (:arguments data))]
-    (if-let [command (find-command (clean-command-name command-name) command-handlers)]
+    (if-let [command (find-command command-name command-handlers)]
       (str "\r\n" (command->help-message command))
       "ERROR. COMMAND NOT FOUND.")
     (str "\r\n" (str/join "\r\n\r\n" (map command->help-message command-handlers)))))
@@ -42,26 +37,26 @@
   (discord/answer-command data (get data "content") response))
 
 (defn execute-command [command-name type data arguments]
-  (if-let [command (find-command command-name (concat command-handlers [help-command]))]
+  (when-let [command (find-command command-name (concat command-handlers [help-command]))]
     (let [min-args (get command :min-args 0)
           max-args (get command :max-args 100)
           usage (get command :usage "")
           handler (get command :handler)]
-          (respond data
-                  (if (common/correct-argument-count arguments min-args max-args)
-                      (handler { :arguments arguments :author (get data "author") :channel-id (get data "channel_id") })
-                      usage)))
-    nil))
+      (if (common/correct-argument-count arguments min-args max-args)
+        (handler { :arguments arguments :author (get data "author") :channel-id (get data "channel_id") })
+        usage))))
 
 (defn parse-arguments [arguments]
   (vec (common/splitter (clojure.string/join " " arguments))))
 
 (defn command-handler [type data]
   (try
-    (let [message (get data "content")]
-      (let [raw-command (common/stripl message "!")
-            [command & command-arguments] (str/split raw-command #" ")]
-            (execute-command command type data (parse-arguments command-arguments))))
+    (println data)
+    (let [message (get data "content")
+          raw-command message
+          [command & command-arguments] (str/split raw-command #" ")]
+      (if-let [response (execute-command raw-command type data (parse-arguments command-arguments))]
+        (respond data response)))
     (catch java.lang.NumberFormatException e (respond data "ERROR. EXPECTED NUMERIC INPUT."))
     (catch Exception e
       (do
