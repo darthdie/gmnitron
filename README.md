@@ -13,6 +13,28 @@ Parentheses "()" represent required arguments.
 
 Square brackets "[]" represent optional arguments.
 
+#### Index
+
+##### Die Commands
+* [Min](#min)
+* [Mid](#mid)
+* [Max](#max)
+* [Reaction](#reaction)
+* [Overcome](#overcome)
+* [Boost](#boost)
+* [Hinder](#hinder)
+* [Minion](#minion)
+* [Lieutenant](#lieutenant)
+
+##### Scene Commands
+* [Establish](#establish)
+* [Hand Off](#hand-off)
+* [Hand Off To](#hand-off-to)
+* [Advance](#advance)
+* [Introduce](#introduce)
+* [Erase](#erase)
+* [Recap](#recap)
+
 #### Die & Dice Pool Rolling
 ---
 
