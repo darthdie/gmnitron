@@ -4,12 +4,13 @@
               [clojure.string :as str]
               [gmnitron.commands.roll :as roll]
               [gmnitron.commands.scene :as scene]
+              [gmnitron.commands.fun :as fun]
               [gmnitron.database :as database]
               [gmnitron.common :as common]))
 
 (def token (System/getenv "GMNITRON_BOT_TOKEN"))
 
-(def command-handlers (into [] (concat roll/command-list scene/command-list)))
+(def command-handlers (into [] (concat roll/command-list scene/command-list fun/command-list)))
 
 (defn find-command [desired-name commands]
   (when (not-empty commands)
@@ -51,7 +52,7 @@
           usage (get command :usage "")
           handler (get command :handler)]
       (if (common/correct-argument-count arguments min-args max-args)
-        (handler { :arguments arguments :author (get data "author") :channel-id (get data "channel_id") })
+        (handler { :arguments arguments :author (get data "author") :channel-id (get data "channel_id") :message-id (get data "id") })
         usage))))
 
 (defn command-handler [type data]

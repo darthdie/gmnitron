@@ -35,6 +35,10 @@ Square brackets "[]" represent optional arguments.
 * [Erase](#erase)
 * [Recap](#recap)
 
+##### Useless/Dumb/"Fun" commands
+* [Censor](#censor)
+* [Died](#died)
+
 #### Die & Dice Pool Rolling
 ---
 
@@ -260,7 +264,7 @@ Adds an actor to the scene.
 ```
 
 ```
-!introduce "Baron Blade"
+!introduce Baron Blade
 The Story so Far
 
 It is currently a Green status. There are 2 Green boxes, 3 Yellow boxes, and 2 Red boxes left.
@@ -279,7 +283,7 @@ Removes an actor from the scene/initiative.
 ```
 
 ```
-!erase "Baron Blade"
+!erase Baron Blade
 The Story so Far
 
 It is currently a Green status. There are 2 Green boxes, 3 Yellow boxes, and 2 Red boxes left.
@@ -306,6 +310,29 @@ Absolute Zero is the current actor.
 
 Legacy hasn't acted this round.
 The Wraith hasn't acted this round.
+```
+
+#### Useless/Dumb/"Fun"
+---
+
+##### Censor
+```
+!censor (message to censor)
+'Censors' a message in true Letters Page form. (Basically it replaces capital letters)
+```
+
+```
+!censor my name is Inigio Montoya, you killed my father. prepare to die.
+my name is smhnigio smhontoya, you killed my father. prepare to die.
+
+!censor Batman vs Superman
+smhatman vs smhuperman
+```
+
+##### Died
+```
+!died
+Links to the "and then they died" gif. For reasons.
 ```
 
 ## Development

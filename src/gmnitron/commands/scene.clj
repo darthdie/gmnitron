@@ -63,7 +63,7 @@
 
 (defn hand-off-to [data]
   (let [{arguments :arguments channel-id :channel-id} data
-        [hand-off-to] arguments
+        [hand-off-to] (str/join " " arguments)
         actor-name (str "<@" (get-in data [:author "id"]) ">")]
     (when (database/has-scene? channel-id)
       (if-let [error (validate-hand-off channel-id actor-name hand-off-to)]
@@ -95,13 +95,13 @@
   (let [{arguments :arguments channel-id :channel-id} data]
     (if-let [scene (database/get-scene channel-id)]
       (do 
-        (database/add-actor channel-id (first arguments))
+        (database/add-actor channel-id (str/join " " arguments))
         (recap channel-id))
       no-scene-message)))
 
 (defn erase [data]
   (let [{arguments :arguments channel-id :channel-id} data
-        actor-name (first arguments)]
+        actor-name (str/join " " arguments)]
     (if (database/has-actor-in-scene? channel-id actor-name)
       (do
         (database/remove-actor channel-id actor-name)
@@ -113,8 +113,8 @@
   { :command "!recap" :handler recap-handler :max-args 0 :usage "!recap" :description "Displays the current scene and initiative status." }
   { :command "!pass" :handler pass :min-args 1 :max-args 1 :usage "!pass (actor name)" :description "Marks the actor as having acted this round." }
   { :command "!hand-off" :handler hand-off :min-args 2 :max-args 2 :usage "!hand-off (actor name) (actor to go next)" :description "Hands off the scene to the actor" }
-  { :command "!hand-off-to" :handler hand-off-to :min-args 1 :max-args 1 :usage "hand off to (actor to go next)" :description "Hands the scene off to the next actor" }
+  { :command "!hand-off-to" :handler hand-off-to :min-args 1 :usage "hand off to (actor to go next)" :description "Hands the scene off to the next actor" }
   { :command "!advance" :handler tick :max-args 0 :usage "!advance" :description "Advances the scene tracker." }
-  { :command "!introduce" :handler introduce :min-args 1 :usage "!introduce \"Big Baddie\"" :description "Adds an actor to the scene/initiative." }
-  { :command "!erase" :handler erase :min-args 1 :usage "!erase \"Big Baddie\"" :description "Removes an actor from the scene/initiative." }
+  { :command "!introduce" :handler introduce :min-args 1 :usage "!introduce Big Baddie" :description "Adds an actor to the scene/initiative." }
+  { :command "!erase" :handler erase :min-args 1 :usage "!erase Big Baddie" :description "Removes an actor from the scene/initiative." }
 ])

@@ -139,7 +139,7 @@
     (>= result 12) "Action succeeds beyond expectations."))
 
 (defn is-effect-die? [possible-die]
-  (some #(= % (keyword possible-die)) [:min :mid :max]))
+  (common/in? [:min :mid :max] (keyword possible-die)))
 
 (defn overcome [data]
   (let [[effect-die d1 d2 d3 & modifiers] (:arguments data)]

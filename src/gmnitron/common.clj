@@ -56,3 +56,9 @@
          (let [[w r] (split-with (fn [[x y]] (not (Character/isSpace x))) xys)]
            (cons (apply str (map first w)) (step r)))))))
    (partition 2 1 (lazy-cat s [nil]))))
+
+(defn first-char [str]
+  (subs str 0 1))
+
+(defn in? [coll elm]  
+  (some #(= elm %) coll))
