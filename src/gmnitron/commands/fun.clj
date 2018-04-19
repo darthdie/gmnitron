@@ -6,12 +6,12 @@
 (defn prepare-censor-word [word]
   (cond
     (and (= (first word) \S) (= (second word) \t)) (subs word 2)
-    (common/in? ["A"] (common/first-char word)) (str/lower-case word)
+    (common/in? ["A" "E" "I" "O" "U"] (common/first-char word)) (str/lower-case word)
     :else (subs word 1)))
 
 (defn censor-word [word]
   (if (and (Character/isUpperCase (first word)) (not (common/in? ["i" "by"] (str/lower-case word))))
-    (str "smh" (prepare-censor-word word))
+    (str "shm" (prepare-censor-word word))
     word))
 
 (defn censor
