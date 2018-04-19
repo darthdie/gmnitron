@@ -37,12 +37,16 @@
 (defn respond [data response]
   (discord/answer-command data (get data "content") response))
 
+(defn fix-mention [part]
+  (clojure.string/replace part #"<@!(\d*)>|<@&(\d*)>" "<@$1>"))
+
 (defn parse-arguments [command]
   (as-> (str/trim command) $
     (str/split $ #" ")
     (filter some? $)
     (str/join " " $)
     (common/splitter $)
+    (map fix-mention $)
     (vec $)))
 
 (defn execute-command [command-name arguments type data]

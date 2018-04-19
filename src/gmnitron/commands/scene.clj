@@ -63,7 +63,7 @@
 
 (defn hand-off-to [data]
   (let [{arguments :arguments channel-id :channel-id} data
-        [hand-off-to] (str/join " " arguments)
+        hand-off-to (str/join " " arguments)
         actor-name (str "<@" (get-in data [:author "id"]) ">")]
     (when (database/has-scene? channel-id)
       (if-let [error (validate-hand-off channel-id actor-name hand-off-to)]
