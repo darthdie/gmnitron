@@ -55,6 +55,9 @@
     (= (mc/count @db "initiatives" { :channel-id channel-id :acted false }) 1)
     (mc/any? @db "initiatives" { :channel-id channel-id :current true :acted false :search-name (str/lower-case name) } )))
 
+(defn current-actor [channel-id]
+  (mc/find-one-as-map @db "initiatives" { :channel-id channel-id :current true }))
+
 (defn has-current-actor? [channel-id]
   (mc/any? @db "initiatives" { :current true :channel-id channel-id }))
 

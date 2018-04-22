@@ -120,6 +120,12 @@
         (recap channel-id))
       no-scene-or-actor-message)))
 
+(defn current-command [data]
+  (let [{channel-id :channel-id} data]
+    (if (database/has-current-actor? channel-id)
+      (str (:name (database/current-actor channel-id)) " is the current actor.")
+      "There is no current actor.")))
+
 (def command-list [
   { :command "!hand" :handler hand-command :min-args 3 :max-args 3 :usage "!hand off (actor name) (actor to go next) OR !hand off to (actor to go next)" :description "Hands off the scene to the next actor" }
   { :command "!establish" :handler establish :min-args 4 :usage "!establish (number of green ticks) (number of yellow ticks) (number of red ticks) (actors)" :description "Sets up the scene with specified number of ticks and actors." }
@@ -128,4 +134,5 @@
   { :command "!advance" :handler tick :max-args 0 :usage "!advance" :description "Advances the scene tracker." }
   { :command ["!introduce" "!add"] :handler introduce :min-args 1 :usage "!introduce Big Baddie" :description "Adds an actor to the scene/initiative." }
   { :command ["!erase" "!remove"] :handler erase :min-args 1 :usage "!erase Big Baddie" :description "Removes an actor from the scene/initiative." }
+  { :command "!current" :handler current-command :usage "!current" :description "Displays the current actor." }
 ])
