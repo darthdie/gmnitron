@@ -126,6 +126,6 @@
   { :command "!recap" :handler recap-handler :max-args 0 :usage "!recap" :description "Displays the current scene and initiative status." }
   { :command "!pass" :handler pass }
   { :command "!advance" :handler tick :max-args 0 :usage "!advance" :description "Advances the scene tracker." }
-  { :command "!introduce" :handler introduce :min-args 1 :usage "!introduce Big Baddie" :description "Adds an actor to the scene/initiative." }
-  { :command "!erase" :handler erase :min-args 1 :usage "!erase Big Baddie" :description "Removes an actor from the scene/initiative." }
+  { :command ["!introduce" "!add"] :handler introduce :min-args 1 :usage "!introduce Big Baddie" :description "Adds an actor to the scene/initiative." }
+  { :command ["!erase" "!remove"] :handler erase :min-args 1 :usage "!erase Big Baddie" :description "Removes an actor from the scene/initiative." }
 ])

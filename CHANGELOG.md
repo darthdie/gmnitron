@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file. This change
 ## [Unreleased]
 !hand-off & !hand-off-to are now !hand off & !hand off to respectively.
 Fixed !pass commands' deprecation message.
+Added aliases for !introduce (!add) and !erase (!remove).
 
 ## 0.3.4
 Changed !censor to prepend/replace with "shm" rather than "smh", and now keeps all starting vowels.

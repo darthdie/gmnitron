@@ -12,10 +12,22 @@
 
 (def command-handlers (into [] (concat roll/command-list scene/command-list fun/command-list)))
 
+(defn as-vector [x]
+  (cond
+    (vector? x) x
+    (sequential? x) (vec x)
+    :else (vector x)))
+
+(defn command-names-match? [match names]
+  (when (> (count names) 0)
+    (if (= match (first names))
+      true
+      (recur match (rest names)))))
+
 (defn find-command [desired-name commands]
   (when (not-empty commands)
     (let [command (first commands)]
-      (if (= desired-name (name (:command command)))
+      (if (command-names-match? desired-name (as-vector (:command command)))
         command
         (recur desired-name (rest commands))))))
 
@@ -57,7 +69,7 @@
           handler (get command :handler)]
       (if (common/correct-argument-count arguments min-args max-args)
         (handler { :arguments arguments :author (get data "author") :channel-id (get data "channel_id") :message-id (get data "id") })
-        usage))))
+        (command->help-message command)))))
 
 (defn command-handler [type data]
   (try
