@@ -53,7 +53,7 @@
     })
     (recap channel-id)))
 
-(defn pass [data] "The !pass command has been replaced with the !hand-off command. You can use it: !hand-off Legacy Wraith")
+(defn pass [data] "The !pass command has been replaced with the !hand off command. You can use it: !hand-off Legacy Wraith")
 
 (defn validate-hand-off [channel-id from to]
   (cond
@@ -73,6 +73,7 @@
           (recap channel-id))))))
 
 (defn hand-off [data]
+  (println data)
   (let [{arguments :arguments channel-id :channel-id} data
         [actor-name hand-off-to] arguments]
     (if (database/has-scene? channel-id)
@@ -82,6 +83,17 @@
           (database/hand-off channel-id actor-name hand-off-to)
           (recap channel-id)))
       no-scene-message)))
+
+(defn hand-off-command [data]
+  (let [{arguments :arguments channel-id :channel-id} data]
+    (if (= (str/lower-case (first arguments)) "to")
+      (hand-off-to (assoc data :arguments (rest arguments)))
+      (hand-off data))))
+
+(defn hand-command [data]
+  (let [{arguments :arguments channel-id :channel-id} data]
+    (when (= (str/lower-case (first arguments)) "off")
+      (hand-off-command (assoc data :arguments (rest arguments))))))
 
 (defn tick [data]
   (let [{arguments :arguments channel-id :channel-id} data]
@@ -109,11 +121,10 @@
       no-scene-or-actor-message)))
 
 (def command-list [
+  { :command "!hand" :handler hand-command :min-args 3 :max-args 3 :usage "!hand off (actor name) (actor to go next) OR !hand off to (actor to go next)" :description "Hands off the scene to the next actor" }
   { :command "!establish" :handler establish :min-args 4 :usage "!establish (number of green ticks) (number of yellow ticks) (number of red ticks) (actors)" :description "Sets up the scene with specified number of ticks and actors." }
   { :command "!recap" :handler recap-handler :max-args 0 :usage "!recap" :description "Displays the current scene and initiative status." }
-  { :command "!pass" :handler pass :min-args 1 :max-args 1 :usage "!pass (actor name)" :description "Marks the actor as having acted this round." }
-  { :command "!hand-off" :handler hand-off :min-args 2 :max-args 2 :usage "!hand-off (actor name) (actor to go next)" :description "Hands off the scene to the actor" }
-  { :command "!hand-off-to" :handler hand-off-to :min-args 1 :usage "hand off to (actor to go next)" :description "Hands the scene off to the next actor" }
+  { :command "!pass" :handler pass }
   { :command "!advance" :handler tick :max-args 0 :usage "!advance" :description "Advances the scene tracker." }
   { :command "!introduce" :handler introduce :min-args 1 :usage "!introduce Big Baddie" :description "Adds an actor to the scene/initiative." }
   { :command "!erase" :handler erase :min-args 1 :usage "!erase Big Baddie" :description "Removes an actor from the scene/initiative." }
