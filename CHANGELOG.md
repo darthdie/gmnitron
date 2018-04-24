@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
 ## [Unreleased]
+
+## 0.3.7
+Added !plan command.
+
+## 0.3.6
+Added help support for aliased commands.
+
+## 0.3.5
 !hand-off & !hand-off-to are now !hand off & !hand off to respectively.
 Fixed !pass commands' deprecation message.
 Added aliases for !introduce (!add) and !erase (!remove).

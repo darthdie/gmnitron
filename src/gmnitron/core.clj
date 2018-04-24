@@ -32,7 +32,7 @@
         (recur desired-name (rest commands))))))
 
 (defn command->help-message [command]
-  (let [name (:command command)
+  (let [name (str/join " OR " (as-vector (:command command)))
         desc (get command :description "No description.")
         usage (get command :usage "")]
     (common/fmt "#{name}\r\n#{desc}\r\nUsage: #{usage}")))

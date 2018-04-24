@@ -30,7 +30,11 @@
 (defn died-command [data]
   "https://media.giphy.com/media/TJ8Pd0jQzyHmYoWZYU/giphy.gif")
 
+(defn plan-command [data]
+  "http://i64.tinypic.com/1214g9w.jpg")
+
 (def command-list [
   { :command "!censor" :handler censor-command :min-args 1 :usage "!censor (message)" :description "'Censors' a message in true Letters Page fashion." }
   { :command "!died" :handler died-command :usage "!died" :description "And then they died." }
+  { :command "!plan" :handler plan-command :usage "!plan" :description "All according to plan." }
 ])
