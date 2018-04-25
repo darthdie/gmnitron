@@ -1,4 +1,4 @@
-(defproject gmnitron "0.3.7-SNAPSHOT"
+(defproject gmnitron "0.3.8-SNAPSHOT"
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
   :license {:name "GNU General Public License v3.0"

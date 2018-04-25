@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file. This change
 
 ## [Unreleased]
 
+## 0.3.8
+Added !gloat and !insult commands.
+
 ## 0.3.7
 Added !plan command.
 
