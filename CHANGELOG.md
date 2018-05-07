@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
 ## [Unreleased]
+Added compound !minion rolls, e.g.
+!minion d8, d6 v5
+
+Added !ambush command to add an actor ready to act to the scene.
+
+**breaking change(s):**
+!introduce now adds an actor as already having acted this round.
 
 ## 0.3.8
 Added !gloat and !insult commands.

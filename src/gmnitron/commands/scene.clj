@@ -107,6 +107,14 @@
   (let [{arguments :arguments channel-id :channel-id} data]
     (if-let [scene (database/get-scene channel-id)]
       (do 
+        (database/add-actor channel-id (str/join " " arguments) true)
+        (recap channel-id))
+      no-scene-message)))
+
+(defn ambush [data]
+  (let [{arguments :arguments channel-id :channel-id} data]
+    (if-let [scene (database/get-scene channel-id)]
+      (do 
         (database/add-actor channel-id (str/join " " arguments))
         (recap channel-id))
       no-scene-message)))
@@ -132,7 +140,8 @@
   { :command "!recap" :handler recap-handler :max-args 0 :usage "!recap" :description "Displays the current scene and initiative status." }
   { :command "!pass" :handler pass }
   { :command "!advance" :handler tick :max-args 0 :usage "!advance" :description "Advances the scene tracker." }
-  { :command ["!introduce" "!add"] :handler introduce :min-args 1 :usage "!introduce Big Baddie" :description "Adds an actor to the scene/initiative." }
+  { :command ["!introduce" "!add"] :handler introduce :min-args 1 :usage "!introduce Citizen Dawn" :description "Adds an actor to the scene/initiative, ready to act *next* round." }
+  { :command "!ambush", :handler ambush :usage "!ambush Baron Blade" :description "Adds an actor to the scene/initiative, ready to act." }
   { :command ["!erase" "!remove"] :handler erase :min-args 1 :usage "!erase Big Baddie" :description "Removes an actor from the scene/initiative." }
   { :command "!current" :handler current-command :usage "!current" :description "Displays the current actor." }
 ])

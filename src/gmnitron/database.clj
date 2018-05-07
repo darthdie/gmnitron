@@ -28,8 +28,10 @@
 (defn has-scene? [channel-id]
   (mc/any? @db "scenes" { :channel-id channel-id } ))
 
-(defn add-actor [channel-id actor-name]
-  (mc/insert @db "initiatives" { :channel-id channel-id :name actor-name :search-name (str/lower-case actor-name) :acted false }))
+(defn add-actor 
+  ([channel-id actor-name] (add-actor channel-id actor-name false))
+  ([channel-id actor-name acted]
+    (mc/insert @db "initiatives" { :channel-id channel-id :name actor-name :search-name (str/lower-case actor-name) :acted acted })))
 
 (defn remove-actor [channel-id actor-name]
   (mc/remove @db "initiatives" { :channel-id channel-id :search-name (str/lower-case actor-name) } ))
