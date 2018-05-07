@@ -5,6 +5,7 @@
                          ScriptEngine)))
 
 (def unknown-effect-die-error "ERROR. UNKNOWN EFFECT DIE. EXPECTED min, mid, or max.")
+(def villian-compound-regex #"(.+?)(?:(v\d*)|$)")
 
 (defn clean-modifiers
   ([output] (clean-modifiers ["+" "-"] output))
@@ -74,11 +75,18 @@
 (defn decrease-die-size [die]
   (- die 2))
 
+(defn str->save [str]
+  (when str
+    (-> str
+    (str/lower-case)
+    (common/stripl "v")
+    (common/str->int))))
+
 (defn parse-modifier-save [args]
   (if (empty? args)
     { :modifiers [] :save nil }
     (if (str/starts-with? (str/lower-case (last args)) "v")
-      { :modifiers (butlast args) :save (common/str->int (common/stripl (str/lower-case (last args)) "v"))}
+      { :modifiers (butlast args) :save (str->save (last args))}
       { :modifiers args :save nil })))
 
 (defn omnitron-insult []
@@ -102,16 +110,31 @@
 (defn save-message-str [total & messages]
   (str "Rolled **" total "** " (str/join " " (filter some? messages))))
 
-(defn roll-minion [data]
-  (let [[die & rest] (:arguments data)
-        { modifiers :modifiers save :save } (parse-modifier-save rest)
-        die-size (parse-die die)
+(defn roll-minion [die]
+  (let [{ die-size :die modifiers :modifiers save :save } die
         roll (roll-die die-size)
         total (apply-modifiers roll modifiers)
         modifier-expression (when (not-empty modifiers) (str "= " roll " " (modifiers->str modifiers)))
         save-message (when save (str "\r\n" (get-minion-save-message total save die-size)))
         save-expression (when save (str "vs. " save ""))]
     (save-message-str total modifier-expression save-expression save-message)))
+
+(defn str->minion-die [str]
+  (let [[die & rest] (str/split str #" ")]
+    (merge { :die (parse-die die) } (parse-modifier-save rest))))
+
+(defn str->minion-roll [str save]
+  (-> str
+    (str/trim)
+    (str->minion-die)
+    (merge { :save (str->save save) })
+    (roll-minion)))
+
+(defn minion-command [data]
+  (let [arguments (:arguments data)
+        [_ rolls save] (re-matches villian-compound-regex (clojure.string/join " " arguments))
+        dice (str/split rolls #",")]
+    (str "\r\n" (str/join "\r\n\r\n" (map #(str->minion-roll % save) dice)))))
 
 (defn get-lieutenant-save-message [roll save die-size]
   (cond
@@ -190,7 +213,7 @@
   { :command "!overcome" :handler overcome :min-args 4 :max-args 6 :usage "!overcome (min/mid/max) (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and returns the overcome result." }
   { :command "!boost" :handler boost :min-args 4 :max-args 6 :usage "!boost (min/mid/max) (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and returns the boost result." }
   { :command "!hinder" :handler hinder :min-args 4 :max-args 6 :usage "!hinder (min/mid/max) (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and returns the hinder result." }
-  { :command "!minion" :handler roll-minion :min-args 1 :max-args 4 :usage "!minion (die) [modifiers] [save vs]" :description "Rolls a minion save, optionally vs a number." }
+  { :command "!minion" :handler minion-command :min-args 1 :usage "!minion (die) [modifiers], ... [save vs]" :description "Rolls a minion save, optionally vs a number." }
   { :command "!lt" :handler roll-lieutenant :min-args 1 :max-args 4 :usage "!lt (die) [modifiers] [save vs]" :description "Rolls a lieutenant save, optionally vs a number." }
   { :command "!reaction" :handler reaction :min-args 1 :max-args 3 :usage "!reaction (die) [modifiers]" :description "Rolls a reaction die." }
 ])
