@@ -125,7 +125,7 @@ Mod size: -1
 ##### Minion
 ```
 !minion (die) [modifier] [save vs.]
-Rolls a minion die (+ modifier), and optionally rolls against a save.
+Rolls minion die/dice (+ modifier), and optionally rolls against a save.
 ```
 
 ```
@@ -135,6 +135,16 @@ Rolled 7 = 6 + 1
 !minion d6 v5
 Rolled 4 vs. 5 
 The Minion is defeated!
+
+!minion d6, d8 + 1, d12 v5
+Rolled 6 vs. 5 
+The Minion is reduced to a d4.
+
+Rolled 8 = 7 + 1 vs. 5 
+The Minion is reduced to a d6.
+
+Rolled 10 vs. 5 
+The Minion is reduced to a d10.
 ```
 
 ##### Lieutenant
@@ -260,7 +270,7 @@ Wraith hasn't acted this round.
 ##### Introduce
 ```
 !introduce
-Adds an actor to the scene.
+Adds an actor to the scene that can act next round.
 ```
 
 ```
@@ -268,6 +278,26 @@ Adds an actor to the scene.
 The Story so Far
 
 It is currently a Green status. There are 2 Green boxes, 3 Yellow boxes, and 2 Red boxes left.
+
+Absolute Zero is the current actor.
+
+Baron Blade has acted this round.
+
+Legacy hasn't acted this round.
+The Wraith hasn't acted this round.
+```
+
+##### Ambush
+```
+!ambush
+Adds an actor to the scene that acts this round.
+```
+
+```
+!ambush Baron Blade
+The Story so Far
+
+It is currently a Green status. There are 2 Green boxes, 4 Yellow boxes, and 2 Red boxes left.
 
 Absolute Zero is the current actor.
 
