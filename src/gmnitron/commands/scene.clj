@@ -25,7 +25,7 @@
         boxes (concat (replicate green "Green") (replicate yellow "Yellow") (replicate red "Red"))]
     (if (>= tick (count boxes))
       "The scene has reached its end."
-      (let [current-box (nth boxes (max 0 (- tick 1)))
+      (let [current-box (nth boxes tick)
             remaining-boxes (->> (drop tick boxes)
               (frequencies)
               (map #(str (second %) " " (first %) " boxes"))
@@ -53,7 +53,7 @@
     })
     (recap channel-id)))
 
-(defn pass [data] "The !pass command has been replaced with the !hand off command. You can use it: !hand-off Legacy Wraith")
+(defn pass [data] "The !pass command has been replaced with the !hand off command. You can use it: !hand off Legacy Wraith")
 
 (defn validate-hand-off [channel-id from to]
   (cond
