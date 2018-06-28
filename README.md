@@ -32,6 +32,7 @@ Square brackets "[]" represent optional arguments.
 * [Hand Off To](#hand-off-to)
 * [Advance](#advance)
 * [Introduce](#introduce)
+* [Ambush](#ambush)
 * [Erase](#erase)
 * [Recap](#recap)
 
