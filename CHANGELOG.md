@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file. This change
 
 ## [Unreleased]
 
+## 0.4.0
+Added !evil command.
+Fixed incorrect deprecation message.
+Updated scene tracker to advance to next zone upon ticking the last of the previous zone.
+
 ## 0.3.9
 Added compound !minion rolls, e.g.
 !minion d8, d6 v5

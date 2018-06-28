@@ -38,6 +38,7 @@ Square brackets "[]" represent optional arguments.
 ##### Useless/Dumb/"Fun" commands
 * [Censor](#censor)
 * [Died](#died)
+* [Evil](#evil)
 
 #### Die & Dice Pool Rolling
 ---
@@ -363,6 +364,12 @@ smhatman vs smhuperman
 ```
 !died
 Links to the "and then they died" gif. For reasons.
+```
+
+##### Evil
+```
+!evil
+Links to a gif of Christopher laughing maniacally.
 ```
 
 ## Development
