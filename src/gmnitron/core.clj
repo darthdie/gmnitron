@@ -61,21 +61,24 @@
     (map fix-mention $)
     (vec $)))
 
-(defn execute-command [command-name arguments type data]
+(defn argument-string [command]
+  (str/join " " (rest (parse-arguments command))))
+
+(defn execute-command [command-name arguments type data command-str]
   (when-let [command (find-command command-name (concat command-handlers [help-command]))]
     (let [min-args (get command :min-args 0)
           max-args (get command :max-args 100)
           usage (get command :usage "")
           handler (get command :handler)]
       (if (common/correct-argument-count arguments min-args max-args)
-        (handler { :arguments arguments :author (get data "author") :channel-id (get data "channel_id") :message-id (get data "id") })
+        (handler { :arguments arguments :command-str command-str :author (get data "author") :channel-id (get data "channel_id") :message-id (get data "id") })
         (command->help-message command)))))
 
 (defn command-handler [type data]
   (try
     (let [message (get data "content")
           [command-name & arguments] (parse-arguments message)]
-      (if-let [response (execute-command command-name arguments type data)]
+      (if-let [response (execute-command command-name arguments type data (argument-string message))]
         (respond data response)))
     (catch java.lang.NumberFormatException e (respond data "ERROR. EXPECTED NUMERIC INPUT."))
     (catch Exception e

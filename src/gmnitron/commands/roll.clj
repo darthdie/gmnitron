@@ -164,13 +164,17 @@
 (defn is-effect-die? [possible-die]
   (common/in? [:min :mid :max] (keyword possible-die)))
 
+(defn fix-die-arguments [arguments]
+  )
+
 (defn overcome [data]
+  (let [[commands] (:command-str data)])
   (let [[effect-die d1 d2 d3 & modifiers] (:arguments data)]
     (if (is-effect-die? effect-die)
       (let [pool (roll-dice-pool [d1 d2 d3] (keyword effect-die) modifiers)
           die-display (dice-pool->display pool)
           outcome (get-overcome-outcome (:total pool))]
-        (common/fmt "\r\n#{die-display}.\r\n#{outcome}"))
+        (common/fmt "\r\n#{die-display}.\r\n#{outcome}\r\n"))
       unknown-effect-die-error)))
 
 (defn get-mod-size [result operator]
