@@ -35,11 +35,16 @@ Square brackets "[]" represent optional arguments.
 * [Ambush](#ambush)
 * [Erase](#erase)
 * [Recap](#recap)
+* [Current](#current)
 
 ##### Useless/Dumb/"Fun" commands
 * [Censor](#censor)
 * [Died](#died)
 * [Evil](#evil)
+* [Plan](#plan)
+* [Gloat](#gloat)
+* [Insult](#insult)
+* [Cult](#cult)
 
 #### Die & Dice Pool Rolling
 ---
@@ -344,6 +349,17 @@ Legacy hasn't acted this round.
 The Wraith hasn't acted this round.
 ```
 
+##### Current
+```
+!recap
+Displays the current actor.
+```
+
+```
+!current
+Inductor is the current actor.
+```
+
 #### Useless/Dumb/"Fun"
 ---
 
@@ -371,6 +387,30 @@ Links to the "and then they died" gif. For reasons.
 ```
 !evil
 Links to a gif of Christopher laughing maniacally.
+```
+
+##### Plan
+```
+!plan
+Links to a picture of Biomancer having everything go according to plan.
+```
+
+##### Gloat
+```
+!gloat
+Supplies a random gloating SC quote.
+```
+
+##### Insult
+```
+!gloat
+Supplies a random insulting SC quote.
+```
+
+##### Cult
+```
+!cult
+Links to the Cult of Gloom plotting in the ruins of Atlantis
 ```
 
 ## Development

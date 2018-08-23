@@ -20,7 +20,9 @@
 
 (defn command-names-match? [match names]
   (when (> (count names) 0)
-    (if (= match (first names))
+    (if (or 
+          (= match (first names))
+          (= match (subs (first names) 1)))
       true
       (recur match (rest names)))))
 
@@ -32,7 +34,7 @@
         (recur desired-name (rest commands))))))
 
 (defn command->help-message [command]
-  (let [name (str/join " OR " (as-vector (:command command)))
+  (let [name (str/join ", " (as-vector (:command command)))
         desc (get command :description "No description.")
         usage (get command :usage "")]
     (common/fmt "#{name}\r\n#{desc}\r\nUsage: #{usage}")))
@@ -42,7 +44,7 @@
     (if-let [command (find-command command-name command-handlers)]
       (str "\r\n" (command->help-message command))
       "ERROR. COMMAND NOT FOUND.")
-    (str "\r\n" (str/join "\r\n\r\n" (map command->help-message command-handlers)))))
+    "https://github.com/darthdie/gmnitron#commands"))
 
 (def help-command { :command "!help" :handler help :max_args 1 :usage "!help [command]" })
 

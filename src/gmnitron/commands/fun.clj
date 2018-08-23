@@ -36,6 +36,9 @@
 (defn evil-command [data]
   "http://i63.tinypic.com/5dti6o.gif")
 
+(defn cult-command [data]
+  "http://i68.tinypic.com/aw2vet.jpg")
+
 (defn gloat-command [data]
   (rand-nth [
     "\"Before this day is ended, the entire planet shall grovel helplessly at my feet!\" - Baron Blade, Moonfall #5"
@@ -113,4 +116,5 @@
   { :command ["!gloat" "!monologue"] :handler gloat-command :usage "!gloat OR !monologue" :description "Gloat your inevitable victory!" }
   { :command "!insult" :handler insult-command :usage "!insult" :description "Dumby." }
   { :command ["!evil" "!maniacal"] :handler evil-command :usage "!evil OR !maniacal" :description "maniacal laugh...maniacal laugh..."}
+  { :command ["!cult" "!gloom"] :handler cult-command :usage "!cult OR !gloom" :description "The gloomy one will have his day." }
 ])
