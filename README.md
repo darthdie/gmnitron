@@ -45,6 +45,7 @@ Square brackets "[]" represent optional arguments.
 * [Gloat](#gloat)
 * [Insult](#insult)
 * [Cult](#cult)
+* [Date](#date)
 
 #### Die & Dice Pool Rolling
 ---
@@ -411,6 +412,12 @@ Supplies a random insulting SC quote.
 ```
 !cult
 Links to the Cult of Gloom plotting in the ruins of Atlantis
+```
+
+##### Date
+```
+!date
+Tells you the current date.
 ```
 
 ## Development

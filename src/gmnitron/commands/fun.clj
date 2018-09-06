@@ -1,7 +1,8 @@
 (ns gmnitron.commands.fun
   (:require [gmnitron.common :as common]
             [clj-discord.core :as discord]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [java-time :as j]))
 
 (defn prepare-censor-word [word]
   (cond
@@ -109,6 +110,11 @@
     "\"Isn't he precious? I named him after you guys! Go get them, Misguided Fool!\" - Wager Master, Freedom Five #177"
   ]))
 
+(defn date-command [data]
+  (let [year-of-board (j/with-zone (j/zoned-date-time 1940 1) "UTC")
+        now (j/with-zone (j/zoned-date-time) "UTC")]
+    (str "It is currently " (j/format "cccc, MMMM d, yyyy " now) "in the year of our boar'd " (j/time-between year-of-board now :years) ".")))
+
 (def command-list [
   { :command "!censor" :handler censor-command :min-args 1 :usage "!censor (message)" :description "'Censors' a message in true Letters Page fashion." }
   { :command "!died" :handler died-command :usage "!died" :description "And then they died." }
@@ -117,4 +123,5 @@
   { :command "!insult" :handler insult-command :usage "!insult" :description "Dumby." }
   { :command ["!evil" "!maniacal"] :handler evil-command :usage "!evil OR !maniacal" :description "maniacal laugh...maniacal laugh..."}
   { :command ["!cult" "!gloom"] :handler cult-command :usage "!cult OR !gloom" :description "The gloomy one will have his day." }
+  { :command "!date" :handler date-command :usage "!date" :description "Tells you the UTC date." }
 ])
