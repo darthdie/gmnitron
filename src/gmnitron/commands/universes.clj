@@ -57,7 +57,7 @@
 ])
 
 (def arataki-list [
-  { :names ["The Argent Artist" "The Argent Adept" "Anthony Drake"] :description "A magical painter and leader of the Primal Wardens. This reality's Argent Adept." }
+  { :names ["The Argent Artist" "Argent Adept" "The Argent Adept" "Anthony Drake"] :description "A magical painter and leader of the Primal Wardens. This reality's Argent Adept." }
   { :names ["Haka" "Arataki"] :description "Haka." }
   { :names ["Sekhmet" "Ra"] :description "Daughter of Ra." }
   { :names ["The Discordian" "Portal Fiend"] :description "An anthropomorphic Portal Fiend from the Realm of Discord." }
@@ -89,7 +89,7 @@
   { :names ["Setback" "Pete Riske" "Babyback"] :description "Babyback" }
   { :names ["Unity" "Devra Thalia Caspit" "Uni-T-Bone"] :description "Uni-T-Bone" }
   { :names ["Absolute Zero" "Absolutefisk Zero"] :description "Absolutefisk Zero" }
-  { :names ["The Argent Adept" "The Asada Adept"] :description "The Asada Adept" }
+  { :names ["The Argent Adept" "Argent Adept" "The Asada Adept"] :description "The Asada Adept" }
   { :names ["Tempest" "Tempastrami" "M’kk Dall’ton"] :description "Tempastrami" }
   { :names ["Haka" "Hacarne"] :description "Hacarne" }
   { :names ["Fanatic" "Fanatikka" "Helena"] :description "Fanatikka" }
@@ -98,7 +98,7 @@
 ])
 
 (def quando-list [
-  { :names ["The Ashen Heir" "The Argent Adept" "Anthony Drake"] :description "This universe's version of the Argent Adept. Angela Drake finds a panpipe belonging to her ancestor, Abigail Gray, whose spirit is trapped in the pipe. Abigail can temporarily fuse with Angela, granting her an appearance similar to that of Nightmist, and together they are the Ashen Heir in that form." }
+  { :names ["The Ashen Heir" "Argent Adept" "The Argent Adept" "Anthony Drake"] :description "This universe's version of the Argent Adept. Angela Drake finds a panpipe belonging to her ancestor, Abigail Gray, whose spirit is trapped in the pipe. Abigail can temporarily fuse with Angela, granting her an appearance similar to that of Nightmist, and together they are the Ashen Heir in that form." }
   { :names ["Unity" "Devra Thalia Caspit"] :description "No relation to the core universe's Unity. A robot created by this universe's version of Dr. Meredith Stinson, using her knowledge and personality on top of Omnitron technology." }
   { :names ["Apex" "Bugbear"] :description "Although his power set is similar to that of The Naturalist, this is actually Moris Dugal, who in the core universe becomes Bugbear. A big-game hunter who accidentally kills another shapechanger and gains his powers through blood-to-blood contact. He has to focus to maintain a human form, and otherwise transforms into a green apex predator of some sort." }
   { :names ["Plaything" "The Dreamer" "Visionary" "Vanessa Long"] :description "This universe's version of The Dreamer. The big Dreamer event (Nightmare World) happened in this universe as well, but young Vanessa Long became a hero thereafter, using her projections intentionally." }
@@ -165,11 +165,9 @@
 (defn first-match [source target]
   (let [fuzzy-list (map #(hash-map :data % :dice (da-lev (:name %) target)) source)
         best-match (apply min-key :dice fuzzy-list)]
-    (do
-    (println fuzzy-list)
-    (if (> (:dice best-match) 4)
+    (if (> (:dice best-match) 5)
       nil
-      best-match))))
+      best-match)))
 
 (defn first-match-or-else [source-list target]
   (let [match (first-match (create-flat-list source-list) target)]
