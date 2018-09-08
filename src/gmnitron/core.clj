@@ -6,11 +6,12 @@
               [gmnitron.commands.scene :as scene]
               [gmnitron.commands.fun :as fun]
               [gmnitron.database :as database]
-              [gmnitron.common :as common]))
+              [gmnitron.common :as common]
+              [gmnitron.commands.universes :as universes]))
 
 (def token (System/getenv "GMNITRON_BOT_TOKEN"))
 
-(def command-handlers (into [] (concat roll/command-list scene/command-list fun/command-list)))
+(def command-handlers (into [] (concat roll/command-list scene/command-list fun/command-list universes/command-list)))
 
 (defn as-vector [x]
   (cond
