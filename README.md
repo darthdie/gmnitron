@@ -46,6 +46,16 @@ Square brackets "[]" represent optional arguments.
 * [Insult](#insult)
 * [Cult](#cult)
 
+##### Universes
+* [Inverse](#inverse)
+* [Ahora!](#ahora)
+* [Animal-Verse](#animalverse)
+* [Arataki](#arataki)
+* [Iron Legacy](#ironlegacy)
+* [Meat-Verse](#meatverse)
+* [Quando?](#quando)
+* [Xtremeverse](#xtremeverse)
+
 #### Die & Dice Pool Rolling
 ---
 
@@ -411,6 +421,57 @@ Supplies a random insulting SC quote.
 ```
 !cult
 Links to the Cult of Gloom plotting in the ruins of Atlantis
+```
+
+#### Universes
+---
+
+##### Inverse
+```
+!cult 'character name'
+Gives information about the character from the inverse universe
+```
+
+##### Ahora
+```
+!ahora | !ahora! 'character name'
+Gives information about the character from the ¡Ahora! universe
+```
+
+##### Animalverse
+```
+!animal | !animal-verse | !animalverse 'character name'
+Gives information about the character from the Animal-Verse
+```
+
+##### Arataki
+```
+!arataki 'character name'
+Gives information about the character from Arataiki's universe
+```
+
+##### Iron Legacy
+```
+!iron-legacy | !ironlegacy 'character name'
+Gives information about the character from The Iron Legacy universe
+```
+
+##### Meatverse
+```
+!meat-verse | !meatverse 'character name'
+Gives information about the character from Meat-Verse universe
+```
+
+##### Quando
+```
+!quando | !quando? 'character name'
+Gives information about the character from the ¿Quando? universe
+```
+
+##### Xtremeverse
+```
+!xtremeverse 'character name'
+Gives information about the character from the Xtremeverse
 ```
 
 ## Development
