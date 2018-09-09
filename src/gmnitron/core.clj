@@ -41,17 +41,17 @@
 (defn help [data]
   (if-let [command-name (first (:arguments data))]
     (if-let [command (find-command command-name command-handlers)]
-      (str "\r\n" (command->help-message command))
+      (str (command->help-message command))
       "ERROR. COMMAND NOT FOUND.")
     "https://github.com/darthdie/gmnitron#commands"))
 
 (def help-command { :command "!help" :handler help :max_args 1 :usage "!help [command]" })
 
 (defn respond [data response]
-  (discord/answer-command data (get data "content") response))
+  (discord/post-message (get data "channel_id") response))
 
 (defn fix-mention [part]
-  (clojure.string/replace part #"<@!(\d*)>" "<@$1>"))
+  (str/replace part #"<@!(\d*)>" "<@$1>"))
 
 (defn parse-arguments [command]
   (as-> (str/trim command) $

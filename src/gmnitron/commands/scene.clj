@@ -34,7 +34,7 @@
 
 (defn recap [channel-id]
   (if-let [scene (database/get-scene channel-id)]
-    (str "\r\n***The Story so Far***\r\n\r\n" (get-scene-recap scene) "\r\n\r\n" (get-initiative-recap scene))
+    (str "***The Story so Far***\r\n\r\n" (get-scene-recap scene) "\r\n\r\n" (get-initiative-recap scene))
     no-scene-message))
 
 (defn recap-handler [data] (recap (:channel-id data)))

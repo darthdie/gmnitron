@@ -173,7 +173,7 @@
 (defn first-match-or-else [source-list target]
   (let [match (first-match (create-flat-list source-list) target)]
     (if match
-      (str "\r\n" (:alias (:data match)) "\r\n" (:description (:data match)))
+      (str (:alias (:data match)) "\r\n" (:description (:data match)))
       "No character found with that name.")))
 
 (defn inverse-command [data]

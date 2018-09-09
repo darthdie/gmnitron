@@ -115,7 +115,7 @@
         roll (roll-die die-size)
         total (apply-modifiers roll modifiers)
         modifier-expression (when (not-empty modifiers) (str "= " roll " " (modifiers->str modifiers)))
-        save-message (when save (str "\r\n" (get-minion-save-message total save die-size)))
+        save-message (when save (str (get-minion-save-message total save die-size)))
         save-expression (when save (str "vs. " save ""))]
     (save-message-str total modifier-expression save-expression save-message)))
 
@@ -134,7 +134,7 @@
   (let [arguments (:arguments data)
         [_ rolls save] (re-matches villian-compound-regex (clojure.string/join " " arguments))
         dice (str/split rolls #",")]
-    (str "\r\n" (str/join "\r\n\r\n" (map #(str->minion-roll % save) dice)))))
+    (str (str/join "\r\n\r\n" (map #(str->minion-roll % save) dice)))))
 
 (defn get-lieutenant-save-message [roll save die-size]
   (cond
@@ -149,7 +149,7 @@
         roll (roll-die die-size)
         total (apply-modifiers roll modifiers)
         modifier-expression (when (not-empty modifiers) (str "= " roll " " (modifiers->str modifiers)))
-        save-message (when save (str "\r\n" (get-lieutenant-save-message total save die-size)))
+        save-message (when save (str (get-lieutenant-save-message total save die-size)))
         save-expression (when save (str "vs. " save ""))]
     (save-message-str total modifier-expression save-expression save-message)))
 
