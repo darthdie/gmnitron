@@ -21,9 +21,7 @@
 
 (defn command-names-match? [match names]
   (when (> (count names) 0)
-    (if (or 
-          (= match (first names))
-          (= match (subs (first names) 1)))
+    (if (= match (first names))
       true
       (recur match (rest names)))))
 
