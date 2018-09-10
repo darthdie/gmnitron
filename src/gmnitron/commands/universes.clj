@@ -224,6 +224,57 @@
       "The home universe of the XTREME Prime Wardens. Everything there is XTREME, based on '80's and '90's influences, including not only all the 'X-' and 'Extreme' comics, but also media such as Heavy Metal, Mad Max, and the tech noir genre as a whole. The characters not the same as what the core universe's characters actually looked like in the 90's, but are a caricature of the style prevalent at the time. Even civilians and the lives they live are XTREME, with ridiculous battles their way of life."
       (first-match-or-else xtreme-list (str/join arguments)))))
 
+(defn final-command [data]
+ (str/join "\r\n"
+  ["A reality which would have been the future of the core reality if Chrono-Ranger and CON had not prevented it. Nothing lives there but:"
+  "**Mutant cryptid monsters**"
+  "**Rat-beasts** (the progeny of Plague Rat)"
+  "**The Eternal Haka**. Lives by himself in a library. He was offered a spot in the Enclave of the Endlings but refused. His library is very far away from CON's bunker, so he and Chrono-Ranger do not know of each others' existence."]))
+
+(defn plant-command [data]
+  (str/join "\r\n"
+    ["Another pun-based universe, like the Animal-Verse, but based on plant puns."
+    "Confirmed denizens include:"
+    "**Fernatic** (Fanatic)"
+    "**Fernessa Long, Vinessa Long, Vanessa Longan** (all The Dreamer)"
+    "**Asquash'Bhuta** (Akash'Bhuta), a giant sentient gourd who thinks gourds are the best vegetable and all other should be destroyed. This an especially big problem because she's the only sentient gourd."
+    "**Asquash'Thriya** is a smaller version of the same thing."
+    "**Asquash'Dharsha** is a jack o'lantern stuffed with OblivAeon shards."
+    "**Asquash'Fauna** is a colossal quadruped made of squash."]))
+
+(defn radio-command [data]
+  (str/join "\r\n"
+    ["The universe in which 'The Adventures of Legacy,' a radio play from the 40's, takes place."
+    "**Legacy**, Paul Parsons VII (Greatest Legacy), is the protagonist. He wears a cape."
+    "**Ruby Rourke** is a detective, and Legacy's suggested love interest."
+    "**Dr. Devlin Dour** is a scientist who tries to take control of 'the city' (this was before Megalopolis was named) by mutating the entire populace into brutes. He is himself mutated and killed. (Most radio play villains lasted only a single episode.)"
+    "**Charlie Callahan** is the Irish police chief. Apparently he has clashed with Dour's associates in the past, and Dour holds a grudge."]))
+
+(defn animated-command [data]
+  (str/join "\r\n"
+    ["The universe in which the later animated series (the one that started in the late 00's) takes place. The characters are largely the same as those of the core universe, but the stories are different."
+    "Some notable changes include:"
+    "**Fashion** is still around as a hero."
+    "**Miss Information** goes straight from normal Aminia Twain to the later, reality-manipulating version from her team version deck. This appearance actually predates this version of her in the comic books."
+    "**Ra** is initially a villain who indiscriminately burns things. The heroes defeat him and separate him from his staff. He becomes a hero later, but it's between episodes and is never explained."
+    "**The Shrieker** is a member of the modern Freedom Five, but disappears in episode 1."]))
+
+(defn visionary-command [data]
+  "The Visionary's home timeline. She came from an alternate 2018 where North Korea won the Korean War and the U.S. is in the middle of a 'Second Cold War' between itself, Korea, and China. It authorizes a secret project ('Project Cocoon') designed to artificially create superheroes from fetuses. Most of the resulting super-powered individuals become villains and contribute to the downfall of the U.S. The Visionary tries to go back in time to prevent any of this from happening but ends up in the core universe instead.")
+
+(defn other-command [data]
+  (str/join "\r\n"
+    ["**America's Cleverest Legacy**: An alternate version of Legacy who loves puzzles (but not riddles). He can't fly."
+    "**The Chronoist**: A man from ancient Greece who fills the role of Chrono-Ranger in his universe. His A.I. partner (equivalent to CON) is CHE. It's unknown whether CHE is based in the same universe as the Chronoist or if its timeline, like that of CON, was split off due to its own efforts."
+    "**Citizen Dusk**: An alternate version of Expatriette who had powers and led the Citizens of the Dawn alongside her mother. She has darkness and shadow-related powers, including the ability to drain life."
+    "**Concorda**: An alternate version of CON that La Capitan takes with her to help navigate La Paradoja Magnifica."
+    "**Course** (Fanatic's black sword in the Sentinel Comics Universe): A blood magic blade that La Capitan took from an alternate Fanatic who was corrupted by it and died."
+    "**Dark Mind**: An evil version of The Visionary who dies just as The Visionary is traveling across realities and hitchhikes onto her psyche."
+    "**Grand Warlord Tempest**: A version of Tempest who fills the role of Grand Warlord Voss in the core universe."
+    "**La Comodora**: Curse of the Black Spot: An alternate La Comodora who was never a villain. She is slowly being consumed by the Void's taint. Her adventures involve using a special device to seek out where the Void intrudes into reality and push it back."
+    "**Omnitron-X**: It comes from a universe in which Omnitron upgrades itself in stages and is repeatedly defeated (it is never Cosmic Omnitron or Omni-Blade in this reality). Most versions are just iterations on the original Omnitron design, except for Omnitron-VII (which is a swarm of nanomachines) and the humanoid Omnitron-X."
+    "**Supply and Demand Benchmark**: He comes from a reality in which Benchmark is the only hero."]))
+
 (def command-list [
   { :command "!inverse" :handler inverse-command :usage "!inverse 'character name'" :description "Gives information about the character from the inverse universe" }
   { :command ["!ahora" "!ahora!"] :handler ahora-command :usage "!ahora | !ahora! 'character name" :description "Gives information about the character from the ¡Ahora! universe" }
@@ -233,4 +284,10 @@
   { :command ["!meat" "!meat-verse" "!meatverse"] :handler meat-command :usage "!meat | !meat-verse | !meatverse 'character name'" :description "Gives information about the character from Meat-Verse universe" }
   { :command ["!quando" "!quando?"] :handler quando-command :usage "!quando | !quando? 'character name'" :description "Gives information about the character from the ¿Quando? universe" }
   { :command ["!xtreme" "!xtremeverse"] :handler xtreme-command :usage "!xtreme | !xtremeverse 'character name'" :description "Gives information about the character from the Xtremeverse" }
+  { :command ["!final" "!final-wasteland"] :handler final-command :usage "!final | !final-wasteland" :description "Gives information about the Final Wasteland universe" }
+  { :command ["!plant" "!plant-verse" "!plantverse"] :handler plant-command :usage "!plant | !plant-verse | !plantverse" :description "Gives information about the Plant-Verse" }
+  { :command ["!radio" "!radio-verse" "!radio-play"] :handler radio-command :usage "!radio | !radio-verse |!radio-play" :description "Gives information about the Radio Play Universe" }
+  { :command ["!animated" "!animated-verse"] :handler animated-command :usage "!animated | !animated-verse" :description "Gives information about the Animated Universe" }
+  { :command ["!visionary" "!visionary-verse"] :handler visionary-command :usage "!visionary | !visionary-verse" :description "Gives information about Visionary's Universe" }
+  { :command ["!other" "!misc"] :handler other-command :usage "!other | !misc" :description "Gives information about misc characters" }
 ])

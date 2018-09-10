@@ -56,6 +56,12 @@ Square brackets "[]" represent optional arguments.
 * [Meat-Verse](#meatverse)
 * [Quando?](#quando)
 * [Xtremeverse](#xtremeverse)
+* [Final](#final)
+* [Plant](#plant)
+* [Radio](#radio)
+* [Animated](#animated)
+* [Visionary](#visionary)
+* [Other](#other)
 
 #### Die & Dice Pool Rolling
 ---
@@ -479,6 +485,42 @@ Gives information about the character from the ¿Quando? universe
 ```
 !xtremeverse 'character name'
 Gives information about the character from the Xtremeverse
+```
+
+##### Final
+```
+!final
+Gives information about the Final Wasteland
+```
+
+##### Plant
+```
+!plant
+Gives information about the Plant-Verse
+```
+
+##### Radio
+```
+!radio
+Gives information about the Radio Play Universe
+```
+
+##### Animated
+```
+!animated
+Gives information about the Animated universe
+```
+
+##### Visionary
+```
+!final
+Gives information about the Visionary's universe
+```
+
+##### Other
+```
+!other
+Gives information about other characters
 ```
 
 ## Development
