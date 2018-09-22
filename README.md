@@ -48,6 +48,7 @@ Square brackets "[]" represent optional arguments.
 * [Cult](#cult)
 * [Date](#date)
 * [Proletariat](#proletariat)
+* [Editor](#editor)
 
 ##### Universes
 * [Inverse](#inverse)
@@ -454,6 +455,17 @@ Tells you the current date.
 ```
 !proletariat OR !approves OR !proletariat approaves
 Links to a picture of proletariat approving.
+```
+
+##### Editor
+```
+!editor message to be edited
+Replaces words with synonyms
+```
+
+```
+!editor testing the best feature in all of existence
+testing the first characteristic in all of creation
 ```
 
 #### Universes

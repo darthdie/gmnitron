@@ -2,7 +2,9 @@
   (:require [gmnitron.common :as common]
             [clj-discord.core :as discord]
             [clojure.string :as str]
-            [java-time :as j]))
+            [java-time :as j]
+            [clojure.data.json :as json]
+            [clj-http.client :as client]))
 
 (defn prepare-censor-word [word]
   (cond
@@ -118,6 +120,25 @@
         now (j/with-zone (j/zoned-date-time) "UTC")]
     (str "It is currently " (j/format "cccc, MMMM d, yyyy " now) "in the year of our boar'd " (j/time-between year-of-board now :years) ".")))
 
+(def common-words ["the" "a" "and" "then" "than" "about" "below" "excepting" "off" "toward" "above" "beneath" "for" "on" "under" "across" "beside" "besides" "from" "onto" "underneath" "after" "between" "in" "out" "until" "against" "beyond" "in front of" "outside" "up" "along" "but" "inside" "over" "upon" "among" "by" "in spite of" "past" "up to" "around" "concerning" "instead of" "regarding" "with" "at" "despite" "into" "since" "within" "because of" "down" "like" "through" "without" "before" "during" "near" "throughout" "with regard to" "behind" "except" "of" "to" "with respect to" "all"])
+
+(defn is-common-word? [word]
+  (some #{word} common-words))
+
+(defn thesaurus-word [word]
+  (if (or (is-common-word? word) (empty? word))
+    word
+    (let [url (str "http://api.datamuse.com/words?rel_syn=" word)]
+        (let [http-response (:body (client/get url))
+          response (json/read-str http-response)]
+              (if (> (count response) 1)
+                (str (second (first (rand-nth response))))
+                word)))))
+
+(defn editor-command [data]
+  (let [parts (:arguments data)]
+    (str/join " " (map #(thesaurus-word (str/trim (str/lower-case %))) parts))))
+
 (def command-list [
   { :command "!censor" :handler censor-command :min-args 1 :usage "!censor (message)" :description "'Censors' a message in true Letters Page fashion." }
   { :command "!died" :handler died-command :usage "!died" :description "And then they died." }
@@ -128,4 +149,5 @@
   { :command ["!cult" "!gloom"] :handler cult-command :usage "!cult OR !gloom" :description "The gloomy one will have his day." }
   { :command "!date" :handler date-command :usage "!date" :description "Tells you the UTC date." }
   { :command ["!proletariat" "!approves" "!proletariat approves"] :handler proletariat-command :usage "!proletariat OR !approves or !proletariat approves", :description "Proletariat approves" }
+  { :command "!editor" :handler editor-command :min-args 1 :usage "!editor message to edit" }
 ])
