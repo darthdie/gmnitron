@@ -139,6 +139,9 @@
   (let [parts (:arguments data)]
     (str/join " " (map #(thesaurus-word (str/trim (str/lower-case %))) parts))))
 
+(defn muffin-command [data]
+  "https://youtu.be/LACbVhgtx9I")
+
 (def command-list [
   { :command "!censor" :handler censor-command :min-args 1 :usage "!censor (message)" :description "'Censors' a message in true Letters Page fashion." }
   { :command "!died" :handler died-command :usage "!died" :description "And then they died." }
@@ -150,4 +153,5 @@
   { :command "!date" :handler date-command :usage "!date" :description "Tells you the UTC date." }
   { :command ["!proletariat" "!approves" "!proletariat approves"] :handler proletariat-command :usage "!proletariat OR !approves or !proletariat approves", :description "Proletariat approves" }
   { :command "!editor" :handler editor-command :min-args 1 :usage "!editor message to edit" }
+  { :command "!muffin" :handler muffin-command }
 ])

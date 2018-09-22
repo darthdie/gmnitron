@@ -49,6 +49,7 @@ Square brackets "[]" represent optional arguments.
 * [Date](#date)
 * [Proletariat](#proletariat)
 * [Editor](#editor)
+* [Muffin](#muffin)
 
 ##### Universes
 * [Inverse](#inverse)
@@ -466,6 +467,12 @@ Replaces words with synonyms
 ```
 !editor testing the best feature in all of existence
 testing the first characteristic in all of creation
+```
+
+##### Muffin
+```
+!muffin
+It's muffin time.
 ```
 
 #### Universes
