@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file. This change
 
 ## [Unreleased]
 
+## 0.4.4
+Added !editor, !chuck, and !proletariat commands.
+
 ## 0.4.0
 Added !evil command.
 Fixed incorrect deprecation message.
