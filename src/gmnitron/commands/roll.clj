@@ -1,8 +1,10 @@
 (ns gmnitron.commands.roll
   (:require [gmnitron.common :as common]
-            [clojure.string :as str])
+            [clojure.string :as str]
+            [random-seed.core :refer :all])
   (:import (javax.script ScriptEngineManager
-                         ScriptEngine)))
+                         ScriptEngine))
+  (:refer-clojure :exclude [rand rand-int rand-nth]))
 
 (def unknown-effect-die-error "ERROR. UNKNOWN EFFECT DIE. EXPECTED min, mid, or max.")
 (def villian-compound-regex #"(.+?)(?:(v\d*)|$)")
@@ -206,6 +208,11 @@
       (common/fmt "Rolled **#{total}** = #{roll} #{modifier-expression}")
       (common/fmt "Rolled **#{total}**"))))
 
+(defn chuck-command [data]
+  (do
+    (set-random-seed! (+ (System/currentTimeMillis) Math/PI)))
+    "Dice have been chucked, and new ones have been commissioned.")
+
 (def command-list [
   { :command "!min" :handler roll-min :min-args 3 :max-args 5 :usage "!min (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and highlights the min die." }
   { :command "!mid" :handler roll-mid :min-args 3 :max-args 5 :usage "!mid (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and highlights the mid die." }
@@ -216,4 +223,5 @@
   { :command "!minion" :handler minion-command :min-args 1 :usage "!minion (die) [modifiers], ... [save vs]" :description "Rolls a minion save, optionally vs a number." }
   { :command "!lt" :handler roll-lieutenant :min-args 1 :max-args 4 :usage "!lt (die) [modifiers] [save vs]" :description "Rolls a lieutenant save, optionally vs a number." }
   { :command "!reaction" :handler reaction :min-args 1 :max-args 3 :usage "!reaction (die) [modifiers]" :description "Rolls a reaction die." }
+  { :command "!chuck" :handler chuck-command :usage "!chuck" :description "Chucks the current dice." }
 ])

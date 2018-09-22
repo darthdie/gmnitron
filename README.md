@@ -25,6 +25,7 @@ Square brackets "[]" represent optional arguments.
 * [Hinder](#hinder)
 * [Minion](#minion)
 * [Lieutenant](#lieutenant)
+* [Chuck](#chuck)
 
 ##### Scene Commands
 * [Establish](#establish)
@@ -46,6 +47,7 @@ Square brackets "[]" represent optional arguments.
 * [Insult](#insult)
 * [Cult](#cult)
 * [Date](#date)
+* [Proletariat](#proletariat)
 
 ##### Universes
 * [Inverse](#inverse)
@@ -184,6 +186,18 @@ Rolled 5
 !lt d6 v5
 Rolled 3 vs. 5 
 The Lieutenant is reduced to a d4.
+```
+
+##### Chuck
+
+```
+!chuck
+Chucks the dice and re-initalizes the random number generator.
+```
+
+```
+!chuck
+Dice have been chucked, and new ones have been commissioned.
 ```
 
 #### Scenes
@@ -434,6 +448,12 @@ Links to the Cult of Gloom plotting in the ruins of Atlantis
 ```
 !date
 Tells you the current date.
+```
+
+##### Proletariat
+```
+!proletariat OR !approves OR !proletariat approaves
+Links to a picture of proletariat approving.
 ```
 
 #### Universes

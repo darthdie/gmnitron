@@ -40,6 +40,9 @@
 (defn cult-command [data]
   "http://i68.tinypic.com/aw2vet.jpg")
 
+(defn proletariat-command [data]
+  "http://i66.tinypic.com/30dcsg8.jpg")
+
 (defn gloat-command [data]
   (rand-nth [
     "\"Before this day is ended, the entire planet shall grovel helplessly at my feet!\" - Baron Blade, Moonfall #5"
@@ -124,4 +127,5 @@
   { :command ["!evil" "!maniacal"] :handler evil-command :usage "!evil OR !maniacal" :description "maniacal laugh...maniacal laugh..."}
   { :command ["!cult" "!gloom"] :handler cult-command :usage "!cult OR !gloom" :description "The gloomy one will have his day." }
   { :command "!date" :handler date-command :usage "!date" :description "Tells you the UTC date." }
+  { :command ["!proletariat" "!approves" "!proletariat approves"] :handler proletariat-command :usage "!proletariat OR !approves or !proletariat approves", :description "Proletariat approves" }
 ])

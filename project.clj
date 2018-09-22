@@ -7,7 +7,8 @@
                  [clj-discord "0.1.0-SNAPSHOT"]
                  [com.novemberain/monger "3.1.0"]
                  [clojure.java-time "0.3.2"]
-                 [net.mikera/core.matrix "0.29.1"]]
+                 [net.mikera/core.matrix "0.29.1"]
+                 [random-seed "1.0.0"]]
   :plugins [[lein-heroku "0.5.3"]]
   :main ^:skip-aot gmnitron.core
   :target-path "target/%s"
