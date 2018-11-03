@@ -125,15 +125,20 @@
 (defn is-common-word? [word]
   (some #{word} common-words))
 
+(defn datamuse-response [url]
+  (let [http-response (:body (client/get url))
+        response (json/read-str http-response)]
+     (when (> (count response) 1)
+      (str (second (first (rand-nth response)))))))
+
 (defn thesaurus-word [word]
   (if (or (is-common-word? word) (empty? word))
     word
-    (let [url (str "http://api.datamuse.com/words?rel_syn=" word)]
-        (let [http-response (:body (client/get url))
-          response (json/read-str http-response)]
-              (if (> (count response) 1)
-                (str (second (first (rand-nth response))))
-                word)))))
+    (if-let [thesaurus (datamuse-response (str "http://api.datamuse.com/words?rel_syn=" word))]
+      thesaurus
+      (if-let [related (datamuse-response (str "https://api.datamuse.com/words?ml=" word))]
+        related
+        word))))
 
 (defn editor-command [data]
   (let [parts (:arguments data)]

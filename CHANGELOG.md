@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file. This change
 
 ## [Unreleased]
 
+## 0.4.5
+Expanded !editor command.
+!min, !mid, and !max are now much less strict. They now support any number of dice and any order.
+
 ## 0.4.4
 Added !editor, !chuck, and !proletariat commands.
 

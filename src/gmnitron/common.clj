@@ -62,3 +62,9 @@
 
 (defn in? [coll elm]  
   (some #(= elm %) coll))
+
+(defn as-vector [x]
+  (cond
+    (vector? x) x
+    (sequential? x) (vec x)
+    :else (vector x)))

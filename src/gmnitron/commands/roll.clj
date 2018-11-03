@@ -62,17 +62,30 @@
 
 (def roll-and-print-dice-pool (comp dice-pool->display roll-dice-pool))
 
+(defn parse-dice-and-modifier [parts]
+  (loop [parts parts
+         dice []
+         modifier 0]
+    (if parts
+      (cond
+        (some #(= (str (first parts)) %) ["+" "-"]) (recur (nnext parts) dice (str (first parts) (second parts)))
+        (some #(str/starts-with? (first parts) %) ["+" "-"]) (recur (next parts) dice (first parts))
+        :else (recur (next parts) (conj dice (first parts)) modifier))
+      { :dice dice :modifier (common/as-vector modifier) })))
+
 (defn roll-min [data]
-  (let [[d1 d2 d3 & modifiers] (:arguments data)]
-   (roll-and-print-dice-pool [d1 d2 d3] :min modifiers)))
+  (let [parts (parse-dice-and-modifier (:arguments data))]
+    (do
+      (println parts)
+      (roll-and-print-dice-pool (:dice parts) :min (:modifier parts)))))
 
 (defn roll-mid [data]
-  (let [[d1 d2 d3 & modifiers] (:arguments data)]
-   (roll-and-print-dice-pool [d1 d2 d3] :mid modifiers)))
+  (let [parts (parse-dice-and-modifier (:arguments data))]
+    (roll-and-print-dice-pool (:dice parts) :mid (:modifier parts))))
 
 (defn roll-max [data]
-  (let [[d1 d2 d3 & modifiers] (:arguments data)]
-   (roll-and-print-dice-pool [d1 d2 d3] :max modifiers)))
+  (let [parts (parse-dice-and-modifier (:arguments data))]
+    (roll-and-print-dice-pool (:dice parts) :max (:modifier parts))))
 
 (defn decrease-die-size [die]
   (- die 2))
@@ -214,9 +227,9 @@
     "Dice have been chucked, and new ones have been commissioned.")
 
 (def command-list [
-  { :command "!min" :handler roll-min :min-args 3 :max-args 5 :usage "!min (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and highlights the min die." }
-  { :command "!mid" :handler roll-mid :min-args 3 :max-args 5 :usage "!mid (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and highlights the mid die." }
-  { :command "!max" :handler roll-max :min-args 3 :max-args 5 :usage "!max (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and highlights the max die." }
+  { :command "!min" :handler roll-min :min-args 1 :usage "!min (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and highlights the min die." }
+  { :command "!mid" :handler roll-mid :min-args 1 :usage "!mid (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and highlights the mid die." }
+  { :command "!max" :handler roll-max :min-args 1 :usage "!max (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and highlights the max die." }
   { :command "!overcome" :handler overcome :min-args 4 :max-args 6 :usage "!overcome (min/mid/max) (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and returns the overcome result." }
   { :command "!boost" :handler boost :min-args 4 :max-args 6 :usage "!boost (min/mid/max) (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and returns the boost result." }
   { :command "!hinder" :handler hinder :min-args 4 :max-args 6 :usage "!hinder (min/mid/max) (die 1) (die 2) (die 3) [modifiers]" :description "Rolls a dice pool and returns the hinder result." }

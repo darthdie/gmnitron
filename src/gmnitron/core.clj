@@ -13,12 +13,6 @@
 
 (def command-handlers (into [] (concat roll/command-list scene/command-list fun/command-list universes/command-list)))
 
-(defn as-vector [x]
-  (cond
-    (vector? x) x
-    (sequential? x) (vec x)
-    :else (vector x)))
-
 (defn command-names-match? [match names]
   (when (> (count names) 0)
     (if (= match (first names))
@@ -28,12 +22,12 @@
 (defn find-command [desired-name commands]
   (when (not-empty commands)
     (let [command (first commands)]
-      (if (command-names-match? desired-name (as-vector (:command command)))
+      (if (command-names-match? desired-name (common/as-vector (:command command)))
         command
         (recur desired-name (rest commands))))))
 
 (defn command->help-message [command]
-  (let [name (str/join ", " (as-vector (:command command)))
+  (let [name (str/join ", " (common/as-vector (:command command)))
         desc (get command :description "No description.")
         usage (get command :usage "")]
     (common/fmt "#{name}\r\n#{desc}\r\nUsage: #{usage}")))
