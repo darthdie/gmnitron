@@ -384,7 +384,7 @@ The Wraith hasn't acted this round.
 
 ##### Current
 ```
-!recap
+!current
 Displays the current actor.
 ```
 
@@ -436,7 +436,7 @@ Supplies a random gloating SC quote.
 
 ##### Insult
 ```
-!gloat
+!insult
 Supplies a random insulting SC quote.
 ```
 
@@ -480,7 +480,7 @@ It's muffin time.
 
 ##### Inverse
 ```
-!cult 'character name'
+!inverse 'character name'
 Gives information about the character from the inverse universe
 ```
 
@@ -552,7 +552,7 @@ Gives information about the Animated universe
 
 ##### Visionary
 ```
-!final
+!visionary
 Gives information about the Visionary's universe
 ```
 

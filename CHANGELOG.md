@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file. This change
 
 ## [Unreleased]
 
+## 0.4.6
+Calmed GMnitron a little bit when it comes to responding to human errors.
+D4 minions can now, as is proper, survive to live another day.
+GMnitron no longer scolds you when rolling a single mid die.
+
 ## 0.4.5
 Expanded !editor command.
 !min, !mid, and !max are now much less strict. They now support any number of dice and any order.
