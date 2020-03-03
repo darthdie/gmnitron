@@ -85,4 +85,5 @@
 (defn -main [& args]
   (discord/connect {:token token
                     :functions {"MESSAGE_CREATE" [command-handler]}
-                    :rate-limit 250}))
+                    :rate-limit 250
+                    :max-text-message-size 100000}))
