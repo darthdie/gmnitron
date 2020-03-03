@@ -51,7 +51,7 @@
 (defn effect-die-in-matrix [effect-die matrix]
   (cond
     (= effect-die :min) (second (first matrix))
-    (= effect-die :mid) (second (second matrix))
+    (= effect-die :mid) (second (nth matrix 2 (first matrix)))
     (= effect-die :max) (second (last matrix))))
 
 (defn roll-dice-pool [dice effect-die modifiers]
@@ -68,24 +68,25 @@
          modifier 0]
     (if parts
       (cond
+        ; a modifier in the format of "+ 2"
         (some #(= (str (first parts)) %) ["+" "-"]) (recur (nnext parts) dice (str (first parts) (second parts)))
+        ; a modifier in the format of "+2"
         (some #(str/starts-with? (first parts) %) ["+" "-"]) (recur (next parts) dice (first parts))
+        ; a die number
         :else (recur (next parts) (conj dice (first parts)) modifier))
       { :dice dice :modifier (common/as-vector modifier) })))
 
 (defn roll-min [data]
   (let [parts (parse-dice-and-modifier (:arguments data))]
-    (do
-      (println parts)
-      (roll-and-print-dice-pool (:dice parts) :min (:modifier parts)))))
+      (roll-and-print-dice-pool (:dice parts) :min (:modifier parts))))
 
 (defn roll-mid [data]
   (let [parts (parse-dice-and-modifier (:arguments data))]
-    (roll-and-print-dice-pool (:dice parts) :mid (:modifier parts))))
+      (roll-and-print-dice-pool (:dice parts) :mid (:modifier parts))))
 
 (defn roll-max [data]
   (let [parts (parse-dice-and-modifier (:arguments data))]
-    (roll-and-print-dice-pool (:dice parts) :max (:modifier parts))))
+      (roll-and-print-dice-pool (:dice parts) :max (:modifier parts))))
 
 (defn decrease-die-size [die]
   (- die 2))
@@ -104,18 +105,12 @@
       { :modifiers (butlast args) :save (str->save (last args))}
       { :modifiers args :save nil })))
 
-(defn omnitron-insult []
-  (rand-nth [
-    "LOADING HUMOUR SUB-ROUTINE... FAILURE."
-    "ATTEMPTING TO UNDERSTAND... FAILURE.\r\nPAGE 17, SECTION 'Minions and Lieutenants', PARAGRAPH 4 STATES: 'If a minion is Attacked when at a d4, it is always removed and does not get a minion save.'"
-    "YOU MIGHT AS WELL HAVE TRIED TO ROLL TO BRING OblivAeon BACK."
-    "MY PROBABILITY SUB-ROUTINE PREDICTS SUCCESS."]))
-
 (defn get-minion-save-message [roll save die-size]
-  (cond
-    (<= die-size 4) (str (omnitron-insult) "\r\n" "The Minion is defeated!")
-    (>= roll save) (str "The Minion is reduced to a d" (- die-size 2) ".")
-    :else "The Minion is defeated!"))
+  (if (or (< die-size 4) (< roll save))
+    "The Minion is defeated!"
+    (if (= die-size 4)
+      "The Minion survives to do more evil."
+      (str "The Minion is reduced to a d" (- die-size 2) "."))))
 
 (defn modifiers->str [modifiers]
   (->> modifiers
