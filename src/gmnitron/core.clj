@@ -66,12 +66,16 @@
         (handler { :arguments arguments :author (get data "author") :channel-id (get data "channel_id") :message-id (get data "id") })
         (command->help-message command)))))
 
+(defn is-bot [data]
+  (get (get data "author" {"bot" false}) "bot" false))
+
 (defn command-handler [type data]
   (try
-    (let [message (get data "content")
+    (if (not (is-bot data))
+      (let [message (get data "content")
           [command-name & arguments] (parse-arguments message)]
-      (if-let [response (execute-command command-name arguments type data)]
-        (respond data response)))
+        (if-let [response (execute-command command-name arguments type data)]
+          (respond data response))))
     (catch java.lang.NumberFormatException e (respond data "ERROR. EXPECTED NUMERIC INPUT."))
     (catch Exception e
       (do
@@ -81,4 +85,4 @@
 (defn -main [& args]
   (discord/connect {:token token
                     :functions {"MESSAGE_CREATE" [command-handler]}
-                    :rate-limit 1}))
+                    :rate-limit 250}))
