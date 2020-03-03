@@ -243,12 +243,12 @@ Wraith hasn't acted this round.
 
 ##### Hand-off
 ```
-!hand-off (from actor) (to actor)
+!hand off (from actor) (to actor)
 Hand off the scene to the given actor.
 ```
 
 ```
-!hand-off "Absolute Zero" "Baddies"
+!hand off "Absolute Zero" "Baddies"
 The Story so Far
 
 It is currently a Green status. There are 2 Green boxes, 4 Yellow boxes, and 2 Red boxes left.
@@ -265,12 +265,12 @@ Wraith hasn't acted this round.
 
 ##### Hand-off-to
 ```
-!hand-off-to (to actor)
+!hand off to (to actor)
 Hands off the scene from the current user to actor. Used by people who were added in !establish via a @mention.
 ```
 
 ```
-DarthDie: !hand-off-to Wraith
+DarthDie: !hand off to Wraith
 The Story so Far
 
 It is currently a Green status. There are 2 Green boxes, 4 Yellow boxes, and 2 Red boxes left.
@@ -454,7 +454,7 @@ Tells you the current date.
 
 ##### Proletariat
 ```
-!proletariat OR !approves OR !proletariat approaves
+!proletariat OR !approves OR !proletariat approves
 Links to a picture of proletariat approving.
 ```
 
