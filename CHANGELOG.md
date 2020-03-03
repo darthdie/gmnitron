@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file. This change
 
 ## [Unreleased]
 
+## 0.4.7
+Emergency fix to try and have GMnitron show up for work.
+
 ## 0.4.6
 Calmed GMnitron a little bit when it comes to responding to human errors.
 D4 minions can now, as is proper, survive to live another day.
