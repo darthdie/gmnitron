@@ -49,10 +49,11 @@
   (str "d" (strip-die die)))
 
 (defn effect-die-in-matrix [effect-die matrix]
-  (cond
-    (= effect-die :min) (second (first matrix))
-    (= effect-die :mid) (second (nth matrix 2 (first matrix)))
-    (= effect-die :max) (second (last matrix))))
+  (second
+    (cond
+      (= effect-die :min) (first matrix)
+      (= effect-die :mid) (nth matrix (int (Math/floor (/ (count matrix) 2))) (first matrix))
+      (= effect-die :max) (last matrix))))
 
 (defn roll-dice-pool [dice effect-die modifiers]
   (let [roll-matrix (map vector (map normalize-die-str dice) (map roll-parsed-die dice))
