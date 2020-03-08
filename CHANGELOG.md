@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file. This change
 
 ## [Unreleased]
 
+## 0.4.8
+Fixed mod roll function.
+
 ## 0.4.7
 Emergency fix to try and have GMnitron show up for work.
 
