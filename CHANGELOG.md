@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file. This change
 
 ## [Unreleased]
 
+## 0.4.9
+GMnitron once again thought it could take the day off.
+
 ## 0.4.8
 Fixed mod roll function.
 

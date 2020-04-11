@@ -86,4 +86,4 @@
   (discord/connect {:token token
                     :functions {"MESSAGE_CREATE" [command-handler]}
                     :rate-limit 250
-                    :max-text-message-size 100000}))
+                    :max-text-message-size 150000}))
