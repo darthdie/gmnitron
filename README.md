@@ -568,7 +568,7 @@ To develop, install https://github.com/technomancy/leiningen
 
 Then follow the steps to use the clj-discord library, https://github.com/yotsov/clj-discord#to-use-this-library
 
-You'll need to set the GMNITRON_BOT_TOKEN & MONGODB_URI environment variables, which is the discord bot token and mongodb URI respectively.
+You'll need to set the GMNITRON_BOT_TOKEN & DB_URI environment variables, which is the discord bot token and mongodb URI respectively.
 
 To run the bot locally, use the `lein run` command.
 

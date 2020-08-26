@@ -31,16 +31,16 @@
     (censor message)))
 
 (defn died-command [data]
-  "https://media.giphy.com/media/TJ8Pd0jQzyHmYoWZYU/giphy.gif")
+  "https://i.imgur.com/unAdMfv.mp4")
 
 (defn plan-command [data]
-  "http://i64.tinypic.com/1214g9w.jpg")
+  "https://i.imgur.com/56PGolV.jpg")
 
 (defn evil-command [data]
-  "http://i63.tinypic.com/5dti6o.gif")
+  "https://i.imgur.com/twzosas.mp4")
 
 (defn cult-command [data]
-  "http://i68.tinypic.com/aw2vet.jpg")
+  "https://i.imgur.com/CiuXENB.jpg")
 
 (defn proletariat-command [data]
   "http://i66.tinypic.com/30dcsg8.jpg")
