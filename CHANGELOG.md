@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file. This change
 
 ## [Unreleased]
 
+## 0.5.0
+Fixed images.
+
+BREAKING CHANGE FOR THOSE HOSTING:
+I changed MONGODB_URI to DB_URI
+
 ## 0.4.9
 GMnitron once again thought it could take the day off.
 
