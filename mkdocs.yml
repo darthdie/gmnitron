@@ -1,0 +1,24 @@
+site_name: GMnitron
+repo_name: gmnitron
+repo_url: https://github.com/darthdie/gmnitron
+theme:
+  name: material
+  feature:
+    tabs: true
+extra_css:
+  - stylesheets/theme.css
+markdown_extensions:
+  - pymdownx.tabbed
+  - pymdownx.superfences
+  - toc:
+      permalink: true
+  - admonition
+
+nav:
+  - Home: index.md
+  - Commands:
+    - Dice: commands/dice.md
+    - Scene: commands/scene.md
+    - Fun: commands/fun.md
+    - Lore: commands/lore.md
+  - Invite the bot: https://discordapp.com/oauth2/authorize?client_id=425385281890418710&scope=bot
