@@ -22,3 +22,4 @@ nav:
     - Fun: commands/fun.md
     - Lore: commands/lore.md
   - Invite the bot: https://discordapp.com/oauth2/authorize?client_id=425385281890418710&scope=bot
+  - Changelog: changelog.md
