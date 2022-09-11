@@ -2,45 +2,48 @@
 
 require 'discordrb'
 require 'byebug'
+require_relative 'commands/fun'
 
-bot = Discordrb::Bot.new(token: 'NDM2NTM2NDQ5NDEyNjI4NTAw.GST6JV.zJt2KWweUjQdbWmIHo5gDQ47_0ikmueuRt-hHs', intents: [:server_messages])
+bot = Discordrb::Bot.new(token: '', intents: [:server_messages])
 
-def titleized?(s)
-  !!s.match(/^[[:upper:]].*/)
-end
+# def titleized?(s)
+#   !!s.match(/^[[:upper:]].*/)
+# end
 
-def prepare_censor_word(word)
-  return word[2..] if word[0..1] == 'St'
-  return word.downcase if word.start_with?(/A|E|I|O|U/)
+# def prepare_censor_word(word)
+#   return word[2..] if word[0..1] == 'St'
+#   return word.downcase if word.start_with?(/A|E|I|O|U/)
   
-  word[1..]
-end
+#   word[1..]
+# end
 
-def censor_word(word)
-  return word unless titleized?(word[0]) && !%w[i by].include?(word.downcase)
+# def censor_word(word)
+#   return word unless titleized?(word[0]) && !%w[i by].include?(word.downcase)
 
-  "shm#{prepare_censor_word(word)}"
-end
+#   "shm#{prepare_censor_word(word)}"
+# end
 
-bot.register_application_command(:fun, 'Fun/meme commands', server_id: ENV['SLASH_COMMAND_BOT_SERVER_ID']) do |cmd|
-  bot.register_application_command(:muffin, "It's muffin time!")
-  bot.register_application_command(:censor, "Smhensors words") do |cmd|
-    cmd.string('message', 'The message to censor', required: true)
-  end
+Commands::Fun.register(bot)
 
-  bot.application_command(:muffin) do |event|
-    # result = event.options['first'].send(event.options['operation'], event.options['second'])
-    event.respond(content: "https://youtu.be/LACbVhgtx9I")
-  end
+# bot.register_application_command(:fun, 'Fun/meme commands', server_id: ENV['SLASH_COMMAND_BOT_SERVER_ID']) do |cmd|
+#   bot.register_application_command(:muffin, "It's muffin time!")
+#   bot.register_application_command(:censor, "Smhensors words") do |cmd|
+#     cmd.string('message', 'The message to censor', required: true)
+#   end
 
-  bot.application_command(:censor) do |event|
-    message = event.options['message']
+#   bot.application_command(:muffin) do |event|
+#     # result = event.options['first'].send(event.options['operation'], event.options['second'])
+#     event.respond(content: "https://youtu.be/LACbVhgtx9I")
+#   end
 
-    censored_message = message.split.map { |word| censor_word(word) }.join(' ')
+#   bot.application_command(:censor) do |event|
+#     message = event.options['message']
 
-    event.respond(content: censored_message)
-  end
-end
+#     censored_message = message.split.map { |word| censor_word(word) }.join(' ')
+
+#     event.respond(content: censored_message)
+#   end
+# end
 
 # We need to register our application commands separately from the handlers with a special DSL.
 # This example uses server specific commands so that they appear immediately for testing,
