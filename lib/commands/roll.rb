@@ -1,49 +1,6 @@
 # frozen_string_literal: true
 
-require 'active_support'
-
 module Commands
-  # class DicePool
-  #   def DicePool.fromOptions(options)
-  #     dice = (1..3).map { |i| options["die_#{i}"] }
-  #     modifier = options['modifier']
-
-  #     if modifier.present?
-  #       modifier = [modifier[0], modifier[1..].to_i]
-  #     end
-
-  #     DicePool.new(dice, modifier)
-  #   end
-
-  #   def initialize(dice, modifier)
-  #     @dice = dice
-  #     @modifier = modifier
-
-  #     rolls = dice.map do |raw_die|
-  #       normalized_die = normalize_die(raw_die)
-  #       { 
-  #         die: normalized_die,
-  #         value: roll_die(normalized_die)
-  #       }
-  #     end.sort_by { |roll| roll[:value] }
-  #   end
-
-  #   def rolls
-  #     @rolls ||= dice
-  #       .map { |raw_die| die.scan(/\d+/).first.to_i }
-  #       .map do |size|
-  #         { 
-  #           die: size,
-  #           value: roll_die(size)
-  #         }
-  #       end.sort_by { |roll| roll[:value] }
-  #   end
-
-  #   def format(effect_die)
-    
-  #   end
-  # end
-
   class Roll
     def Roll.register(bot)
       @instance ||= Roll.new(bot)
@@ -79,10 +36,12 @@ module Commands
     end
 
     def roll_min_command(event)
-      dice_pool = parse_dice_and_modifier(event.options)
-      rolls = roll_dice_pool(dice_pool, :min)
+      dice_pool = DicePool.new(event.options, :min)
 
-      event.respond(content: format_dice_pool(rolls))
+      # dice_pool = parse_dice_and_modifier(event.options)
+      # rolls = roll_dice_pool(dice_pool, :min)
+
+      event.respond(content: dice_pool.format_for_display)
     end
 
     def roll_mid_command(event)
