@@ -5,10 +5,19 @@ require 'byebug'
 
 RSpec.describe DicePool do
   before(:each) do
-    allow_any_instance_of(Object).to receive(:rand).and_return(5)
+    allow_any_instance_of(Object).to receive(:rand) do |range|
+      3
+    end
   end
 
-  %i[min mid max].each do |type|
+  [
+    { type: :min, expected_value: 3 },
+    { type: :mid, expected_value: 3 },
+    { type: :max, expected_value: 3 },
+  ].each do |roll_expectations|
+    type = roll_expectations[:type]
+    expected_value = roll_expectations[:expected_value]
+
     context type.to_s do
       it "rolls 3 dice without a modifier" do
         options = {
@@ -16,10 +25,16 @@ RSpec.describe DicePool do
           'die_2' => 'd8',
           'die_3' => 'd6'
         }
-        pool = described_class.new(options, type)
-        expect(pool.format_for_display).to eq("Rolled **5** (*d8:* **5**, *d6:* **5**, *d4:* **5**)")
+        pool = described_class.new(options)
+        rolls = pool.roll(type)
+        expect(rolls).to eq(DicePoolRoll.new(
+          rolls: [DiceRoll.new(size: 8, value: 3), DiceRoll.new(size: 6, value: 3), DiceRoll.new(size: 4, value: 3)],
+          total: expected_value,
+          effect_die_value: 3
+        ))
+        # expect(pool.format_for_display).to eq("Rolled **5** (*d8:* **5**, *d6:* **5**, *d4:* **5**)")
       end
-  
+
       it "rolls 3 dice with a modifier" do
         options = {
           'die_1' => 'd4',
@@ -27,10 +42,16 @@ RSpec.describe DicePool do
           'die_3' => 'd6',
           'modifier' => '+2'
         }
-        pool = described_class.new(options, type)
-        expect(pool.format_for_display).to eq("Rolled **7** = 5 + 2 (*d8:* **5**, *d6:* **5**, *d4:* **5**)")
+        pool = described_class.new(options)
+        rolls = pool.roll(type)
+        expect(rolls).to eq(DicePoolRoll.new(
+          rolls: [DiceRoll.new(size: 8, value: 3), DiceRoll.new(size: 6, value: 3), DiceRoll.new(size: 4, value: 3)],
+          total: expected_value + 2,
+          effect_die_value: 3,
+          modifier: ['+', 2]
+        ))
+        # expect(pool.format_for_display).to eq("Rolled **7** = 5 + 2 (*d8:* **5**, *d6:* **5**, *d4:* **5**)")
       end
     end
   end
 end
-  

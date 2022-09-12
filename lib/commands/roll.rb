@@ -32,7 +32,7 @@ module Commands
         # "!overcome" :handler overcome :min-args 4 :max-args 6 :usage "!overcome (min/mid/max) (die 1) (die 2) (die 3) [modifiers]"
 
         cmd.subcommand(:overcome, 'Rolls a dice pool and returns the overcome result.') do |sub|
-          sub.string('effect_die', 'The effect die to be used in the overcome.', required: true, options: { 'min' => 'min', 'mid' => 'mid', 'max' => 'max' })
+          sub.string('effect_die', 'The effect die to be used in the overcome.', required: true, choices: { 'min' => :min, 'mid' => :mid, 'max' => :max })
           sub.string('die_1', 'The first die to roll, e.g. d4', required: true)
           sub.string('die_2', 'The second die to roll, e.g. d6', required: true)
           sub.string('die_3', 'The third die to roll, e.g. d8', required: true)
@@ -47,47 +47,36 @@ module Commands
     end
 
     def roll_min_command(event)
-      dice_pool = DicePool.new(event.options. :min)
+      rolls = DicePool.roll(event.options, :min)
 
-      # DicePoolFormatter.format(dice_pool, :min)
+      content = DicePoolRollFormatter.format(rolls)
 
-      event.respond(content: dice_pool.format_for_display)
+      event.respond(content: content)
     end
 
     def roll_mid_command(event)
-      dice_pool = DicePool.new(event.options, :mid)
+      rolls = DicePool.roll(event.options, :mid)
 
-      event.respond(content: dice_pool.format_for_display)
+      content = DicePoolRollFormatter.format(rolls)
+
+      event.respond(content: content)
     end
 
     def roll_max_command(event)
-      dice_pool = DicePool.new(event.options, :max)
+      rolls = DicePool.roll(event.options, :max)
 
-      event.respond(content: dice_pool.format_for_display)
+      content = DicePoolRollFormatter.format(rolls)
+
+      event.respond(content: content)
     end
 
     def roll_overcome_command(event)
-      dice_pool = DicePool.new(event.options, :max)
-      # (defn overcome [data]
-      #   (let [[effect-die d1 d2 d3 & modifiers] (:arguments data)]
-      #     (if (is-effect-die? effect-die)
-      #       (let [pool (roll-dice-pool [d1 d2 d3] (keyword effect-die) modifiers)
-      #           die-display (dice-pool->display pool)
-      #           outcome (get-overcome-outcome (:total pool))]
-      #         (common/fmt "\r\n#{die-display}.\r\n#{outcome}"))
-      #       unknown-effect-die-error)))
-    end
+      effect_die = event.options['effect_die'].to_sym
+      rolls = DicePool.new(event.options).roll(effect_die)
 
-    def overcome_outcome_for(roll)
-      case roll
-      when (1..3) "Action fails, or succeeds with a major twist."
-      when (4..7) "Action succeeds, but with a minor twist."
-      when (8..11) "Action completely succeeds."
-      else
-        return "Action utterly, spectacularly fails." if roll <= 0
+      content = OvercomeFormatter.format(rolls)
 
-        "Action succeeds beyond expectations."
-      end
+      event.respond(content: content)
     end
   end
 end

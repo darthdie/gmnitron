@@ -4,6 +4,9 @@ require 'discordrb'
 require 'byebug'
 require_relative 'commands/fun'
 require_relative 'commands/roll'
+require_relative 'models/dice_pool'
+require_relative 'models/dice_pool_roll_formatter'
+require_relative 'models/overcome_formatter'
 
 bot = Discordrb::Bot.new(token: '', intents: [:server_messages])
 
