@@ -4,4 +4,5 @@ gem 'discordrb', github: 'shardlab/discordrb', branch: 'main'
 gem 'activesupport'
 group :test, :development do
     gem 'byebug'
+    gem 'rspec'
 end
