@@ -4,7 +4,7 @@ require 'models/dice_pool'
 require 'models/dice_pool_roll_formatter'
 require 'byebug'
 
-RSpec.describe DicePoolRollFormatter do
+RSpec.describe Models::DicePoolRollFormatter do
   before(:each) do
     allow_any_instance_of(Object).to receive(:rand) do |range|
       3
@@ -17,7 +17,7 @@ RSpec.describe DicePoolRollFormatter do
       'die_2' => 'd8',
       'die_3' => 'd6'
     }
-    rolls = DicePool.new(options).roll(:min)
+    rolls = Models::DicePool.new(options).roll(:min)
 
     message = described_class.format(rolls)
     expect(message).to eq("Rolled **3** (*d8:* **3**, *d6:* **3**, *d4:* **3**)")
@@ -30,7 +30,7 @@ RSpec.describe DicePoolRollFormatter do
       'die_3' => 'd6',
       'modifier' => '+2'
     }
-    rolls = DicePool.new(options).roll(:min)
+    rolls = Models::DicePool.new(options).roll(:min)
 
     message = described_class.format(rolls)
     expect(message).to eq("Rolled **5** = 3 + 2 (*d8:* **3**, *d6:* **3**, *d4:* **3**)")

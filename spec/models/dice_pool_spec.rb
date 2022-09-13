@@ -3,7 +3,7 @@
 require 'models/dice_pool'
 require 'byebug'
 
-RSpec.describe DicePool do
+RSpec.describe Models::DicePool do
   before(:each) do
     allow_any_instance_of(Object).to receive(:rand) do |range|
       3
@@ -27,8 +27,8 @@ RSpec.describe DicePool do
         }
         pool = described_class.new(options)
         rolls = pool.roll(type)
-        expect(rolls).to eq(DicePoolRoll.new(
-          rolls: [DiceRoll.new(size: 8, value: 3), DiceRoll.new(size: 6, value: 3), DiceRoll.new(size: 4, value: 3)],
+        expect(rolls).to eq(Models::DicePoolRoll.new(
+          rolls: [Models::DiceRoll.new(size: 8, value: 3), Models::DiceRoll.new(size: 6, value: 3), Models::DiceRoll.new(size: 4, value: 3)],
           total: expected_value,
           effect_die_value: 3
         ))
@@ -44,8 +44,8 @@ RSpec.describe DicePool do
         }
         pool = described_class.new(options)
         rolls = pool.roll(type)
-        expect(rolls).to eq(DicePoolRoll.new(
-          rolls: [DiceRoll.new(size: 8, value: 3), DiceRoll.new(size: 6, value: 3), DiceRoll.new(size: 4, value: 3)],
+        expect(rolls).to eq(Models::DicePoolRoll.new(
+          rolls: [Models::DiceRoll.new(size: 8, value: 3), Models::DiceRoll.new(size: 6, value: 3), Models::DiceRoll.new(size: 4, value: 3)],
           total: expected_value + 2,
           effect_die_value: 3,
           modifier: ['+', 2]

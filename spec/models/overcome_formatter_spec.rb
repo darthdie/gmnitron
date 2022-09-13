@@ -4,7 +4,7 @@ require 'models/dice_pool'
 require 'models/overcome_formatter'
 require 'byebug'
 
-RSpec.describe OvercomeFormatter do
+RSpec.describe Models::OvercomeFormatter do
   before(:each) do
     allow_any_instance_of(Object).to receive(:rand) do |range|
       3
@@ -17,7 +17,7 @@ RSpec.describe OvercomeFormatter do
       'die_2' => 'd8',
       'die_3' => 'd6'
     }
-    rolls = DicePool.new(options).roll(:min)
+    rolls = Models::DicePool.new(options).roll(:min)
 
     message = described_class.format(rolls)
     expect(message).to eq("\r\nRolled **3** (*d8:* **3**, *d6:* **3**, *d4:* **3**).\r\nAction fails, or succeeds with a major twist.")
@@ -30,7 +30,7 @@ RSpec.describe OvercomeFormatter do
       'die_3' => 'd6',
       'modifier' => '+2'
     }
-    rolls = DicePool.new(options).roll(:min)
+    rolls = Models::DicePool.new(options).roll(:min)
 
     message = described_class.format(rolls)
     expect(message).to eq("\r\nRolled **5** = 3 + 2 (*d8:* **3**, *d6:* **3**, *d4:* **3**).\r\nAction succeeds, but with a minor twist.")
