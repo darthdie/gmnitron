@@ -34,25 +34,29 @@ Metrics/ParameterLists:
   Max: 4
   Enabled: true
 
+# I like the idea of the following 3 - unable to determine how to clean up the command registration code
 Metrics/MethodLength:
   Description: 'Avoid methods longer than 5 lines of code.'
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#short-methods'
-  Max: 5
+  Max: 50
   Enabled: true
 
 Metrics/BlockLength:
   CountComments: false
-  Max: 5
-  # IgnoredMethods:
-  #   - context
-  #   - describe
-  #   - it
-  #   - shared_examples
-  #   - shared_examples_for
-  #   - namespace
-  #   - draw
-  #   - configure
-  #   - group
+  Max: 50
+  AllowedMethods:
+    - context
+    - describe
+    - it
+    - shared_examples
+    - shared_examples_for
+    - namespace
+    - draw
+    - configure
+    - group
+
+Metrics/AbcSize:
+  Enabled: false
 
 # Style Cops
 
@@ -117,7 +121,7 @@ Style/TrailingCommaInArguments:
     - comma
     - consistent_comma
     - no_comma
-  Enabled: true
+  Enabled: false
 
 Style/TrailingCommaInArrayLiteral:
   Description: 'Checks for trailing comma in array literals.'
@@ -179,3 +183,6 @@ Bundler/OrderedGems:
 
 Layout/EndOfLine:
   EnforcedStyle: lf
+
+Performance/MethodObjectAsBlock:
+  Enabled: false

@@ -5,20 +5,20 @@ module Models
     attr_reader :rolls
 
     def self.format(rolls)
-      OvercomeFormatter.new(rolls).format()
+      OvercomeFormatter.new(rolls).format
     end
 
     def initialize(rolls)
       @rolls = rolls
     end
 
-    def format()
+    def format
       roll_value = rolls.total
       outcome = overcome_outcome_for(roll_value)
 
       die_display = DicePoolRollFormatter.format(rolls)
 
-      "\r\n#{die_display}.\r\n#{outcome}"
+      "#{die_display}.\r\n#{outcome}"
     end
 
     def overcome_outcome_for(roll)

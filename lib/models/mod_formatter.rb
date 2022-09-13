@@ -5,7 +5,7 @@ module Models
     attr_reader :rolls, :operator
 
     def self.format(rolls, operator)
-      ModFormatter.new(rolls, operator).format()
+      ModFormatter.new(rolls, operator).format
     end
 
     def initialize(rolls, operator)
@@ -13,13 +13,13 @@ module Models
       @operator = operator
     end
 
-    def format()
+    def format
       roll_value = rolls.total
       outcome = mod_size_for(roll_value)
 
       die_display = DicePoolRollFormatter.format(rolls)
 
-      "\r\n#{die_display}.\r\n#{outcome}"
+      "#{die_display}.\r\n#{outcome}"
     end
 
     def mod_size_for(roll)
@@ -32,7 +32,7 @@ module Models
         "#{operator} 3"
       else
         if roll <= 0
-          mod_type = operator == '+' ? 'bonus' : 'penalty'
+          mod_type = operator == "+" ? "bonus" : "penalty"
           return "No #{mod_type} is created."
         end
 

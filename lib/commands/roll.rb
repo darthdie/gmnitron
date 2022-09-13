@@ -2,64 +2,12 @@
 
 module Commands
   class Roll
-    def Roll.register(bot)
-      @instance ||= Roll.new(bot)
+    def self.register(bot)
+      @register ||= Roll.new(bot)
     end
 
     def initialize(bot)
-      bot.register_application_command(:roll, 'Die rolling commands', server_id: ENV['SLASH_COMMAND_BOT_SERVER_ID']) do |cmd|
-        cmd.subcommand(:min, 'Rolls a dice pool and highlights the min die.') do |sub|
-          sub.string('die_1', 'The first die to roll, e.g. d4', required: true)
-          sub.string('die_2', 'The second die to roll, e.g. d6', required: true)
-          sub.string('die_3', 'The third die to roll, e.g. d8', required: true)
-          sub.string('modifier', 'The modifier to apply to the roll, e.g. +2')
-        end
-
-        cmd.subcommand(:mid, 'Rolls a dice pool and highlights the mid die.') do |sub|
-          sub.string('die_1', 'The first die to roll, e.g. d4', required: true)
-          sub.string('die_2', 'The second die to roll, e.g. d6', required: true)
-          sub.string('die_3', 'The third die to roll, e.g. d8', required: true)
-          sub.string('modifier', 'The modifier to apply to the roll, e.g. +2')
-        end
-
-        cmd.subcommand(:max, 'Rolls a dice pool and highlights the max die.') do |sub|
-          sub.string('die_1', 'The first die to roll, e.g. d4', required: true)
-          sub.string('die_2', 'The second die to roll, e.g. d6', required: true)
-          sub.string('die_3', 'The third die to roll, e.g. d8', required: true)
-          sub.string('modifier', 'The modifier to apply to the roll, e.g. +2')
-        end
-
-        cmd.subcommand(:overcome, 'Rolls a dice pool and returns the overcome result.') do |sub|
-          sub.string('effect_die', 'The effect die to be used.', required: true, choices: { 'min' => :min, 'mid' => :mid, 'max' => :max })
-          sub.string('die_1', 'The first die to roll, e.g. d4', required: true)
-          sub.string('die_2', 'The second die to roll, e.g. d6', required: true)
-          sub.string('die_3', 'The third die to roll, e.g. d8', required: true)
-          sub.string('modifier', 'The modifier to apply to the roll, e.g. +2')
-        end
-
-        cmd.subcommand(:boost, 'Rolls a dice pool and returns the boost result.') do |sub|
-          sub.string('effect_die', 'The effect die to be used.', required: true, choices: { 'min' => :min, 'mid' => :mid, 'max' => :max })
-          sub.string('die_1', 'The first die to roll, e.g. d4', required: true)
-          sub.string('die_2', 'The second die to roll, e.g. d6', required: true)
-          sub.string('die_3', 'The third die to roll, e.g. d8', required: true)
-          sub.string('modifier', 'The modifier to apply to the roll, e.g. +2')
-        end
-
-        cmd.subcommand(:hinder, 'Rolls a dice pool and returns the hinder result.') do |sub|
-          sub.string('effect_die', 'The effect die to be used.', required: true, choices: { 'min' => :min, 'mid' => :mid, 'max' => :max })
-          sub.string('die_1', 'The first die to roll, e.g. d4', required: true)
-          sub.string('die_2', 'The second die to roll, e.g. d6', required: true)
-          sub.string('die_3', 'The third die to roll, e.g. d8', required: true)
-          sub.string('modifier', 'The modifier to apply to the roll, e.g. +2')
-        end
-
-        bot.application_command(:roll).subcommand(:min, &method(:roll_min_command))
-        bot.application_command(:roll).subcommand(:mid, &method(:roll_mid_command))
-        bot.application_command(:roll).subcommand(:max, &method(:roll_max_command))
-        bot.application_command(:roll).subcommand(:overcome, &method(:roll_overcome_command))
-        bot.application_command(:roll).subcommand(:boost, &method(:roll_boost_command))
-        bot.application_command(:roll).subcommand(:hinder, &method(:roll_hinder_command))
-      end
+      register_commands(bot)
     end
 
     def roll_min_command(event)
@@ -87,7 +35,7 @@ module Commands
     end
 
     def roll_overcome_command(event)
-      effect_die = event.options['effect_die'].to_sym
+      effect_die = event.options["effect_die"].to_sym
       rolls = Models::DicePool.new(event.options).roll(effect_die)
 
       content = Models::OvercomeFormatter.format(rolls)
@@ -96,7 +44,7 @@ module Commands
     end
 
     def roll_boost_command(event)
-      effect_die = event.options['effect_die'].to_sym
+      effect_die = event.options["effect_die"].to_sym
       rolls = Models::DicePool.new(event.options).roll(effect_die)
 
       content = Models::ModFormatter.format(rolls, "+")
@@ -105,7 +53,7 @@ module Commands
     end
 
     def roll_hinder_command(event)
-      effect_die = event.options['effect_die'].to_sym
+      effect_die = event.options["effect_die"].to_sym
       rolls = Models::DicePool.new(event.options).roll(effect_die)
 
       content = Models::ModFormatter.format(rolls, "-")
@@ -136,5 +84,50 @@ module Commands
     # (defn hinder [data]
     #   (let [[effect-die d1 d2 d3 & modifiers] (:arguments data)]
     #     (roll-mod effect-die [d1 d2 d3] modifiers "-")))
+  end
+
+  private
+
+  def register_commands(bot)
+    bot.register_application_command(:roll, "Die rolling commands") do |cmd|
+      register_die_and_modifier_command(cmd, :min, "Rolls a dice pool and highlights the min die.")
+      register_die_and_modifier_command(cmd, :mid, "Rolls a dice pool and highlights the mid die.")
+      register_die_and_modifier_command(cmd, :max, "Rolls a dice pool and highlights the max die.")
+
+      register_effect_and_die_and_modifier_command(cmd, :overcome, "Rolls a dice pool and returns the overcome result.")
+      register_effect_and_die_and_modifier_command(cmd, :boost, "Rolls a dice pool and returns the boost result.")
+      register_effect_and_die_and_modifier_command(cmd, :hinder, "Rolls a dice pool and returns the register result.")
+
+      bot.application_command(:roll).subcommand(:min, &method(:roll_min_command))
+      bot.application_command(:roll).subcommand(:mid, &method(:roll_mid_command))
+      bot.application_command(:roll).subcommand(:max, &method(:roll_max_command))
+      bot.application_command(:roll).subcommand(:overcome, &method(:roll_overcome_command))
+      bot.application_command(:roll).subcommand(:boost, &method(:roll_boost_command))
+      bot.application_command(:roll).subcommand(:hinder, &method(:roll_hinder_command))
+    end
+  end
+
+  def register_die_and_modifier_command(cmd, name, description)
+    cmd.subcommand(name, description) do |sub|
+      sub.string("die_1", "The first die to roll, e.g. d4", required: true)
+      sub.string("die_2", "The second die to roll, e.g. d6", required: true)
+      sub.string("die_3", "The third die to roll, e.g. d8", required: true)
+      sub.string("modifier", "The modifier to apply to the roll, e.g. +2")
+    end
+  end
+
+  def register_effect_and_die_and_modifier_command(cmd, name, description)
+    cmd.subcommand(name, description) do |sub|
+      sub.string(
+        "effect_die",
+        "The effect die to be used.",
+        required: true,
+        choices: { "min" => :min, "mid" => :mid, "max" => :max }
+      )
+      sub.string("die_1", "The first die to roll, e.g. d4", required: true)
+      sub.string("die_2", "The second die to roll, e.g. d6", required: true)
+      sub.string("die_3", "The third die to roll, e.g. d8", required: true)
+      sub.string("modifier", "The modifier to apply to the roll, e.g. +2")
+    end
   end
 end
