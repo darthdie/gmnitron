@@ -19,7 +19,7 @@ RSpec.describe Models::ModFormatter do
       rolls = Models::DicePool.new(options).roll(:min)
 
       message = described_class.format(rolls, "+")
-      expect(message).to eq("\r\nRolled **3** (*d8:* **3**, *d6:* **3**, *d4:* **3**).\r\n+ 1")
+      expect(message).to eq("Rolled **3** (*d8:* **3**, *d6:* **3**, *d4:* **3**).\r\n+ 1")
     end
 
     it "formats with a modifier" do
@@ -32,7 +32,7 @@ RSpec.describe Models::ModFormatter do
       rolls = Models::DicePool.new(options).roll(:min)
 
       message = described_class.format(rolls, "+")
-      expect(message).to eq("\r\nRolled **5** = 3 + 2 (*d8:* **3**, *d6:* **3**, *d4:* **3**).\r\n+ 2")
+      expect(message).to eq("Rolled **5** = 3 + 2 (*d8:* **3**, *d6:* **3**, *d4:* **3**).\r\n+ 2")
     end
   end
 
@@ -46,7 +46,7 @@ RSpec.describe Models::ModFormatter do
       rolls = Models::DicePool.new(options).roll(:min)
 
       message = described_class.format(rolls, "-")
-      expect(message).to eq("\r\nRolled **3** (*d8:* **3**, *d6:* **3**, *d4:* **3**).\r\n- 1")
+      expect(message).to eq("Rolled **3** (*d8:* **3**, *d6:* **3**, *d4:* **3**).\r\n- 1")
     end
 
     it "formats with a modifier" do
@@ -59,7 +59,7 @@ RSpec.describe Models::ModFormatter do
       rolls = Models::DicePool.new(options).roll(:min)
 
       message = described_class.format(rolls, "-")
-      expect(message).to eq("\r\nRolled **5** = 3 + 2 (*d8:* **3**, *d6:* **3**, *d4:* **3**).\r\n- 2")
+      expect(message).to eq("Rolled **5** = 3 + 2 (*d8:* **3**, *d6:* **3**, *d4:* **3**).\r\n- 2")
     end
   end
 end

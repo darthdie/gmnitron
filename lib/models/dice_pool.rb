@@ -37,7 +37,7 @@ module Models
     def roll(effect_die)
       # Move to this to a Struct?
       rolls = die_sizes.map do |die_size|
-        DiceRoll.new(size: die_size, value: rand(1..die_size))
+        DiceRoll.new(die_size: die_size, value: rand(1..die_size))
       end
       rolls = rolls.sort_by(&:value)
 
