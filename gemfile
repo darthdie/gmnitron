@@ -2,7 +2,11 @@ source 'https://rubygems.org'
 
 gem 'discordrb', github: 'shardlab/discordrb', branch: 'main'
 gem 'activesupport'
+gem 'class_loader'
+
 group :test, :development do
-    gem 'byebug'
-    gem 'rspec'
+  gem 'byebug'
+  gem 'rspec'
+  gem 'rubocop'
+  gem 'rubocop-rspec'
 end
