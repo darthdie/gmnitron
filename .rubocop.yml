@@ -2,7 +2,6 @@
 
 require:
   - rubocop-performance
-  - rubocop-rspec
 
 AllCops:
   NewCops: enable
@@ -131,7 +130,7 @@ Style/TrailingCommaInArrayLiteral:
     - comma
     - consistent_comma
     - no_comma
-  Enabled: true
+  Enabled: false
 
 Style/TrailingCommaInHashLiteral:
   Description: 'Checks for trailing comma in hash literals.'
@@ -141,7 +140,7 @@ Style/TrailingCommaInHashLiteral:
     - comma
     - consistent_comma
     - no_comma
-  Enabled: true
+  Enabled: false
 
 # Layout Cops
 

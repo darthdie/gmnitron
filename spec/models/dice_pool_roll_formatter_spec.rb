@@ -1,21 +1,19 @@
 # frozen_string_literal: true
 
-require 'models/dice_pool'
-require 'models/dice_pool_roll_formatter'
-require 'byebug'
+require "models/dice_pool"
+require "models/dice_pool_roll_formatter"
+require "byebug"
 
 RSpec.describe Models::DicePoolRollFormatter do
-  before(:each) do
-    allow_any_instance_of(Object).to receive(:rand) do |range|
-      3
-    end
+  before do
+    allow_any_instance_of(Object).to receive(:rand).and_return(3)
   end
 
   it "formats without a modifier" do
     options = {
-      'die_1' => 'd4',
-      'die_2' => 'd8',
-      'die_3' => 'd6'
+      "die_1" => "d4",
+      "die_2" => "d8",
+      "die_3" => "d6",
     }
     rolls = Models::DicePool.new(options).roll(:min)
 
@@ -25,10 +23,10 @@ RSpec.describe Models::DicePoolRollFormatter do
 
   it "formats with a modifier" do
     options = {
-      'die_1' => 'd4',
-      'die_2' => 'd8',
-      'die_3' => 'd6',
-      'modifier' => '+2'
+      "die_1" => "d4",
+      "die_2" => "d8",
+      "die_3" => "d6",
+      "modifier" => "+2",
     }
     rolls = Models::DicePool.new(options).roll(:min)
 
