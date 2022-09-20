@@ -21,9 +21,11 @@ require_relative "../lib/commands/fun"
 require_relative "../lib/commands/roll"
 require_relative "../lib/models/dice_pool"
 require_relative "../lib/models/die"
+require_relative "../lib/models/modifier"
 require_relative "../lib/models/dice_pool_roll_formatter"
 require_relative "../lib/models/overcome_formatter"
 require_relative "../lib/models/mod_formatter"
+require_relative "../lib/models/minion_roll_formatter"
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate

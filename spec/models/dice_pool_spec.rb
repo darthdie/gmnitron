@@ -9,9 +9,9 @@ RSpec.describe Models::DicePool do
   end
 
   [
-    { type: :min, expected_value: 3 },
-    { type: :mid, expected_value: 3 },
-    { type: :max, expected_value: 3 },
+    { type: :min, expected_value: 3, expected_size: 4 },
+    { type: :mid, expected_value: 3, expected_size: 6  },
+    { type: :max, expected_value: 3, expected_size: 8  },
   ].each do |roll_expectations|
     type = roll_expectations[:type]
     expected_value = roll_expectations[:expected_value]
@@ -28,10 +28,9 @@ RSpec.describe Models::DicePool do
         expect(rolls).to eq(Models::DicePoolRoll.new(
           rolls: [Models::DiceRoll.new(die_size: 8, value: 3), Models::DiceRoll.new(die_size: 6, value: 3),
                   Models::DiceRoll.new(die_size: 4, value: 3)],
-          total: expected_value,
-          effect_die_value: 3
+          effect_die: Models::DiceRoll.new(die_size: roll_expectations[:expected_size], value: 3, total: 3),
+          modifier: Models::Modifier.new(nil, 0)
         ))
-        # expect(pool.format_for_display).to eq("Rolled **5** (*d8:* **5**, *d6:* **5**, *d4:* **5**)")
       end
 
       it "rolls 3 dice with a modifier" do
@@ -46,11 +45,9 @@ RSpec.describe Models::DicePool do
         expect(rolls).to eq(Models::DicePoolRoll.new(
           rolls: [Models::DiceRoll.new(die_size: 8, value: 3), Models::DiceRoll.new(die_size: 6, value: 3),
                   Models::DiceRoll.new(die_size: 4, value: 3)],
-          total: expected_value + 2,
-          effect_die_value: 3,
-          modifier: ["+", 2]
+          effect_die: Models::DiceRoll.new(die_size: roll_expectations[:expected_size], value: 3, total: 3),
+          modifier: Models::Modifier.new("+", 2)
         ))
-        # expect(pool.format_for_display).to eq("Rolled **7** = 5 + 2 (*d8:* **5**, *d6:* **5**, *d4:* **5**)")
       end
     end
   end

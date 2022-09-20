@@ -15,7 +15,33 @@ module Models
     end
 
     def roll
-      self.class.roll(size)
+      DiceRoll.new(die_size: size, value: self.class.roll(size))
+    end
+  end
+
+  class DiceRoll
+    include Comparable
+
+    attr_reader :die_size, :value, :total
+
+    def initialize(die_size:, value:, total: nil)
+      @die_size = die_size
+      @value = value
+      @total = total || value
+    end
+
+    def <=>(other_roll)
+      value <=> other_roll.value
+    end
+
+    def apply!(modifier)
+      return unless modifier.present?
+
+      @total = @total.send(modifier.operator, modifier.value)
+    end
+
+    def to_s
+      "d#{die_size}: #{roll} (#{total})"
     end
   end
 end

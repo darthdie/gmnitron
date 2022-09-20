@@ -13,7 +13,7 @@ module Models
     end
 
     def format
-      roll_value = rolls.total
+      roll_value = rolls.effect_die.total
       outcome = overcome_outcome_for(roll_value)
 
       die_display = DicePoolRollFormatter.format(rolls)

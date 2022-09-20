@@ -62,35 +62,16 @@ module Commands
     end
 
     def roll_minion_command(event)
-      die = Die.parse(event.options['die']).roll
-      modifier = Modifier.parse(event.options['modifier'])
-      # total = roll + modifier.value
-      versus = event.options['versus']
-      # (defn roll-minion [die]
-      #   (let [{ die-size :die modifiers :modifiers save :save } die
-      #         roll (roll-die die-size)
-      #         total (apply-modifiers roll modifiers)
-      #         modifier-expression (when (not-empty modifiers) (str "= " roll " " (modifiers->str modifiers)))
-      #         save-message (when save (str (get-minion-save-message total save die-size)))
-      #         save-expression (when save (str "vs. " save ""))]
-      #     (save-message-str total modifier-expression save-expression save-message)))
+      die = Models::Die.parse(event.options['die']).roll
+      modifier = Models::Modifier.parse(event.options['modifier'])
+      save = event.options['save_versus']
+      if save.present?
+        save = save.to_i
+      end
 
-      # (defn str->minion-die [str]
-      #   (let [[die & rest] (str/split str #" ")]
-      #     (merge { :die (parse-die die) } (parse-modifier-save rest))))
+      content = Models::MinionRollFormatter.format(die, modifier, save: save)
 
-      # (defn str->minion-roll [str save]
-      #   (-> str
-      #     (str/trim)
-      #     (str->minion-die)
-      #     (merge { :save (str->save save) })
-      #     (roll-minion)))
-
-      # (defn minion-command [data]
-      #   (let [arguments (:arguments data)
-      #         [_ rolls save] (re-matches villian-compound-regex (clojure.string/join " " arguments))
-      #         dice (str/split rolls #",")]
-      #     (str (str/join "\r\n\r\n" (map #(str->minion-roll % save) dice)))))
+      event.respond(content: content)
     end
 
     private
@@ -108,7 +89,7 @@ module Commands
         cmd.subcommand(:minion, "Rolls a minion save, optionally vs a number.") do |sub|
           sub.string("die", "The die to roll, e.g. d4", required: true)
           sub.string("modifier", "The modifier to apply to the roll, e.g. +2")
-          sub.string("versus", "The number to roll against.")
+          sub.integer("save_versus", "The number to roll against.")
         end
 
         bot.application_command(:roll).subcommand(:min, &method(:roll_min_command))
@@ -117,6 +98,7 @@ module Commands
         bot.application_command(:roll).subcommand(:overcome, &method(:roll_overcome_command))
         bot.application_command(:roll).subcommand(:boost, &method(:roll_boost_command))
         bot.application_command(:roll).subcommand(:hinder, &method(:roll_hinder_command))
+        bot.application_command(:roll).subcommand(:minion, &method(:roll_minion_command))
       end
     end
 

@@ -9,7 +9,7 @@ RSpec.describe Models::DicePoolRollFormatter do
     allow_any_instance_of(Object).to receive(:rand).and_return(3)
   end
 
-  it "formats without a modifier" do
+  fit "formats without a modifier" do
     options = {
       "die_1" => "d4",
       "die_2" => "d8",
