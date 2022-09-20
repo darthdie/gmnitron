@@ -5,7 +5,7 @@ module Models
     include Comparable
     def self.parse(string)
       string ||= ""
-      Modifier.new(string[0], string[1..].to_i)
+      new(string[0], string[1..].to_i)
     end
 
     attr_reader :operator, :value

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Models::MinionRollFormatter do
+RSpec.describe Models::LieutenantRollFormatter do
   before do
     allow_any_instance_of(Object).to receive(:rand).and_return(3)
   end
@@ -21,24 +21,24 @@ RSpec.describe Models::MinionRollFormatter do
     expect(message).to eq("Rolled **7** = 3 + 4")
   end
 
-  it "defeats a minion" do
-    die = Models::Die.parse("d6").roll
+  it "defeats a lieutenant" do
+    die = Models::Die.parse("d4").roll
 
     message = described_class.format(die, nil, save: 6)
-    expect(message).to eq("Rolled **3** vs. 6 \r\nThe Minion is defeated!")
+    expect(message).to eq("Rolled **3** vs. 6 \r\nThe Lieutenant is defeated!")
   end
 
-  it "a minion can survive" do
+  it "a lieutenant can survive" do
     die = Models::Die.parse("d4").roll
 
     message = described_class.format(die, nil, save: 2)
-    expect(message).to eq("Rolled **3** vs. 2 \r\nThe Minion survives to do more evil.")
+    expect(message).to eq("Rolled **3** vs. 2 \r\nThe Lieutenant lives another day.")
   end
 
-  it "a minion be reduced" do
+  it "a lieutenant be reduced" do
     die = Models::Die.parse("d6").roll
 
-    message = described_class.format(die, nil, save: 2)
-    expect(message).to eq("Rolled **3** vs. 2 \r\nThe Minion is reduced to a d4.")
+    message = described_class.format(die, nil, save: 4)
+    expect(message).to eq("Rolled **3** vs. 4 \r\nThe Lieutenant is reduced to a d4.")
   end
 end

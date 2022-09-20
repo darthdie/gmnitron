@@ -61,6 +61,7 @@ module Commands
       event.respond(content: content)
     end
 
+    # TODO: Re-add support for any number of minions
     def roll_minion_command(event)
       die = Models::Die.parse(event.options["die"]).roll
       modifier = Models::Modifier.parse(event.options["modifier"])
@@ -68,6 +69,17 @@ module Commands
 
       die.apply!(modifier)
       content = Models::MinionRollFormatter.format(die, modifier, save: save)
+
+      event.respond(content: content)
+    end
+
+    def roll_lieutenant_command(event)
+      die = Models::Die.parse(event.options["die"]).roll
+      modifier = Models::Modifier.parse(event.options["modifier"])
+      save = event.options["save_versus"]
+
+      die.apply!(modifier)
+      content = Models::LieutenantRollFormatter.format(die, modifier, save: save)
 
       event.respond(content: content)
     end
@@ -94,6 +106,12 @@ module Commands
           sub.integer("save_versus", "The number to roll against.")
         end
 
+        cmd.subcommand(:lieutenant, "Rolls a lieutenant save, optionally vs a number.") do |sub|
+          sub.string("die", "The die to roll, e.g. d4", required: true)
+          sub.string("modifier", "The modifier to apply to the roll, e.g. +2")
+          sub.integer("save_versus", "The number to roll against.")
+        end
+
         bot.application_command(:roll).subcommand(:min, &method(:roll_min_command))
         bot.application_command(:roll).subcommand(:mid, &method(:roll_mid_command))
         bot.application_command(:roll).subcommand(:max, &method(:roll_max_command))
@@ -101,6 +119,7 @@ module Commands
         bot.application_command(:roll).subcommand(:boost, &method(:roll_boost_command))
         bot.application_command(:roll).subcommand(:hinder, &method(:roll_hinder_command))
         bot.application_command(:roll).subcommand(:minion, &method(:roll_minion_command))
+        bot.application_command(:roll).subcommand(:lieutenant, &method(:roll_lieutenant_command))
       end
     end
 

@@ -5,7 +5,7 @@ module Models
     attr_reader :rolls
 
     def self.format(rolls)
-      OvercomeFormatter.new(rolls).format
+      new(rolls).format
     end
 
     def initialize(rolls)

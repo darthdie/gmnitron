@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require "models/dice_pool"
-require "models/dice_pool_roll_formatter"
-require "byebug"
-
 RSpec.describe Models::DicePoolRollFormatter do
   before do
     allow_any_instance_of(Object).to receive(:rand).and_return(3)

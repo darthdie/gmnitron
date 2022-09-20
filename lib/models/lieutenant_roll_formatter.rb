@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Models
-  class MinionRollFormatter
+  class LieutenantRollFormatter
     attr_reader :die, :save, :modifier
 
     def self.format(die, modifier, save: nil)
@@ -24,10 +24,11 @@ module Models
     end
 
     def save_outcome
-      return "The Minion is defeated!" if die.die_size < 4 || die.total < save
-      return "The Minion survives to do more evil." if die.die_size == 4
+      failed_save = die.total < save
+      return "The Lieutenant is defeated!" if die.die_size <= 4 && failed_save
+      return "The Lieutenant is reduced to a d#{die.die_size - 2}." if failed_save
 
-      "The Minion is reduced to a d#{die.die_size - 2}."
+      "The Lieutenant lives another day."
     end
   end
 end

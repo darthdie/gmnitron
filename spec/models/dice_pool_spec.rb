@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require "models/dice_pool"
-require "byebug"
-
 RSpec.describe Models::DicePool do
   before do
     allow_any_instance_of(Object).to receive(:rand).and_return(3)
@@ -23,13 +20,18 @@ RSpec.describe Models::DicePool do
           "die_2" => "d8",
           "die_3" => "d6",
         }
-        pool = described_class.new(options)
-        rolls = pool.roll(type)
-        expect(rolls).to eq(Models::DicePoolRoll.new(
-          rolls: [Models::DiceRoll.new(die_size: 8, value: 3), Models::DiceRoll.new(die_size: 6, value: 3),
-                  Models::DiceRoll.new(die_size: 4, value: 3)],
-          effect_die: Models::DiceRoll.new(die_size: roll_expectations[:expected_size], value: expected_value, total: 3),
-          modifier: Models::Modifier.new(nil, 0)
+        rolls = described_class.new(options).roll(type)
+
+        expect(rolls.rolls).to match_array([
+          Models::DiceRoll.new(die_size: 8, value: expected_value),
+          Models::DiceRoll.new(die_size: 6, value: expected_value),
+          Models::DiceRoll.new(die_size: 4, value: expected_value)
+        ])
+
+        expect(rolls.effect_die).to eq(Models::DiceRoll.new(
+          die_size: roll_expectations[:expected_size],
+          value: expected_value,
+          total: expected_value
         ))
       end
 
@@ -40,21 +42,14 @@ RSpec.describe Models::DicePool do
           "die_3" => "d6",
           "modifier" => "+2",
         }
-        pool = described_class.new(options)
-        rolls = pool.roll(type)
-        # TODO: should it test this? -- it dislikes that one of them has a different total
-        # expect(rolls.rolls).to match_array([
-        #   Models::DiceRoll.new(die_size: 8, value: 3),
-        #   Models::DiceRoll.new(die_size: 6, value: 3),
-        #   Models::DiceRoll.new(die_size: 4, value: 3)
-        # ])
 
+        rolls = described_class.new(options).roll(type)
         expect(rolls.modifier).to eq(Models::Modifier.new("+", 2))
 
         expect(rolls.effect_die).to eq(Models::DiceRoll.new(
           die_size: roll_expectations[:expected_size],
           value: expected_value,
-          total: 5
+          total: expected_value + 2
         ))
       end
     end

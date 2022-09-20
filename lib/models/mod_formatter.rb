@@ -5,7 +5,7 @@ module Models
     attr_reader :rolls, :operator
 
     def self.format(rolls, operator)
-      ModFormatter.new(rolls, operator).format
+      new(rolls, operator).format
     end
 
     def initialize(rolls, operator)

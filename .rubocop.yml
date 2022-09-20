@@ -175,6 +175,9 @@ Layout/MultilineMethodCallIndentation:
   Enabled: true
   EnforcedStyle: indented
 
+Layout/FirstArrayElementIndentation:
+  EnforcedStyle: consistent
+
 # Bundler Cops
 
 Bundler/OrderedGems:

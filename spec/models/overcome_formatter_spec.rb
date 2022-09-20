@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require "models/dice_pool"
-require "models/overcome_formatter"
-require "byebug"
-
 RSpec.describe Models::OvercomeFormatter do
   before do
     allow_any_instance_of(Object).to receive(:rand).and_return(3)

@@ -17,7 +17,7 @@ module Models
     attr_reader :modifier, :dice
 
     def self.roll(options, effect_die)
-      DicePool.new(options).roll(effect_die)
+      new(options).roll(effect_die)
     end
 
     def initialize(options)
@@ -26,9 +26,7 @@ module Models
     end
 
     def roll(effect_die)
-      rolls = dice.map(&:roll)
-
-      rolls = rolls.sort_by(&:value)
+      rolls = dice.map(&:roll).sort_by(&:value)
 
       effective_die = effect_die(rolls, effect_die)
       effective_die.apply!(modifier)

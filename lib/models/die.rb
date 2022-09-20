@@ -5,7 +5,7 @@ module Models
     end
 
     def self.parse(string)
-      Die.new(string.scan(/\d+/).first.to_i)
+      new(string.scan(/\d+/).first.to_i)
     end
 
     attr_reader :size
