@@ -7,6 +7,10 @@ module Models
     def modifier?
       modifier.present?
     end
+
+    def to_s
+      "lol butts"
+    end
   end
 
   class DicePool

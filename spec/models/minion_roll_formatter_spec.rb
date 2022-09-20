@@ -10,12 +10,6 @@ RSpec.describe Models::MinionRollFormatter do
   end
 
   fit "formats without a modifier" do
-    options = {
-      "die_1" => "d4",
-      "die_2" => "d8",
-      "die_3" => "d6",
-    }
-
     die = Models::Die.parse("d6").roll
 
     message = described_class.format(die, nil)
@@ -23,13 +17,6 @@ RSpec.describe Models::MinionRollFormatter do
   end
 
   it "formats with a modifier" do
-    options = {
-      "die_1" => "d4",
-      "die_2" => "d8",
-      "die_3" => "d6",
-      "modifier" => "+2",
-    }
-
     die = Models::Die.parse("d6").roll
     modifier = Models::Modifier.new("+", 4)
     die.apply!(modifier)
@@ -39,13 +26,6 @@ RSpec.describe Models::MinionRollFormatter do
   end
 
   it "defeats a minion" do
-    options = {
-      "die_1" => "d4",
-      "die_2" => "d8",
-      "die_3" => "d6",
-      "modifier" => "+2",
-    }
-
     die = Models::Die.parse("d6").roll
 
     message = described_class.format(die, nil, save: 6)
@@ -53,13 +33,6 @@ RSpec.describe Models::MinionRollFormatter do
   end
 
   it "a minion can survive" do
-    options = {
-      "die_1" => "d4",
-      "die_2" => "d8",
-      "die_3" => "d6",
-      "modifier" => "+2",
-    }
-
     die = Models::Die.parse("d4").roll
 
     message = described_class.format(die, nil, save: 2)
@@ -67,13 +40,6 @@ RSpec.describe Models::MinionRollFormatter do
   end
 
   it "a minion be reduced" do
-    options = {
-      "die_1" => "d4",
-      "die_2" => "d8",
-      "die_3" => "d6",
-      "modifier" => "+2",
-    }
-
     die = Models::Die.parse("d6").roll
 
     message = described_class.format(die, nil, save: 2)

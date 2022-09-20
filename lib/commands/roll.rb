@@ -62,9 +62,9 @@ module Commands
     end
 
     def roll_minion_command(event)
-      die = Models::Die.parse(event.options['die']).roll
-      modifier = Models::Modifier.parse(event.options['modifier'])
-      save = event.options['save_versus']
+      die = Models::Die.parse(event.options["die"]).roll
+      modifier = Models::Modifier.parse(event.options["modifier"])
+      save = event.options["save_versus"]
 
       die.apply!(modifier)
       content = Models::MinionRollFormatter.format(die, modifier, save: save)
@@ -80,7 +80,11 @@ module Commands
         register_die_and_modifier_command(cmd, :mid, "Rolls a dice pool and highlights the mid die.")
         register_die_and_modifier_command(cmd, :max, "Rolls a dice pool and highlights the max die.")
 
-        register_effect_and_die_and_modifier_command(cmd, :overcome, "Rolls a dice pool and returns the overcome result.")
+        register_effect_and_die_and_modifier_command(
+          cmd,
+          :overcome,
+          "Rolls a dice pool and returns the overcome result."
+        )
         register_effect_and_die_and_modifier_command(cmd, :boost, "Rolls a dice pool and returns the boost result.")
         register_effect_and_die_and_modifier_command(cmd, :hinder, "Rolls a dice pool and returns the register result.")
 

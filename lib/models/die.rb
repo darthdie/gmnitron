@@ -30,8 +30,8 @@ module Models
       @total = total || value
     end
 
-    def <=>(other_roll)
-      value <=> other_roll.value
+    def <=>(other)
+      total <=> other.total
     end
 
     def apply!(modifier)
