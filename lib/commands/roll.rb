@@ -84,6 +84,23 @@ module Commands
       event.respond(content: content)
     end
 
+    def roll_reaction_command(event)
+      die = Models::Die.parse(event.options["die"]).roll
+      modifier = Models::Modifier.parse(event.options["modifier"])
+      die.apply!(modifier)
+
+      content = Models::ReactionRollFormatter.format(die, modifier)
+
+      event.respond(content: content)
+    end
+
+    def roll_chuck_command(event)
+      current_time_in_ms = (current_time.to_f * 1000).to_i
+      srand(current_time_in_ms + Math::PI)
+
+      event.respond(content: "Dice have been chucked, and new ones have been commissioned.")
+    end
+
     private
 
     def register_commands(bot)
@@ -112,6 +129,13 @@ module Commands
           sub.integer("save_versus", "The number to roll against.")
         end
 
+        cmd.subcommand(:reaction, "Rolls a reaction die.") do |sub|
+          sub.string("die", "The die to roll, e.g. d4", required: true)
+          sub.string("modifier", "The modifier to apply to the roll, e.g. +2")
+        end
+
+        cmd.subcommand(:chuck, "Chucks the current dice.")
+
         bot.application_command(:roll).subcommand(:min, &method(:roll_min_command))
         bot.application_command(:roll).subcommand(:mid, &method(:roll_mid_command))
         bot.application_command(:roll).subcommand(:max, &method(:roll_max_command))
@@ -120,6 +144,8 @@ module Commands
         bot.application_command(:roll).subcommand(:hinder, &method(:roll_hinder_command))
         bot.application_command(:roll).subcommand(:minion, &method(:roll_minion_command))
         bot.application_command(:roll).subcommand(:lieutenant, &method(:roll_lieutenant_command))
+        bot.application_command(:roll).subcommand(:reaction, &method(:roll_reaction_command))
+        bot.application_command(:roll).subcommand(:chuck, &method(:roll_chuck_command))
       end
     end
 
