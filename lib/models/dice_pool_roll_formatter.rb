@@ -16,6 +16,7 @@ module Models
       total_value = rolls.effect_die.total
       dice_pool_display = rolls.rolls.map { |roll| "*d#{roll.die_size}:* **#{roll.value}**" }.join(", ")
 
+      # TODO: roll this into the effect die?
       unless rolls.modifier.present?
         return "Rolled **#{total_value}** (#{dice_pool_display})"
       end

@@ -15,13 +15,11 @@ module Models
     end
 
     def format
-      die.apply!(modifier)
-
-      [
+      message = [
         "Rolled **#{die.total}**",
         ("= #{die.value} #{modifier.operator} #{modifier.value}" if modifier.present?),
         ("vs. #{save}" if save.present?),
-        (save_outcome if save.present?)
+        ("\r\n#{save_outcome}" if save.present?)
       ].compact.join(" ")
     end
 

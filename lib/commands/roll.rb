@@ -65,10 +65,8 @@ module Commands
       die = Models::Die.parse(event.options['die']).roll
       modifier = Models::Modifier.parse(event.options['modifier'])
       save = event.options['save_versus']
-      if save.present?
-        save = save.to_i
-      end
 
+      die.apply!(modifier)
       content = Models::MinionRollFormatter.format(die, modifier, save: save)
 
       event.respond(content: content)

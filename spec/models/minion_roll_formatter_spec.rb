@@ -32,6 +32,7 @@ RSpec.describe Models::MinionRollFormatter do
 
     die = Models::Die.parse("d6").roll
     modifier = Models::Modifier.new("+", 4)
+    die.apply!(modifier)
 
     message = described_class.format(die, modifier)
     expect(message).to eq("Rolled **7** = 3 + 4")
@@ -48,7 +49,7 @@ RSpec.describe Models::MinionRollFormatter do
     die = Models::Die.parse("d6").roll
 
     message = described_class.format(die, nil, save: 6)
-    expect(message).to eq("Rolled **3** vs. 6 The Minion is defeated!")
+    expect(message).to eq("Rolled **3** vs. 6 \r\nThe Minion is defeated!")
   end
 
   it "a minion can survive" do
@@ -62,7 +63,7 @@ RSpec.describe Models::MinionRollFormatter do
     die = Models::Die.parse("d4").roll
 
     message = described_class.format(die, nil, save: 2)
-    expect(message).to eq("Rolled **3** vs. 2 The Minion survives to do more evil.")
+    expect(message).to eq("Rolled **3** vs. 2 \r\nThe Minion survives to do more evil.")
   end
 
   it "a minion be reduced" do
@@ -76,6 +77,6 @@ RSpec.describe Models::MinionRollFormatter do
     die = Models::Die.parse("d6").roll
 
     message = described_class.format(die, nil, save: 2)
-    expect(message).to eq("Rolled **3** vs. 2 The Minion is reduced to a d4.")
+    expect(message).to eq("Rolled **3** vs. 2 \r\nThe Minion is reduced to a d4.")
   end
 end
