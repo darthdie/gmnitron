@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Models::ReactionRollFormatter do
+RSpec.describe Models::Formatters::ReactionRollFormatter do
   before do
     allow_any_instance_of(Object).to receive(:rand).and_return(3)
   end

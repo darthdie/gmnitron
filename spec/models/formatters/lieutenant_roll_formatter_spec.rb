@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Models::LieutenantRollFormatter do
+RSpec.describe Models::Formatters::LieutenantRollFormatter do
   before do
     allow_any_instance_of(Object).to receive(:rand).and_return(3)
   end

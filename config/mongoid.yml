@@ -1,0 +1,8 @@
+production:
+  clients:
+    default:
+      uri: "<%= ENV['DB_URI'] %>"
+development:
+  clients:
+    default:
+      uri: "<%= ENV['DB_URI'] %>"

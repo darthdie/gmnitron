@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Models
+module Models::Formatters
   class ReactionRollFormatter
     attr_reader :die, :save
 

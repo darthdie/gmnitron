@@ -16,7 +16,10 @@
 
 require "byebug"
 
-Dir["./lib/models/*.rb"].sort.each { |file| require file }
+[
+  *Dir["./lib/models/*.rb"],
+  *Dir["./lib/models/formatters/*.rb"]
+].sort.each { |file| require file }
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Models::MinionRollFormatter do
+RSpec.describe Models::Formatters::MinionRollFormatter do
   before do
     allow_any_instance_of(Object).to receive(:rand).and_return(3)
   end
