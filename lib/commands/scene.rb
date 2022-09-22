@@ -11,7 +11,7 @@ module Commands
     end
 
     def register_commands(bot)
-      bot.register_application_command(:session, "Session commands") do |cmd|
+      bot.register_application_command(:session, "Session commands", server_id: ENV.fetch("DISCORD_TEST_SERVER_ID", nil)) do |cmd|
       end
       # { :command "!hand" :handler hand-command :min-args 3 :max-args 3 :usage "!hand off (actor name) (actor to go next) OR !hand off to (actor to go next)" :description "Hands off the scene to the next actor" }
       # { :command "!establish" :handler establish :min-args 4 :usage "!establish (number of green ticks) (number of yellow ticks) (number of red ticks) (actors)" :description "Sets up the scene with specified number of ticks and actors." }

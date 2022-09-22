@@ -5,12 +5,14 @@ module Models
     include Mongoid::Document
 
     field :channel_id, type: Integer
-    field :green_ticks, type: Integer
-    field :yellow_ticks, type: Integer
-    field :red_ticks, type: Integer
-    field :current_tick, type: Integer
+    field :green_ticks, type: Integer, default: 1
+    field :yellow_ticks, type: Integer, default: 1
+    field :red_ticks, type: Integer, default: 1
+    field :current_tick, type: Integer, default: 0
 
-    has_many :actors
+    validates :channel_id, presence: true
+
+    has_many :actors, class_name: "Actor", inverse_of: :scene
   end
 end
 

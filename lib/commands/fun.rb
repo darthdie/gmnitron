@@ -7,7 +7,7 @@ module Commands
     end
 
     def initialize(bot)
-      bot.register_application_command(:fun, "Fun/meme commands") do
+      bot.register_application_command(:fun, "Fun/meme commands", server_id: ENV.fetch("DISCORD_TEST_SERVER_ID", nil)) do
         bot.register_application_command(:muffin, "It's muffin time!")
         bot.register_application_command(:censor, "Smhensors words") do |cmd|
           cmd.string("message", "The message to censor.", required: true)

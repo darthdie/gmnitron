@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Models::Formatters
-  class ReactionRollFormatter
+  class SceneRecapFormatter
     attr_reader :scene
 
     def self.format(scene)
@@ -13,12 +13,13 @@ module Models::Formatters
     end
 
     def format
+      # byebug
       # (str "***The Story so Far***\r\n\r\n" (get-scene-recap scene) "\r\n\r\n" (get-initiative-recap scene)
       [
         "***The Story so Far***",
         scene_formatted,
         initiative_formatted
-      ].join("\r\n\r\n")
+      ].compact.join("\r\n\r\n")
     end
 
     def scene_formatted
@@ -67,7 +68,7 @@ module Models::Formatters
       [
         current_actor_formatted,
         acted_formatted,
-        unacted
+        unacted_formatted
       ].compact.join("\r\n\r\n")
       # (defn get-initiative-recap [scene]
       #   (let [initiative (group-by :acted (filter #(= (get % :current false) false) (get scene :initiative)))
@@ -79,21 +80,21 @@ module Models::Formatters
     end
 
     def current_actor_formatted
-      actor = scene.actors.where(current: true).first
+      actor = scene.actors.filter { |actor| actor.current }.first
       return unless actor.present?
 
-      "**#{actor.name} is the current actor."
+      "**#{actor.name}** is the current actor."
     end
 
     def acted_formatted
-      actors = scene.actors.where(acted: true)
+      actors = scene.actors.filter { |actor| actor.acted && !actor.current }
       return unless actors.any?
 
       actors.map { |actor| format_actor(actor) }.join("\r\n")
     end
 
-    def acted_formatted
-      actors = scene.actors.where(unacted: true)
+    def unacted_formatted
+      actors = scene.actors.filter { |actor| !actor.acted && !actor.current }
       return unless actors.any?
 
       actors.map { |actor| format_actor(actor) }.join("\r\n")

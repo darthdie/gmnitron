@@ -3,7 +3,7 @@
 require 'mongoid'
 
 module Models
-  class Initiative
+  class Actor
     include Mongoid::Document
 
     field :name, type: String
@@ -11,14 +11,12 @@ module Models
     field :acted, type: Boolean, default: false
     field :current, type: Boolean, default: false
 
-    belongs_to :scene
+    belongs_to :scene, class_name: "Scene", inverse_of: :actor
     attr_readonly :search_name
 
     def name=(value)
-      update_attributes(
-        name: value,
-        search_name: value.downcase
-      )
+      write_attribute(:name, value)
+      write_attribute(:search_name, value.downcase)
     end
   end
 end

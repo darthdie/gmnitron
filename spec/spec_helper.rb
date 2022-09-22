@@ -16,10 +16,21 @@
 
 require "byebug"
 
+require_relative "../lib/enumerable.rb"
+
 [
   *Dir["./lib/models/*.rb"],
   *Dir["./lib/models/formatters/*.rb"]
 ].sort.each { |file| require file }
+
+Mongoid.configure do |config|
+  config.clients.default = {
+    database: "development",
+    uri: ENV['DB_URI']
+  }
+
+  config.log_level = :warn
+end
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate

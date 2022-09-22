@@ -2,7 +2,7 @@
 
 module Models::Formatters
   class ReactionRollFormatter
-    attr_reader :die, :save
+    attr_reader :die, :modifier
 
     def self.format(die, modifier)
       new(die, modifier).format

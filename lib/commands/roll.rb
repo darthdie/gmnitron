@@ -106,7 +106,7 @@ module Commands
     private
 
     def register_commands(bot)
-      bot.register_application_command(:roll, "Die rolling commands") do |cmd|
+      bot.register_application_command(:roll, "Die rolling commands", server_id: ENV.fetch("DISCORD_TEST_SERVER_ID", nil)) do |cmd|
         register_die_and_modifier_command(cmd, :min, "Rolls a dice pool and highlights the min die.")
         register_die_and_modifier_command(cmd, :mid, "Rolls a dice pool and highlights the mid die.")
         register_die_and_modifier_command(cmd, :max, "Rolls a dice pool and highlights the max die.")
