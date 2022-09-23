@@ -5,8 +5,8 @@ module Commands
         :integer,
         :string
       ].each do |type|
-        define_method :"#{type}" do |name:, description:, options: nil|
-          new(type, name, description, options)
+        define_method :"#{type}" do |name, description, options: nil|
+          new(type: type, name: name, description: description, options: options)
         end
       end
     end

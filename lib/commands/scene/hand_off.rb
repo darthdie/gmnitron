@@ -3,6 +3,8 @@
 module Commands
   class Scene
     class Hand
+      extend Commands::SceneHelpers
+
       ERRORS = {
         already_acted: "ERROR. ACTOR HAS ALREADY GONE THIS INITIATIVE.",
         actors_not_found: "ERROR. UNABLE TO ACCESS ACTOR. USE THE /introduce COMMAND TO ADD.",

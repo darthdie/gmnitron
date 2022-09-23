@@ -3,6 +3,8 @@
 module Commands
   class Scene
     class Establish
+      extend Commands::SceneHelpers
+
       def self.name
         :establish
       end
@@ -13,10 +15,10 @@ module Commands
 
       def self.arguments
         [
-          CommandArgument.integer(name: :green_ticks, description: "The number of green ticks in a scene.", options: { required: true }),
-          CommandArgument.integer(name: :yellow_ticks, description: "The number of yellow ticks in a scene.", options: { required: true }),
-          CommandArgument.integer(name: :red_ticks, description: "The number of red ticks in a scene.", options: { required: true }),
-          CommandArgument.string(name: :actors, description: 'A list of actors to start with in the scene, e.g. "Baron Blade" Legacy Wraith "Absolute Zero"')
+          CommandArgument.integer(:green_ticks, "The number of green ticks in a scene.", options: { required: true }),
+          CommandArgument.integer(:yellow_ticks, "The number of yellow ticks in a scene.", options: { required: true }),
+          CommandArgument.integer(:red_ticks, "The number of red ticks in a scene.", options: { required: true }),
+          CommandArgument.string(:actors, 'A list of actors to start with in the scene, e.g. "Baron Blade" Legacy Wraith "Absolute Zero"')
         ]
       end
 

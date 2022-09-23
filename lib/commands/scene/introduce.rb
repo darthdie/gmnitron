@@ -3,6 +3,8 @@
 module Commands
   class Scene
     class Introduce
+      extend Commands::SceneHelpers
+
       def self.name
         :introduce
       end

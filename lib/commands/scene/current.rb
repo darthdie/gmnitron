@@ -3,6 +3,8 @@
 module Commands
   class Scene
     class Current
+      extend Commands::SceneHelpers
+
       def self.name
         :current
       end

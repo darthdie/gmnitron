@@ -3,6 +3,8 @@
 module Commands
   class Scene
     class Remove
+      extend Commands::SceneHelpers
+
       def self.name
         :remove
       end

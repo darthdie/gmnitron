@@ -3,6 +3,8 @@
 module Commands
   class Scene
     class Ambush
+      extend Commands::SceneHelpers
+
       def self.name
         :ambush
       end
@@ -12,7 +14,6 @@ module Commands
       end
 
       def self.arguments
-        byebug
         [
           CommandArgument.string(:name, "The actor name.", options: { required: true })
         ]
