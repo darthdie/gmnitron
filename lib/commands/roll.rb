@@ -15,7 +15,7 @@ module Commands
     def roll_min_command(event)
       rolls = Models::DicePool.roll(event.options, :min)
 
-      content = Models::DicePoolRollFormatter.format(rolls)
+      content = Models::Formatters::DicePoolRollFormatter.format(rolls)
 
       event.respond(content: content)
     end
@@ -23,7 +23,7 @@ module Commands
     def roll_mid_command(event)
       rolls = Models::DicePool.roll(event.options, :mid)
 
-      content = Models::DicePoolRollFormatter.format(rolls)
+      content = Models::Formatters::DicePoolRollFormatter.format(rolls)
 
       event.respond(content: content)
     end
@@ -31,7 +31,7 @@ module Commands
     def roll_max_command(event)
       rolls = Models::DicePool.roll(event.options, :max)
 
-      content = Models::DicePoolRollFormatter.format(rolls)
+      content = Models::Formatters::DicePoolRollFormatter.format(rolls)
 
       event.respond(content: content)
     end
@@ -40,7 +40,7 @@ module Commands
       effect_die = event.options["effect_die"].to_sym
       rolls = Models::DicePool.new(event.options).roll(effect_die)
 
-      content = Models::OvercomeFormatter.format(rolls)
+      content = Models::Formatters::OvercomeFormatter.format(rolls)
 
       event.respond(content: content)
     end
@@ -49,7 +49,7 @@ module Commands
       effect_die = event.options["effect_die"].to_sym
       rolls = Models::DicePool.new(event.options).roll(effect_die)
 
-      content = Models::ModFormatter.format(rolls, "+")
+      content = Models::Formatters::ModFormatter.format(rolls, "+")
 
       event.respond(content: content)
     end
@@ -58,7 +58,7 @@ module Commands
       effect_die = event.options["effect_die"].to_sym
       rolls = Models::DicePool.new(event.options).roll(effect_die)
 
-      content = Models::ModFormatter.format(rolls, "-")
+      content = Models::Formatters::ModFormatter.format(rolls, "-")
 
       event.respond(content: content)
     end
@@ -70,7 +70,7 @@ module Commands
       save = event.options["save_versus"]
 
       die.apply!(modifier)
-      content = Models::MinionRollFormatter.format(die, modifier, save: save)
+      content = Models::Formatters::MinionRollFormatter.format(die, modifier, save: save)
 
       event.respond(content: content)
     end
@@ -81,7 +81,7 @@ module Commands
       save = event.options["save_versus"]
 
       die.apply!(modifier)
-      content = Models::LieutenantRollFormatter.format(die, modifier, save: save)
+      content = Models::Formatters::LieutenantRollFormatter.format(die, modifier, save: save)
 
       event.respond(content: content)
     end
@@ -91,7 +91,7 @@ module Commands
       modifier = Models::Modifier.parse(event.options["modifier"])
       die.apply!(modifier)
 
-      content = Models::ReactionRollFormatter.format(die, modifier)
+      content = Models::Formatters::ReactionRollFormatter.format(die, modifier)
 
       event.respond(content: content)
     end

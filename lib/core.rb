@@ -12,7 +12,7 @@ require 'mongoid'
 # require_relative "models/overcome_formatter"
 # require_relative "models/mod_formatter"
 # require_relative "models/minion_roll_formatter"
-require_relative "array.rb"
+require_relative "enumerable.rb"
 
 Dir["./lib/models/*.rb"].sort.each { |file| require file }
 Dir["./lib/commands/*.rb"].sort.each { |file| require file }
@@ -29,5 +29,6 @@ bot = Discordrb::Bot.new(token: ENV.fetch("GMNITRON_BOT_TOKEN"), intents: [:serv
 
 Commands::Fun.register(bot)
 Commands::Roll.register(bot)
+Commands::Scene.register(bot)
 
 bot.run

@@ -20,6 +20,7 @@ module Commands
     end
 
     def muffin_command(event)
+      byebug
       event.respond(content: "https://youtu.be/LACbVhgtx9I")
     end
 

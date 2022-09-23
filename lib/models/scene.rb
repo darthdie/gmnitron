@@ -13,6 +13,22 @@ module Models
     validates :channel_id, presence: true
 
     has_many :actors, class_name: "Actor", inverse_of: :scene
+
+    def current_actor
+      actors.filter { |actor| actor.current }.first
+    end
+
+    def acted_actors
+      actors.filter { |actor| actor.acted }
+    end
+
+    def unacted_actors
+      actors.filter { |actor| !actor.acted }
+    end
+
+    def is_last_actor?(actor)
+      unacted_actors.count == 1 && unacted_actors.first.name == actor.name
+    end
   end
 end
 

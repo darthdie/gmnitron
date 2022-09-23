@@ -13,8 +13,6 @@ module Models::Formatters
     end
 
     def format
-      # byebug
-      # (str "***The Story so Far***\r\n\r\n" (get-scene-recap scene) "\r\n\r\n" (get-initiative-recap scene)
       [
         "***The Story so Far***",
         scene_formatted,
@@ -26,18 +24,6 @@ module Models::Formatters
       return "The scene has reached its end." if end_of_scene?
 
       "It is currently a #{current_box} status. There are #{remaining_boxes_formatted} left."
-
-      # (defn get-scene-recap [scene]
-      #   (let [{green :green-ticks yellow :yellow-ticks red :red-ticks tick :current-tick} scene
-      #         boxes (concat (replicate green "Green") (replicate yellow "Yellow") (replicate red "Red"))]
-      #     (if (>= tick (count boxes))
-      #       "The scene has reached its end."
-      #       (let [current-box (nth boxes tick)
-      #             remaining-boxes (->> (drop tick boxes)
-      #               (frequencies)
-      #               (map #(str (second %) " " (first %) " boxes"))
-      #               (common/oxford))]
-      #         (common/fmt "It is currently a #{current-box} status. There are #{remaining-boxes} left.")))))
     end
 
     def end_of_scene?
@@ -70,13 +56,6 @@ module Models::Formatters
         acted_formatted,
         unacted_formatted
       ].compact.join("\r\n\r\n")
-      # (defn get-initiative-recap [scene]
-      #   (let [initiative (group-by :acted (filter #(= (get % :current false) false) (get scene :initiative)))
-      #         current-actor (first (filter #(= (get % :current false) true) (get scene :initiative)))
-      #         current-actor-display (if current-actor (str "**" (str (:name current-actor)) "** is the current actor.") nil)
-      #         acted (str/join "\r\n" (map actor->display (get initiative true [])))
-      #         unacted (str/join "\r\n" (map actor->display (get initiative false [])))]
-      #     (str/join "\r\n\r\n" (filter #(> (count %) 0) [current-actor-display acted unacted]))))
     end
 
     def current_actor_formatted

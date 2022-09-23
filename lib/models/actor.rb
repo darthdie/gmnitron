@@ -15,6 +15,9 @@ module Models
     attr_readonly :search_name
 
     def name=(value)
+      # Remove quotes in the event it's a quoted name
+      # TODO: I would love to remove this with some sort of official discord list argument
+      value = value.delete_prefix('"').delete_suffix('"')
       write_attribute(:name, value)
       write_attribute(:search_name, value.downcase)
     end
