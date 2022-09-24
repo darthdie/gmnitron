@@ -5,7 +5,7 @@ require "byebug"
 require 'mongoid'
 require_relative "enumerable.rb"
 
-Dir["./lib/models/*.rb"].sort.each { |file| require file }
+Dir["./lib/models/**/*.rb"].sort.each { |file| require file }
 Dir["./lib/commands/*.rb"].sort.each { |file| require file }
 
 Mongoid.load!("./config/mongoid.yml")

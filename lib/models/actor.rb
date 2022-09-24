@@ -2,8 +2,11 @@
 
 require 'mongoid'
 
+require_relative "actor_helpers"
+
 module Models
   class Actor
+    extend Models::ActorHelpers
     include Mongoid::Document
 
     field :name, type: String
@@ -15,14 +18,15 @@ module Models
     attr_readonly :search_name
 
     def name=(value)
-      # Remove quotes in the event it's a quoted name
-      # TODO: I would love to remove this with some sort of official discord list argument
-      value = value.delete_prefix('"').delete_suffix('"')
+      # TODO: I would love to remove this with some sort of official discord string list argument
+      value = sanitize_name(value)
       write_attribute(:name, value)
       write_attribute(:search_name, value.downcase)
     end
+
+    # Jesus fucking christ rspec fine - here's the fucking method you're having so much fucking trouble finding
+    def sanitize_name(name)
+      name.to_s.delete_prefix('"').delete_suffix('"').strip
+    end
   end
 end
-
-# (defn get-initiative [channel-id]
-#   (with-collection @db "initiatives" (find { :channel-id channel-id }) (sort (array-map :acted -1 :name 1))))

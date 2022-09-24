@@ -4,6 +4,7 @@ module Commands
   class Scene
     class Remove
       extend Commands::SceneHelpers
+      extend Models::ActorHelpers
 
       def self.name
         :remove
@@ -15,7 +16,7 @@ module Commands
 
       def self.arguments
         [
-          CommandArgument.string(:name, "The actor name.", options: { required: true })
+          CommandArgument.string("name", "The actor name.", options: { required: true })
         ]
       end
 
@@ -24,8 +25,12 @@ module Commands
         scene = scene_for_channel(event)
         return respond_with_no_scene(event) unless scene.present?
 
-        name = event.options[:name]
-        scene.actors.pull(name: name)
+        actor = scene.find_actor(name: event.options["name"])
+        unless actor.present?
+          return respond_with_error(event, "ERROR. UNABLE TO ACCESS SCENE OR ACTOR. USE !establish OR !introduce COMMANDS TO CREATE.")
+        end
+
+        actor.destroy
 
         respond_with_scene_recap(event, scene)
       end

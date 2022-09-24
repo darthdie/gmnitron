@@ -2,8 +2,9 @@
 
 module Commands
   class Scene
-    class Hand
+    class HandOff
       extend Commands::SceneHelpers
+      extend Models::ActorHelpers
 
       ERRORS = {
         already_acted: "ERROR. ACTOR HAS ALREADY GONE THIS INITIATIVE.",
@@ -22,8 +23,8 @@ module Commands
 
       def self.arguments
         [
-          CommandArgument.string(:from, "The name of the actor to pass from, or 'to' if you're the current actor.", options: { required: true }),
-          CommandArgument.string(:to, "The name of the actor to pass to.", options: { required: true }),
+          CommandArgument.string("from", "The name of the actor to pass from, or 'to' if you're the current actor.", options: { required: true }),
+          CommandArgument.string("to", "The name of the actor to pass to.", options: { required: true }),
         ]
       end
 
@@ -36,19 +37,11 @@ module Commands
         # validate that the from actor isn't the last one AND the to hasn't already acted
         # NEW: validate that that from actor isn't the same as the to actor
 
-        from_name = event.options[:from].downcase.strip
-        from = block do
-          if from_name == "to"
-            from_name = "<@#{event.author.id}>" if from_name == "to"
-            # actor-name (str "<@" (get-in data [:author "id"]) ">"
-            # actor-name becomes "<@AUTHOR_ID>"
-            # find actor for current user
-          else
-            scene.actors.filter { |actor| actor.search_name == from_name }.first
-          end
-        end
-        to_name = event.options[:to].downcase.strip
-        to = scene.actors.filter { |actor| actor.search_name == to_name }.first
+        from_name = event.options["from"]
+        from_name = "<@#{event.author.id}>" if from_name == "to"
+        from = scene.find_actor(name: from_name)
+
+        to = scene.find_actor(name: event.options["to"])
 
         error_message = block do
           next ERRORS[:actors_not_found] unless from.present? && to.present?

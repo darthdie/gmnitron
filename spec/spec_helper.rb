@@ -15,12 +15,15 @@
 # See https://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
 require "byebug"
+require "discordrb"
 
 require_relative "../lib/enumerable.rb"
 
+require_relative "../lib/models/actor_helpers.rb"
+
 [
-  *Dir["./lib/models/*.rb"],
-  *Dir["./lib/models/formatters/*.rb"]
+  *Dir["./lib/models/**/*.rb"],
+  *Dir["./lib/commands/*.rb"]
 ].sort.each { |file| require file }
 
 Mongoid.configure do |config|

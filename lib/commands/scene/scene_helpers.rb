@@ -14,8 +14,12 @@ module Commands
     end
 
     def respond_with_scene_recap(event, scene)
-      content = Models::SceneRecapFormatter.format(scene)
+      content = Models::Formatters::SceneRecapFormatter.format(scene)
       event.respond(content: content)
+    end
+
+    def respond_with_error(event, error)
+      event.respond(content: error, ephemeral: true)
     end
   end
 end

@@ -2,7 +2,7 @@
 
 module Commands
   class Scene
-    class Ambush
+    class Recap
       extend Commands::SceneHelpers
 
       def self.name
@@ -18,8 +18,7 @@ module Commands
 
         return respond_with_no_scene(event) unless scene.present?
 
-        content = Models::SceneRecapFormatter.format(scene)
-        event.respond(content: content)
+        respond_with_scene_recap(event, scene)
       end
     end
   end
