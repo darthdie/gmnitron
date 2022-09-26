@@ -1,4 +1,5 @@
 source 'https://rubygems.org'
+ruby "3.1.2"
 
 gem 'discordrb', github: 'shardlab/discordrb', branch: 'main'
 gem 'activesupport'
@@ -12,4 +13,3 @@ group :test, :development do
   gem 'rubocop-rspec'
   gem 'rubocop-performance'
 end
-
