@@ -32,13 +32,8 @@ module Commands
         scene = scene_for_channel(event)
         return respond_with_no_scene(event) unless scene.present?
 
-        # validate that the from actor is the current actor
-        # validate that we have actors?
-        # validate that the from actor isn't the last one AND the to hasn't already acted
-        # NEW: validate that that from actor isn't the same as the to actor
-
-        from_name = event.options["from"]
-        from_name = "<@#{event.author.id}>" if from_name == "to"
+        from_name = sanitize_name(event.options["from"])
+        from_name = "<@!#{event.user.id}>" if from_name == "to"
         from = scene.find_actor(name: from_name)
 
         to = scene.find_actor(name: event.options["to"])
@@ -47,54 +42,12 @@ module Commands
         return event.respond(content: error_message, ephemeral: true) if error_message.present?
 
         from.update(acted: true)
-        byebug
         if scene.actors.all? { |actor| actor.acted }
           Models::Actor.where(scene: scene).update_all(acted: false)
         end
 
         Models::Actor.where(scene: scene).update_all(current: false)
         to.update(current: true)
-
-        # (defn hand-off [channel-id from to]
-        #   (update-scene-actor-acted channel-id from true)
-        #   (when (all-actors-acted? channel-id)
-        #     (reset-scene-initiative channel-id))
-        #   (update-scene-set-active channel-id to))
-
-        # !hand off (actor name) (actor to go next) OR !hand off to (actor to go next)
-
-
-        # (defn validate-hand-off [channel-id from to]
-        #   (cond
-        #     (and (database/has-current-actor? channel-id) (not (database/is-current-actor? channel-id from))) not-current-actor-message
-        #     (not (database/has-actors-in-scene? channel-id [from to])) no-actor-message
-        #     (and (not (database/is-last-actor? channel-id from)) (database/actor-has-acted? channel-id to)) actor-already-acted-message))
-
-        # (defn hand-off-to [data]
-        #   (let [{arguments :arguments channel-id :channel-id} data
-        #         hand-off-to (str/join " " arguments)
-        #         actor-name (str "<@" (get-in data [:author "id"]) ">")]
-        #     (when (database/has-scene? channel-id)
-        #       (if-let [error (validate-hand-off channel-id actor-name hand-off-to)]
-        #         error
-        #         (do
-        #           (database/hand-off channel-id actor-name hand-off-to)
-        #           (recap channel-id))))))
-
-        # (defn hand-off [data]
-        #   (println data)
-        #   (let [{arguments :arguments channel-id :channel-id} data
-        #         [actor-name hand-off-to] arguments]
-        #     (if (database/has-scene? channel-id)
-        #       (if-let [error (validate-hand-off channel-id actor-name hand-off-to)]
-        #         error
-        #         (do
-        #           (database/hand-off channel-id actor-name hand-off-to)
-        #           (recap channel-id)))
-        #       no-scene-message)))
-
-
-        # scene.inc(current_tick: 1)
 
         respond_with_scene_recap(event, scene)
       end
