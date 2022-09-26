@@ -1,5 +1,7 @@
 # GMnitron
 
+#### This has been rewritten into Ruby and docs are out of date.
+
 A Sentinel Comics RPG Discord bot that has game-specific die rolling commands as well as scene/initiative tracking to help run games via Discord.
 
 You can view the full documentation here: https://darthdie.github.io/gmnitron/
