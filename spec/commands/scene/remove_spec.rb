@@ -1,20 +1,5 @@
 # frozen_string_literal: true
 
-class DiscordEvent
-  def initialize(options)
-    @options = options.with_indifferent_access
-  end
-
-  def method_missing(m, *args, &block)
-    return @options[m.to_sym] if @options.key?(m.to_sym)
-
-    super
-  end
-
-  def respond(*args)
-  end
-end
-
 RSpec.describe Commands::Scene::Remove do
   it "without a scene it returns an error" do
     event = DiscordEvent.new({channel_id: -1})
@@ -48,5 +33,28 @@ RSpec.describe Commands::Scene::Remove do
       ephemeral: true
     )
     described_class.handle(event)
+  end
+
+  it "with a valid actor it removes them" do
+    scene = Models::Scene.create!(
+      channel_id: -1,
+      green_ticks: 1,
+      yellow_ticks: 1,
+      red_ticks: 1,
+      actors: [
+        Models::Actor.new(name: "Haka"),
+        Models::Actor.new(name: "Argent Adept"),
+        Models::Actor.new(name: "Tempest"),
+        Models::Actor.new(name: "Fanatic"),
+        Models::Actor.new(name: "Captain Cosmic")
+      ]
+    )
+
+    allow_any_instance_of(Commands::SceneHelpers).to receive(:scene_for_channel).and_return(scene)
+
+    event = DiscordEvent.new({channel_id: 1, options: { "name" => "Haka" }})
+    expect {
+      described_class.handle(event)
+    }.to change { scene.reload.actors.length }.by(-1)
   end
 end

@@ -43,23 +43,23 @@ module Commands
 
         to = scene.find_actor(name: event.options["to"])
 
-        error_message = block do
-          next ERRORS[:actors_not_found] unless from.present? && to.present?
+        error_message = validate_hand_off(scene, from, to)
+        return event.respond(content: error_message, ephemeral: true) if error_message.present?
 
-          if !scene.current_actor.present? || scene.current_actor.search_name != from.search_name
-            next ERRORS[:not_current_actor]
-          end
-
-          if !scene.is_last_actor?(from) && to.acted
-            next ERRORS[:already_acted]
-          end
-
-          if from.search_name == to.search_name
-            next ERRORS[:cannot_pass_to_self]
-          end
+        from.update(acted: true)
+        byebug
+        if scene.actors.all? { |actor| actor.acted }
+          Models::Actor.where(scene: scene).update_all(acted: false)
         end
 
-        return event.respond(content: error_message, ephemeral: true) if error_message.present?
+        Models::Actor.where(scene: scene).update_all(current: false)
+        to.update(current: true)
+
+        # (defn hand-off [channel-id from to]
+        #   (update-scene-actor-acted channel-id from true)
+        #   (when (all-actors-acted? channel-id)
+        #     (reset-scene-initiative channel-id))
+        #   (update-scene-set-active channel-id to))
 
         # !hand off (actor name) (actor to go next) OR !hand off to (actor to go next)
 
@@ -97,6 +97,22 @@ module Commands
         # scene.inc(current_tick: 1)
 
         respond_with_scene_recap(event, scene)
+      end
+
+      def self.validate_hand_off(scene, from, to)
+        return ERRORS[:actors_not_found] unless from.present? && to.present?
+
+        if scene.current_actor.present? && scene.current_actor.search_name != from.search_name
+          return ERRORS[:not_current_actor]
+        end
+
+        if !scene.is_last_actor?(from) && to.acted
+          return ERRORS[:already_acted]
+        end
+
+        if from.search_name == to.search_name
+          return ERRORS[:cannot_pass_to_self]
+        end
       end
     end
   end

@@ -21,7 +21,6 @@ module Commands
       end
 
       def self.handle(event)
-        # TODO: test this
         scene = scene_for_channel(event)
         return respond_with_no_scene(event) unless scene.present?
 
