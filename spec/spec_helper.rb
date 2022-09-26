@@ -14,7 +14,6 @@
 #
 # See https://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
-require "byebug"
 require "discordrb"
 
 require_relative "discord_event.rb"

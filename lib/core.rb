@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "discordrb"
-require "byebug"
 require 'mongoid'
 require_relative "enumerable.rb"
 
